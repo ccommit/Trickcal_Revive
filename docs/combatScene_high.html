@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>트릭컬풍 모바일 RPG 최소 프로토타입</title>
+<style>
+  :root{
+    --green:#86df4a;
+    --green2:#4fb82e;
+    --dark:#1d3024;
+    --cream:#fff8dc;
+    --panel:#f7ffe9;
+    --orange:#ffbf3d;
+    --red:#ff6464;
+    --blue:#65c7ff;
+    --purple:#b179ff;
+    --shadow:0 8px 18px rgba(0,0,0,.28);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:#111;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+    color:#26351f;
+    overflow:hidden;
+  }
+  #game{
+    position:relative;
+    width:min(100vw, 430px);
+    height:min(100vh, 932px);
+    aspect-ratio:430/932;
+    max-height:100vh;
+    overflow:hidden;
+    background:#bfe7ff;
+    border-radius:22px;
+    box-shadow:0 0 0 1px rgba(255,255,255,.2), 0 20px 70px rgba(0,0,0,.55);
+  }
+  .screen{
+    display:none;
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+  }
+  .screen.active{display:block;}
+  button{
+    border:none;
+    cursor:pointer;
+    font-weight:900;
+    font-family:inherit;
+  }
+  .btn{
+    padding:12px 18px;
+    border-radius:18px;
+    background:linear-gradient(#fff7b7,#ffc94e);
+    color:#49360c;
+    border:3px solid #fff2a8;
+    box-shadow:0 5px 0 #c8841a, var(--shadow);
+    text-shadow:0 1px #fff;
+  }
+  .btn:active{transform:translateY(2px); box-shadow:0 3px 0 #c8841a, var(--shadow);}
+  .btn.green{
+    background:linear-gradient(#d6ff9e,#77db43);
+    border-color:#c7ff91;
+    color:#22420e;
+    box-shadow:0 5px 0 #35952d, var(--shadow);
+  }
+  .btn.gray{
+    background:linear-gradient(#f8f8f8,#cfcfcf);
+    border-color:#fff;
+    color:#555;
+    box-shadow:0 5px 0 #999, var(--shadow);
+  }
+  .round{
+    width:48px; height:48px; border-radius:50%;
+    background:linear-gradient(#d8ff9f,#69d342);
+    border:4px solid #adf779;
+    box-shadow:var(--shadow);
+    color:#26480d;
+    font-size:26px;
+  }
+  .top-currency{
+    position:absolute; top:14px; right:12px; display:flex; gap:6px; z-index:20;
+  }
+  .currency{
+    height:32px; min-width:91px;
+    border-radius:18px;
+    background:rgba(255,255,230,.95);
+    border:3px solid rgba(116,200,74,.9);
+    display:flex; align-items:center; justify-content:center; gap:5px;
+    font-weight:900; font-size:13px;
+    box-shadow:0 3px 8px rgba(0,0,0,.25);
+  }
+  .icon{
+    width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    color:white;font-weight:900;text-shadow:0 1px 2px #000;
+  }
+  .i-stamina{background:radial-gradient(#ff9aa0,#d8244f);}
+  .i-gold{background:radial-gradient(#ffe582,#db9613);}
+  .i-gem{background:radial-gradient(#dffcff,#4cc3a5);}
+  .toast{
+    position:absolute; left:50%; bottom:95px; transform:translateX(-50%);
+    background:rgba(25,40,20,.9); color:#fff; padding:12px 18px; border-radius:20px;
+    z-index:999; font-weight:800; opacity:0; pointer-events:none; transition:.25s;
+    white-space:nowrap;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-8px);}
+  .bg-login{
+    background:
+      radial-gradient(circle at 70% 25%, rgba(255,255,255,.7) 0 10%, transparent 25%),
+      linear-gradient(160deg,#a4e4ff 0%,#e2f8ff 36%,#9dd87b 37%,#78c45d 70%,#e7f6d7 100%);
+  }
+  .bg-town{
+    background:
+      radial-gradient(circle at 52% 38%, rgba(255,255,255,.35) 0 15%, transparent 30%),
+      linear-gradient(#b7edff 0 38%,#e9f5c1 38% 42%,#88d870 42% 100%);
+  }
+  .bg-cave{
+    background:
+      radial-gradient(circle at 42% 18%, rgba(255,214,131,.65), transparent 18%),
+      radial-gradient(circle at 20% 40%, rgba(96,255,194,.22), transparent 16%),
+      radial-gradient(circle at 85% 34%, rgba(86,255,203,.25), transparent 18%),
+      linear-gradient(#2b2f3d 0%,#1a1f2a 45%,#3d3b35 45%,#252b25 100%);
+  }
+  .logo{
+    position:absolute; left:22px; top:30px; width:150px; height:82px;
+    background:white; border-radius:26px 26px 36px 10px; transform:rotate(-5deg);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:#ff7868; font-weight:1000; font-size:34px; line-height:.82;
+    text-shadow:2px 2px #fff, 4px 4px #61c8ff;
+    border:4px solid #fff;
+    box-shadow:var(--shadow);
+  }
+  .logo small{font-size:14px;color:#4a9bb8;text-shadow:none;letter-spacing:1px;}
+  .login-art{
+    position:absolute; inset:auto 0 120px 0; height:520px;
+  }
+  .big-char{
+    position:absolute;
+    width:150px;height:210px;
+    filter:drop-shadow(0 10px 4px rgba(0,0,0,.18));
+    animation:idle 2.2s ease-in-out infinite;
+  }
+  .big-char.c1{left:48px; bottom:45px; transform:scale(.95);}
+  .big-char.c2{left:155px; bottom:20px; transform:scale(1.04); animation-delay:.25s;}
+  .big-char.c3{right:-8px; bottom:5px; transform:scale(1.3); animation-delay:.45s;}
+  .ch-head{position:absolute;left:25px;top:12px;width:95px;height:82px;border-radius:48% 52% 42% 50%;background:#fff6f2;border:3px solid #5a423c;}
+  .ch-body{position:absolute;left:45px;top:86px;width:58px;height:88px;border-radius:20px;background:#fff;border:3px solid #5a423c;}
+  .ch-eye{position:absolute;top:45px;width:12px;height:8px;border-radius:50%;background:#5a423c;}
+  .ch-eye.e1{left:52px}.ch-eye.e2{left:88px}
+  .ch-mouth{position:absolute;left:70px;top:58px;width:18px;height:12px;border-radius:0 0 16px 16px;background:#ff7387;}
+  .hair{position:absolute;inset:-8px 4px auto 4px;height:45px;border-radius:45px 45px 20px 20px;background:var(--hair,#ef7b92);border:3px solid #5a423c;}
+  .ear{position:absolute;width:36px;height:96px;border-radius:30px;background:var(--hair,#ef7b92);border:3px solid #5a423c;top:-38px;}
+  .ear.l{left:10px;transform:rotate(-25deg)} .ear.r{right:9px;transform:rotate(22deg)}
+  .arm,.leg{position:absolute;background:#fff6f2;border:3px solid #5a423c;border-radius:20px;}
+  .arm{width:20px;height:58px;top:94px}.arm.l{left:27px;transform:rotate(18deg)}.arm.r{right:25px;transform:rotate(-18deg)}
+  .leg{width:20px;height:48px;top:158px}.leg.l{left:52px}.leg.r{left:82px}
+  .tap-start{
+    position:absolute; left:50%; bottom:72px; transform:translateX(-50%);
+    width:330px; text-align:center; font-weight:1000; color:#fff;
+    text-shadow:0 3px 0 #ff7b73,0 5px 10px rgba(0,0,0,.35);
+    font-size:24px;
+  }
+  .login-panel{
+    position:absolute; left:22px; right:22px; bottom:18px;
+    background:rgba(255,255,255,.82); border:4px solid #fff; border-radius:26px;
+    padding:14px; box-shadow:var(--shadow);
+    display:flex; gap:8px; align-items:center;
+  }
+  .login-panel input{
+    flex:1; min-width:0; border:3px solid #8bdd5a; border-radius:16px; padding:12px;
+    font-size:16px; font-weight:800; outline:none;
+  }
+  .town-road{
+    position:absolute;left:-50px;right:-50px;bottom:105px;height:230px;
+    background:linear-gradient(8deg,#e9d3a8,#f8e7bd); transform:skewY(-4deg);
+    border-top:6px solid rgba(255,255,255,.55);
+  }
+  .house{position:absolute;width:118px;height:135px;background:#fff2cb;border:5px solid #74c775;border-radius:35px 35px 10px 10px;top:155px;}
+  .house:before{content:"";position:absolute;left:-12px;top:-38px;width:132px;height:55px;background:#7ad4b5;border:5px solid #58a56c;border-radius:40px 40px 10px 10px;}
+  .h1{left:10px}.h2{right:20px;top:130px;transform:scale(1.1)}.tree{position:absolute;left:155px;top:40px;width:95px;height:285px;background:#9f7b47;border-radius:55px;}
+  .tree:before{content:"";position:absolute;left:-96px;top:-86px;width:300px;height:160px;background:#65b76b;border-radius:50%;}
+  .lobby-top{
+    position:absolute;left:12px;top:12px;right:12px;height:50px;z-index:30;display:flex;align-items:center;gap:8px;
+  }
+  .profile{
+    min-width:175px;height:45px;background:rgba(255,255,255,.88);border:3px solid #76d34f;border-radius:24px;display:flex;align-items:center;gap:8px;padding:4px 10px;font-weight:900;box-shadow:var(--shadow);
+  }
+  .avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(#fff,#ffdfe7);border:3px solid #7bcf52;display:flex;align-items:center;justify-content:center;}
+  .lobby-chars .big-char{width:110px;height:155px;}
+  .lobby-chars .c1{left:25px;bottom:210px}.lobby-chars .c2{left:145px;bottom:220px}.lobby-chars .c3{right:25px;bottom:185px}
+  .lobby-menu{
+    position:absolute;left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;z-index:50;
+  }
+  .menu-btn{
+    height:70px;border-radius:20px;background:linear-gradient(#dfffab,#84da54);border:3px solid #ebffd2;
+    box-shadow:0 5px 0 #48a33b, var(--shadow);font-size:13px;color:#25430e;
+  }
+  .stage-entry{
+    position:absolute;right:12px;bottom:105px;width:110px;height:110px;border-radius:28px;background:rgba(255,255,255,.8);border:4px solid #fff;box-shadow:var(--shadow);
+    display:flex;align-items:end;justify-content:center;padding-bottom:8px;font-weight:1000;
+  }
+  .stage-entry:before{content:"41-1";position:absolute;top:12px;right:12px;background:#ffd34c;border-radius:18px;padding:7px 12px;font-weight:1000;}
+  .title-bar{position:absolute;left:12px;top:12px;right:12px;height:54px;z-index:20;display:flex;align-items:center;gap:10px;}
+  .title-text{font-size:28px;font-weight:1000;color:white;text-shadow:0 3px 0 #263121,0 4px 8px #000;}
+  .stage-map{
+    position:absolute;inset:0;background:
+      linear-gradient(135deg,rgba(251,160,90,.85) 0 24%,rgba(60,54,106,.88) 24% 55%,rgba(20,72,79,.95) 55% 100%);
+  }
+  .tile{
+    position:absolute;width:116px;height:86px;background:linear-gradient(135deg,#8d93a3,#4f5664);border-radius:10px;
+    transform:rotate(-32deg) skewX(18deg);box-shadow:10px 12px 0 rgba(0,0,0,.18), inset 0 0 0 3px rgba(255,255,255,.12);
+  }
+  .stage-node{
+    position:absolute;width:92px;height:68px;border-radius:20px;background:linear-gradient(#9ded5e,#3ea629);
+    border:5px solid #197a1c;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;flex-direction:column;
+    color:white;font-weight:1000;text-shadow:0 2px 0 #124d0d;z-index:5;
+  }
+  .stage-node.locked{filter:grayscale(.25); background:linear-gradient(#c2c2c2,#727272); border-color:#555;}
+  .stage-node.selected{outline:7px solid rgba(255,255,255,.8); transform:scale(1.07);}
+  .stage-node small{font-size:12px;color:#e8ffba;}
+  .bubble{
+    position:absolute;left:38px;top:132px;width:245px;min-height:112px;background:#fafff1;border:7px solid #38ad4e;border-radius:35px;z-index:9;
+    box-shadow:var(--shadow);padding:20px 16px;text-align:center;font-weight:1000;
+  }
+  .bubble:after{content:"";position:absolute;bottom:-28px;left:96px;border:16px solid transparent;border-top-color:#38ad4e;}
+  .bubble .monster{position:absolute;left:24px;top:-48px;width:78px;height:78px;border-radius:50%;background:linear-gradient(#ff7cff,#b71fde);border:7px solid #fff;}
+  .bottom-rewards{position:absolute;left:20px;right:20px;bottom:34px;height:88px;background:rgba(255,255,255,.55);border-radius:50px;border:4px solid rgba(255,255,255,.8);display:flex;align-items:center;justify-content:space-around;z-index:6;}
+  .reward-dot{width:62px;height:62px;border-radius:50%;background:#fff;border:5px solid #e2edff;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:900;}
+  .stage-detail{
+    position:absolute;right:14px;top:150px;width:300px;min-height:410px;background:#fffdf2;border:7px solid #35a947;border-radius:34px;z-index:30;box-shadow:var(--shadow);
+    padding:22px 18px;display:none;
+  }
+  .stage-detail.show{display:block;}
+  .detail-stars{position:absolute;left:50%;top:-38px;transform:translateX(-50%);width:150px;height:64px;background:#35a947;border-radius:25px;border:6px solid #148a30;display:flex;align-items:center;justify-content:center;font-size:30px;color:#1b771f;}
+  .close{position:absolute;right:18px;top:16px;background:none;font-size:34px;color:#555;}
+  .reward-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:16px 0;}
+  .item{height:55px;border-radius:14px;background:linear-gradient(#fff,#ffe0b0);border:3px solid #eee;display:flex;align-items:center;justify-content:center;font-weight:900;}
+  .prep-bg,.battle-bg,.result-bg{background:
+      radial-gradient(circle at 35% 12%, rgba(255,226,147,.55), transparent 16%),
+      radial-gradient(circle at 18% 26%, rgba(75,255,188,.20), transparent 14%),
+      radial-gradient(circle at 80% 27%, rgba(96,255,203,.20), transparent 18%),
+      linear-gradient(#293242 0%,#161b25 39%,#3f3c38 40%,#202821 100%);
+  }
+  .field-lines{
+    position:absolute;left:0;right:0;top:190px;height:420px;background:
+      linear-gradient(90deg,transparent 0 24%,rgba(255,255,255,.13) 24% 26%,transparent 26% 49%,rgba(255,255,255,.13) 49% 51%,transparent 51% 74%,rgba(255,255,255,.13) 74% 76%,transparent 76%),
+      linear-gradient(rgba(255,255,255,.13) 0 3px, transparent 3px 33%);
+    clip-path:polygon(2% 16%,98% 4%,92% 88%,8% 96%);
+    opacity:.65;
+  }
+  .slot{position:absolute;width:92px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);border:4px solid rgba(255,255,255,.28);}
+  .party-side{position:absolute;left:8px;top:86px;bottom:110px;width:58%;z-index:10;}
+  .roster-panel{
+    position:absolute;right:0;top:70px;bottom:0;width:38%;background:rgba(255,255,245,.96);border-left:7px solid #4bbb3b;border-radius:24px 0 0 24px;z-index:21;box-shadow:var(--shadow);padding:14px 10px;
+  }
+  .roster-head{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+  .roster-head button{height:38px;border-radius:15px;background:#efffe4;border:3px solid #a7df70;font-weight:1000;}
+  .roster-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;overflow:hidden;}
+  .roster-card{height:120px;border-radius:18px;border:4px solid #37bc38;background:linear-gradient(#e9d8ff,#fff);padding:4px;position:relative;box-shadow:0 4px 6px rgba(0,0,0,.14);}
+  .face{height:65px;border-radius:14px;background:linear-gradient(135deg,#fff,#ffd8e1);display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;}
+  .roster-card .lv{font-size:11px;font-weight:1000}.roster-card .power{font-size:13px;font-weight:1000;}
+  .prep-info{
+    position:absolute;left:74px;right:165px;top:78px;height:114px;background:rgba(0,0,0,.45);border-radius:18px;color:#fff;z-index:20;padding:12px;font-weight:900;
+  }
+  .prep-bottom{
+    position:absolute;left:0;right:0;bottom:0;height:94px;background:rgba(250,255,224,.94);z-index:30;border-top:4px solid rgba(255,255,255,.9);
+    display:flex;align-items:center;justify-content:space-around;padding:12px;
+  }
+  .prep-start{width:140px;height:62px;border-radius:26px;font-size:20px;}
+  .cost{display:flex;align-items:center;gap:5px;font-weight:1000;}
+  .battle-top{position:absolute;left:8px;right:8px;top:8px;height:70px;z-index:50;display:flex;align-items:center;justify-content:space-between;}
+  .timer{
+    width:76px;height:76px;border-radius:50%;background:rgba(30,42,31,.72);border:5px solid #a9f36c;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:1000;text-shadow:0 2px #000;
+  }
+  .wave{position:absolute;left:88px;top:16px;background:rgba(0,0,0,.55);color:#fff;border-radius:18px;padding:7px 20px;font-weight:1000;}
+  .battle-controls{display:flex;gap:8px;}
+  .circle-btn{width:50px;height:50px;border-radius:50%;background:rgba(0,0,0,.55);border:4px solid #bdf37f;color:#dfffac;font-size:24px;font-weight:1000;}
+  .battle-field{position:absolute;left:0;right:0;top:88px;bottom:130px;z-index:10;}
+  .unit{
+    position:absolute;width:74px;height:112px;transition:transform .22s,left .22s,top .22s;z-index:15;filter:drop-shadow(0 8px 4px rgba(0,0,0,.3));
+    animation:unitIdle 1.8s ease-in-out infinite;
+  }
+  .unit.enemy .unit-card{--main:#ffb0a6;--hair:#9d2830;}
+  .unit.ally .unit-card{--main:#e7fff5;}
+  .unit.hit{animation:hit .25s 2;}
+  .unit.attack{transform:translateX(26px) scale(1.05);}
+  .unit.enemy.attack{transform:translateX(-26px) scale(1.05);}
+  .unit.dead{opacity:.25; filter:grayscale(1);}
+  .unit-card{position:absolute;inset:0;}
+  .mini-head{position:absolute;left:8px;top:0;width:58px;height:50px;border-radius:45% 50% 42% 45%;background:var(--main,#fff);border:3px solid #422;overflow:hidden;}
+  .mini-head:before{content:"";position:absolute;left:-3px;right:-3px;top:-4px;height:23px;background:var(--hair,#6cbd8e);border-bottom:3px solid #422;border-radius:30px;}
+  .mini-body{position:absolute;left:20px;top:48px;width:34px;height:42px;border-radius:12px;background:#fff;border:3px solid #422;}
+  .mini-eye{position:absolute;top:26px;width:6px;height:7px;border-radius:50%;background:#522;}
+  .mini-eye.l{left:23px}.mini-eye.r{right:23px}
+  .mini-bar{position:absolute;left:2px;right:2px;bottom:4px;height:10px;background:#1a1a1a;border-radius:10px;border:2px solid #111;overflow:hidden;}
+  .mini-bar .hp{height:100%;width:100%;background:#56da55;}
+  .mini-mp{position:absolute;left:10px;right:10px;bottom:-8px;height:5px;background:#1a1a1a;border-radius:8px;overflow:hidden;}
+  .mini-mp .mp{height:100%;width:0;background:#58a8ff;}
+  .dmg{
+    position:absolute;z-index:100;color:#ff643d;font-weight:1000;font-size:26px;text-shadow:2px 2px #fff,0 4px 6px #000;animation:dmg 1s forwards;pointer-events:none;
+  }
+  .heal{color:#4fff61;}
+  .battle-bottom{
+    position:absolute;left:0;right:0;bottom:0;height:125px;background:rgba(242,255,216,.96);z-index:60;border-top:5px solid white;
+    display:flex;align-items:end;justify-content:center;gap:10px;padding:0 8px 12px;
+  }
+  .energy{
+    position:absolute;left:10px;bottom:20px;width:78px;height:78px;border-radius:50%;background:linear-gradient(#d8ff54,#4fba2d);
+    border:8px solid #c8f55e;display:flex;align-items:center;justify-content:center;color:#fff;font-size:33px;font-weight:1000;text-shadow:0 3px 0 #237222;box-shadow:var(--shadow);
+  }
+  .skill-card{
+    width:72px;height:92px;border-radius:15px;background:linear-gradient(#c9edff,#fff);border:4px solid #3bd866;position:relative;box-shadow:0 6px 10px rgba(0,0,0,.25);overflow:hidden;
+  }
+  .skill-card .cost{position:absolute;right:-4px;top:-7px;width:28px;height:28px;border-radius:50%;background:#faffd9;border:3px solid #7ec93e;justify-content:center;color:#2d6114;}
+  .skill-card .portrait{height:58px;background:linear-gradient(135deg,#ffd5e1,#c9fff0);display:flex;align-items:center;justify-content:center;font-size:33px;}
+  .skill-card .name{text-align:center;font-size:11px;font-weight:1000;padding-top:2px;}
+  .small-side{position:absolute;right:8px;bottom:26px;font-weight:1000;text-align:center;color:#31451e;text-shadow:0 1px #fff;}
+  .result-card{
+    position:absolute;inset:0;background:rgba(0,0,0,.25);z-index:5;
+  }
+  .victory{
+    position:absolute;left:12px;top:95px;width:235px;height:315px;background:radial-gradient(circle at center,#aaff4e 0 28%,rgba(120,255,72,.45) 30%,transparent 65%);
+    color:#30b928;text-shadow:0 4px #fff,0 8px 10px #116b11;font-size:50px;font-weight:1000;display:flex;align-items:end;justify-content:center;padding-bottom:35px;
+  }
+  .victory:before{content:"★★★";position:absolute;bottom:95px;font-size:43px;color:#ffcf2e;text-shadow:0 3px #9b6b00;}
+  .reward-panel{
+    position:absolute;left:245px;right:12px;top:120px;height:310px;color:#eafff4;font-weight:1000;
+  }
+  .expbar{height:30px;background:rgba(0,0,0,.45);border-radius:16px;overflow:hidden;margin:8px 0 16px;}
+  .expbar span{display:block;height:100%;width:58%;background:#73e8ff;}
+  .result-buttons{position:absolute;left:80px;right:16px;bottom:35px;display:flex;gap:10px;z-index:20;}
+  .result-buttons .btn{flex:1;font-size:15px;padding:12px 8px;}
+  .modal-pause{
+    position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:center;justify-content:center;
+  }
+  .modal-pause.show{display:flex;}
+  .pause-box{width:310px;background:#fffceb;border:6px solid #78d44a;border-radius:28px;padding:24px;text-align:center;box-shadow:var(--shadow);}
+  @keyframes idle{0%,100%{margin-bottom:0}50%{margin-bottom:12px}}
+  @keyframes unitIdle{0%,100%{margin-top:0}50%{margin-top:-5px}}
+  @keyframes hit{0%,100%{filter:drop-shadow(0 8px 4px rgba(0,0,0,.3))}50%{filter:brightness(2) hue-rotate(-35deg) drop-shadow(0 8px 4px rgba(0,0,0,.3));}}
+  @keyframes dmg{0%{opacity:0;transform:translateY(0) scale(.8)}20%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-70px) scale(.9)}}
+  .small-note{font-size:12px;color:#516149;font-weight:700;line-height:1.35;}
+  .hidden{display:none!important;}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="login" class="screen active bg-login">
+    <div class="logo">트릭컬<small>RE:MAKE</small></div>
+    <div class="login-art">
+      <div class="big-char c1" style="--hair:#f2e0b0"><div class="ear l"></div><div class="ear r"></div><div class="ch-head"><div class="hair"></div><div class="ch-eye e1"></div><div class="ch-eye e2"></div><div class="ch-mouth"></div></div><div class="ch-body"></div><div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div></div>
+      <div class="big-char c2" style="--hair:#ffffff"><div class="ear l"></div><div class="ear r"></div><div class="ch-head"><div class="hair"></div><div class="ch-eye e1"></div><div class="ch-eye e2"></div><div class="ch-mouth"></div></div><div class="ch-body"></div><div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div></div>
+      <div class="big-char c3" style="--hair:#d85276"><div class="ear l"></div><div class="ear r"></div><div class="ch-head"><div class="hair"></div><div class="ch-eye e1"></div><div class="ch-eye e2"></div><div class="ch-mouth"></div></div><div class="ch-body"></div><div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div></div>
+    </div>
+    <div class="tap-start">볼을 잡아당겨서 시작하기!</div>
+    <div class="login-panel">
+      <input id="nicknameInput" maxlength="10" placeholder="닉네임 입력" value="게스트" />
+      <button class="btn green" onclick="guestLogin()">게스트 로그인</button>
+    </div>
+  </div>
+
+  <div id="lobby" class="screen bg-town">
+    <div class="tree"></div><div class="house h1"></div><div class="house h2"></div><div class="town-road"></div>
+    <div class="lobby-top">
+      <div class="profile"><div class="avatar">🐰</div><div><div id="lobbyNick">게스트</div><div class="small-note">Lv.1 모작 개발자</div></div></div>
+    </div>
+    <div class="top-currency">
+      <div class="currency"><span class="icon i-stamina">●</span><span id="uiStamina">30</span></div>
+      <div class="currency"><span class="icon i-gold">G</span><span id="uiGold">1000</span></div>
+      <div class="currency"><span class="icon i-gem">◆</span><span id="uiGem">300</span></div>
+    </div>
+    <div class="lobby-chars">
+      <div class="big-char c1" style="--hair:#ffffff"><div class="ear l"></div><div class="ear r"></div><div class="ch-head"><div class="hair"></div><div class="ch-eye e1"></div><div class="ch-eye e2"></div><div class="ch-mouth"></div></div><div class="ch-body"></div><div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div></div>
+      <div class="big-char c2" style="--hair:#8cc990"><div class="ear l"></div><div class="ear r"></div><div class="ch-head"><div class="hair"></div><div class="ch-eye e1"></div><div class="ch-eye e2"></div><div class="ch-mouth"></div></div><div class="ch-body"></div><div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div></div>
+      <div class="big-char c3" style="--hair:#ffe073"><div class="ear l"></div><div class="ear r"></div><div class="ch-head"><div class="hair"></div><div class="ch-eye e1"></div><div class="ch-eye e2"></div><div class="ch-mouth"></div></div><div class="ch-body"></div><div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div></div>
+    </div>
+    <button class="stage-entry" onclick="showScreen('stage')">41-1<br>바로 가기</button>
+    <div class="lobby-menu">
+      <button class="menu-btn" onclick="planned()">모집</button>
+      <button class="menu-btn" onclick="planned()">상점</button>
+      <button class="menu-btn" onclick="planned()">사도</button>
+      <button class="menu-btn" onclick="planned()">카드</button>
+      <button class="menu-btn" onclick="showScreen('stage')">모험</button>
+    </div>
+  </div>
+
+  <div id="stage" class="screen">
+    <div class="stage-map"></div>
+    <div class="title-bar"><button class="round" onclick="showScreen('lobby')">‹</button><div class="title-text">스테이지 리스트</div></div>
+    <div class="top-currency">
+      <div class="currency"><span class="icon i-stamina">●</span><span id="stageStamina">30</span></div>
+      <div class="currency"><span class="icon i-gold">G</span><span id="stageGold">1000</span></div>
+      <div class="currency"><span class="icon i-gem">◆</span><span id="stageGem">300</span></div>
+    </div>
+    <div class="tile" style="left:35px;top:258px"></div>
+    <div class="tile" style="left:162px;top:208px"></div>
+    <div class="tile" style="left:128px;top:388px"></div>
+    <div class="tile" style="left:278px;top:330px"></div>
+    <div class="tile" style="left:290px;top:178px"></div>
+    <div class="bubble"><div class="monster"></div><div style="margin-left:65px">권장 전투력: <span id="bubblePower">900</span></div><div id="bubbleStage">동굴 탐험 시작!</div></div>
+    <button class="stage-node" style="left:72px;top:360px" onclick="selectStage('1-1')"><small id="star-1-1">☆☆☆</small>41-1</button>
+    <button class="stage-node" style="left:182px;top:285px" onclick="selectStage('1-2')"><small id="star-1-2">☆☆☆</small>41-2</button>
+    <button class="stage-node" style="left:198px;top:470px" onclick="selectStage('1-3')"><small id="star-1-3">☆☆☆</small>41-3</button>
+    <button class="stage-node locked" style="left:318px;top:410px" onclick="planned()">🔒<br>41-4</button>
+    <div class="bottom-rewards">
+      <div class="reward-dot">⭐<small>0/9</small></div>
+      <div class="reward-dot">25<br><small>보상</small></div>
+      <div class="reward-dot">50<br><small>보상</small></div>
+      <div class="reward-dot">100<br><small>보상</small></div>
+    </div>
+    <div id="stageDetail" class="stage-detail">
+      <div class="detail-stars" id="detailStars">☆☆☆</div>
+      <button class="close" onclick="closeStageDetail()">×</button>
+      <h2 id="detailName" style="margin:40px 0 8px">41-1</h2>
+      <div style="display:flex;justify-content:space-around;text-align:center;font-weight:900;margin-bottom:15px">
+        <div>추천 성격<br><span class="icon" style="background:#4cc3ff">❄</span></div>
+        <div>출현 몬스터<br><span class="icon" style="background:#3b2354">😈</span></div>
+      </div>
+      <div style="background:#f3eadc;border-radius:18px;padding:12px;text-align:center;font-weight:1000;">보상 목록</div>
+      <div class="reward-grid" id="detailRewards"></div>
+      <div class="small-note">별 3개 달성 시 빠른 전투가 가능하다는 확장 위치입니다.</div>
+      <div style="display:flex;gap:10px;margin-top:18px;">
+        <button class="btn gray" style="flex:1" onclick="planned()">면제</button>
+        <button class="btn" style="flex:1" onclick="goPrep()">덱 선택</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="prep" class="screen prep-bg">
+    <div class="title-bar"><button class="round" onclick="showScreen('stage')">‹</button><div class="title-text" id="prepTitle">41-1. 동굴 탐험 시작!</div></div>
+    <div class="top-currency">
+      <div class="currency"><span class="icon i-stamina">●</span><span id="prepStamina">30</span></div>
+      <div class="currency"><span class="icon i-gold">G</span><span id="prepGold">1000</span></div>
+      <div class="currency"><span class="icon i-gem">◆</span><span id="prepGem">300</span></div>
+    </div>
+    <div class="field-lines"></div>
+    <div class="prep-info">
+      <div>시작 코인 <b id="prepCoin">30</b></div>
+      <div>권장 전투력 <b id="prepPower">900</b></div>
+      <div>편성된 사도 <b>4 / 4</b></div>
+    </div>
+    <div class="party-side">
+      <div class="slot" style="left:40px;top:190px"></div><div class="slot" style="left:150px;top:160px"></div><div class="slot" style="left:80px;top:300px"></div><div class="slot" style="left:210px;top:275px"></div>
+      <div class="unit ally" style="left:38px;top:120px"><div class="unit-card"><div class="mini-head"><div class="mini-eye l"></div><div class="mini-eye r"></div></div><div class="mini-body"></div><div class="mini-bar"><div class="hp"></div></div><div class="mini-mp"><div class="mp"></div></div></div></div>
+      <div class="unit ally" style="left:150px;top:85px;--hair:#8cc990"><div class="unit-card"><div class="mini-head"><div class="mini-eye l"></div><div class="mini-eye r"></div></div><div class="mini-body"></div><div class="mini-bar"><div class="hp"></div></div><div class="mini-mp"><div class="mp"></div></div></div></div>
+      <div class="unit ally" style="left:82px;top:250px;--hair:#7a5cc5"><div class="unit-card"><div class="mini-head"><div class="mini-eye l"></div><div class="mini-eye r"></div></div><div class="mini-body"></div><div class="mini-bar"><div class="hp"></div></div><div class="mini-mp"><div class="mp"></div></div></div></div>
+      <div class="unit ally" style="left:205px;top:215px;--hair:#d7f2ff"><div class="unit-card"><div class="mini-head"><div class="mini-eye l"></div><div class="mini-eye r"></div></div><div class="mini-body"></div><div class="mini-bar"><div class="hp"></div></div><div class="mini-mp"><div class="mp"></div></div></div></div>
+    </div>
+    <div class="roster-panel">
+      <div class="roster-head"><button>대여</button><button>전투력</button></div>
+      <div class="roster-grid" id="rosterGrid"></div>
+    </div>
+    <div class="prep-bottom">
+      <div class="cost"><span class="icon i-stamina">●</span><span id="prepCost">10</span></div>
+      <button class="btn prep-start" onclick="startBattle()">출발</button>
+      <button class="round" onclick="showScreen('stage')">↩</button>
+    </div>
+  </div>
+
+  <div id="battle" class="screen battle-bg">
+    <div class="battle-top">
+      <div class="timer" id="battleTimer">00:00</div>
+      <div class="wave">⚔ <span id="waveText">1/3</span></div>
+      <div class="battle-controls">
+        <button class="circle-btn" id="autoBtn" onclick="toggleAuto()">⚔</button>
+        <button class="circle-btn" id="speedBtn" onclick="toggleSpeed()">▶</button>
+        <button class="circle-btn" onclick="pauseBattle()">Ⅱ</button>
+      </div>
+    </div>
+    <div class="field-lines"></div>
+    <div id="battleField" class="battle-field"></div>
+    <div class="battle-bottom">
+      <div class="energy" id="energy">10</div>
+      <div id="skillCards" style="display:flex;gap:10px;margin-left:72px;"></div>
+      <div class="small-side">스펠목록</div>
+    </div>
+    <div id="pauseModal" class="modal-pause">
+      <div class="pause-box">
+        <h2>일시정지</h2>
+        <p class="small-note">전투 흐름만 확인하는 최소 프로토타입입니다.</p>
+        <button class="btn green" onclick="resumeBattle()">계속하기</button>
+        <button class="btn gray" onclick="endBattle(false)" style="margin-top:12px">나가기</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="result" class="screen result-bg">
+    <div class="result-card"></div>
+    <div class="victory" id="resultTitle">VICTORY</div>
+    <div class="reward-panel">
+      <h2 id="resultStage">41-1 동굴 탐험 시작!</h2>
+      <div>Lv.1 <span id="resultExpText">50/100</span></div>
+      <div class="expbar"><span></span></div>
+      <div style="font-size:20px;margin-bottom:8px;">보상 획득</div>
+      <div class="reward-grid" id="resultRewards"></div>
+    </div>
+    <div class="result-buttons">
+      <button class="btn gray" onclick="showScreen('lobby')">나가기</button>
+      <button class="btn" onclick="retryStage()">다시하기</button>
+      <button class="btn" onclick="nextStage()">다음 스테이지로</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">추후 구현 예정</div>
+</div>
+
+<script>
+const SAVE_KEY = "trickcal_min_proto_v1";
+
+const basePlayer = {
+  id: "guest_001",
+  nickname: "게스트",
+  gold: 1000,
+  stamina: 30,
+  gem: 300,
+  currentStage: "1-1",
+  clearedStages: {}
+};
+
+const stageData = [
+  { id:"1-1", label:"41-1", name:"동굴 탐험 시작!", staminaCost:10, recommendedPower:900, rewards:[["💎",10],["🧩",1],["🪙",120],["🍮",3]], enemies:3 },
+  { id:"1-2", label:"41-2", name:"버섯 동굴", staminaCost:10, recommendedPower:1100, rewards:[["💎",15],["🔮",1],["🪙",160],["🍮",5]], enemies:4 },
+  { id:"1-3", label:"41-3", name:"어둠의 입구", staminaCost:12, recommendedPower:1400, rewards:[["💎",20],["📘",1],["🪙",220],["🍮",8]], enemies:5 }
+];
+
+const partyData = [
+  { id:"a1", name:"시온", role:"딜러", hp:520, maxHp:520, attack:72, mp:0, maxMp:100, icon:"🐺", hair:"#ffffff", skill:"참격" },
+  { id:"a2", name:"조안", role:"마법", hp:430, maxHp:430, attack:88, mp:0, maxMp:100, icon:"🦉", hair:"#8cc990", skill:"광휘" },
+  { id:"a3", name:"네르", role:"탱커", hp:720, maxHp:720, attack:48, mp:0, maxMp:100, icon:"🐱", hair:"#536e9f", skill:"도발" },
+  { id:"a4", name:"나이아", role:"힐러", hp:460, maxHp:460, attack:38, mp:0, maxMp:100, icon:"🐰", hair:"#d7f2ff", skill:"회복" }
+];
+
+let player = loadPlayer();
+let selectedStageId = player.currentStage || "1-1";
+let battle = null;
+let battleTimer = null;
+let battleSec = 0;
+let speed = 1;
+let auto = false;
+
+function loadPlayer(){
+  const raw = localStorage.getItem(SAVE_KEY);
+  if(!raw) return {...basePlayer};
+  try { return {...basePlayer, ...JSON.parse(raw)}; }
+  catch(e){ return {...basePlayer}; }
+}
+function savePlayer(){
+  localStorage.setItem(SAVE_KEY, JSON.stringify(player));
+}
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="lobby") renderLobby();
+  if(id==="stage") renderStage();
+  if(id==="prep") renderPrep();
+}
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1200);
+}
+function planned(){ toast("추후 구현 예정입니다."); }
+
+function guestLogin(){
+  const nick = document.getElementById("nicknameInput").value.trim() || "게스트";
+  player.nickname = nick;
+  savePlayer();
+  showScreen("lobby");
+}
+function updateCurrencies(prefix){
+  const pairs = [["Stamina","stamina"],["Gold","gold"],["Gem","gem"]];
+  pairs.forEach(([id,key])=>{
+    const el=document.getElementById(prefix+id);
+    if(el) el.textContent = player[key].toLocaleString();
+  });
+}
+function renderLobby(){
+  document.getElementById("lobbyNick").textContent = player.nickname;
+  updateCurrencies("ui");
+}
+function renderStage(){
+  updateCurrencies("stage");
+  stageData.forEach(st=>{
+    const clear=player.clearedStages[st.id];
+    const el=document.getElementById("star-"+st.id);
+    if(el) el.textContent=clear ? "★★★" : "☆☆☆";
+  });
+  selectStage(selectedStageId, true);
+}
+function getStage(id){ return stageData.find(s=>s.id===id) || stageData[0]; }
+function selectStage(id, silent=false){
+  selectedStageId=id;
+  const st=getStage(id);
+  document.querySelectorAll(".stage-node").forEach(n=>n.classList.remove("selected"));
+  const node = [...document.querySelectorAll(".stage-node")].find(n=>n.textContent.includes(st.label));
+  if(node) node.classList.add("selected");
+  document.getElementById("bubblePower").textContent=st.recommendedPower.toLocaleString();
+  document.getElementById("bubbleStage").textContent=st.name;
+  if(!silent) openStageDetail(st);
+}
+function openStageDetail(st){
+  const clear=player.clearedStages[st.id];
+  document.getElementById("detailStars").textContent=clear ? "★★★" : "☆☆☆";
+  document.getElementById("detailName").textContent=st.label+" "+st.name;
+  const grid=document.getElementById("detailRewards");
+  grid.innerHTML=st.rewards.map(r=>`<div class="item">${r[0]}<br>${r[1]}</div>`).join("");
+  document.getElementById("stageDetail").classList.add("show");
+}
+function closeStageDetail(){
+  document.getElementById("stageDetail").classList.remove("show");
+}
+function goPrep(){
+  closeStageDetail();
+  showScreen("prep");
+}
+function renderPrep(){
+  const st=getStage(selectedStageId);
+  updateCurrencies("prep");
+  document.getElementById("prepTitle").textContent = st.label+". "+st.name;
+  document.getElementById("prepCoin").textContent = 30;
+  document.getElementById("prepPower").textContent = st.recommendedPower.toLocaleString();
+  document.getElementById("prepCost").textContent = st.staminaCost;
+  const roster=document.getElementById("rosterGrid");
+  roster.innerHTML=partyData.concat(partyData).slice(0,6).map((p,i)=>`
+    <div class="roster-card">
+      <div class="face">${p.icon}</div>
+      <div class="lv">Lv.1 ${p.name}</div>
+      <div class="power">${(900000+i*123456).toLocaleString()}</div>
+    </div>`).join("");
+}
+function startBattle(){
+  const st=getStage(selectedStageId);
+  if(player.stamina < st.staminaCost){
+    toast("행동력이 부족합니다.");
+    return;
+  }
+  player.stamina -= st.staminaCost;
+  savePlayer();
+  initBattle(st);
+  showScreen("battle");
+}
+function initBattle(st){
+  clearInterval(battleTimer);
+  battleSec=0; speed=1; auto=false;
+  document.getElementById("speedBtn").textContent="▶";
+  document.getElementById("autoBtn").textContent="⚔";
+  document.getElementById("waveText").textContent="1/3";
+  battle = {
+    stage:st,
+    allies: partyData.map((p,i)=>({...p,hp:p.maxHp,mp:0,side:"ally",x:[22,118,58,162][i],y:[110,75,245,205][i]})),
+    enemies: Array.from({length: Math.min(4, st.enemies)}, (_,i)=>({
+      id:"e"+i,name:["젤리","버섯","늑대","보스"][i]||"적",role:"적",hp:[330,410,480,690][i]||350,maxHp:[330,410,480,690][i]||350,attack:[38,44,52,70][i]||40,mp:0,maxMp:100,side:"enemy",x:[285,330,250,345][i],y:[110,225,305,365][i],hair:["#9d2830","#ff9d5c","#b34444","#714c22"][i]
+    })),
+    paused:false,
+    ended:false,
+    result:false
+  };
+  renderBattle();
+  battleTimer=setInterval(battleTick, 950);
+}
+function renderBattle(){
+  const field=document.getElementById("battleField");
+  const units=[...battle.allies,...battle.enemies];
+  field.innerHTML = units.map(u=>`
+    <div class="unit ${u.side} ${u.hp<=0?'dead':''}" id="unit-${u.id}" style="left:${u.x}px;top:${u.y}px;--hair:${u.hair || '#8cc990'}">
+      <div class="unit-card">
+        <div class="mini-head"><div class="mini-eye l"></div><div class="mini-eye r"></div></div>
+        <div class="mini-body"></div>
+        <div class="mini-bar"><div class="hp" style="width:${Math.max(0,u.hp/u.maxHp*100)}%"></div></div>
+        <div class="mini-mp"><div class="mp" style="width:${Math.max(0,u.mp/u.maxMp*100)}%"></div></div>
+      </div>
+    </div>`).join("");
+  const skills=document.getElementById("skillCards");
+  skills.innerHTML=partyData.slice(0,4).map((p,i)=>`
+    <button class="skill-card" onclick="useSkill(${i})">
+      <div class="cost">${i===1?10:5}</div>
+      <div class="portrait">${p.icon}</div>
+      <div class="name">${p.name}</div>
+    </button>`).join("");
+}
+function battleTick(){
+  if(!battle || battle.paused || battle.ended) return;
+  for(let s=0;s<speed;s++) oneBattleStep();
+  battleSec++;
+  const min=String(Math.floor(battleSec/60)).padStart(2,"0");
+  const sec=String(battleSec%60).padStart(2,"0");
+  document.getElementById("battleTimer").textContent=`${min}:${sec}`;
+  document.getElementById("energy").textContent=Math.max(0,10-Math.floor(battleSec/4));
+  renderBattle();
+  checkBattleEnd();
+}
+function oneBattleStep(){
+  const allies=battle.allies.filter(u=>u.hp>0);
+  const enemies=battle.enemies.filter(u=>u.hp>0);
+  if(!allies.length || !enemies.length) return;
+  const attackers=[...allies,...enemies].sort(()=>Math.random()-.5).slice(0,2);
+  attackers.forEach(a=>{
+    const targets = a.side==="ally" ? battle.enemies.filter(u=>u.hp>0) : battle.allies.filter(u=>u.hp>0);
+    if(!targets.length || a.hp<=0) return;
+    const t=targets[Math.floor(Math.random()*targets.length)];
+    const dmg=Math.max(10, Math.floor(a.attack*(.75+Math.random()*.55)));
+    t.hp=Math.max(0,t.hp-dmg);
+    a.mp=Math.min(a.maxMp,a.mp+18);
+    animateAttack(a,t,dmg);
+  });
+}
+function animateAttack(a,t,dmg){
+  setTimeout(()=>{
+    const ae=document.getElementById("unit-"+a.id);
+    const te=document.getElementById("unit-"+t.id);
+    if(ae) ae.classList.add("attack");
+    if(te) te.classList.add("hit");
+    showDamage(t,dmg,false);
+    setTimeout(()=>{ if(ae) ae.classList.remove("attack"); if(te) te.classList.remove("hit"); },320);
+  },10);
+}
+function showDamage(t,amount,isHeal){
+  const field=document.getElementById("battleField");
+  const d=document.createElement("div");
+  d.className="dmg"+(isHeal?" heal":"");
+  d.style.left=(t.x+8)+"px"; d.style.top=(t.y+20)+"px";
+  d.textContent=(isHeal?"+":"")+amount.toLocaleString();
+  field.appendChild(d);
+  setTimeout(()=>d.remove(),1000);
+}
+function useSkill(index){
+  if(!battle || battle.ended) return;
+  const caster=battle.allies[index];
+  if(!caster || caster.hp<=0) return;
+  if(caster.mp < 60){ toast("MP가 부족합니다."); return; }
+  caster.mp=0;
+  if(caster.role==="힐러"){
+    const target=battle.allies.filter(u=>u.hp>0).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];
+    const heal=180;
+    target.hp=Math.min(target.maxHp,target.hp+heal);
+    showDamage(target,heal,true);
+  }else{
+    const target=battle.enemies.filter(u=>u.hp>0)[0];
+    if(target){
+      const dmg=caster.attack*3;
+      target.hp=Math.max(0,target.hp-dmg);
+      animateAttack(caster,target,dmg);
+    }
+  }
+  renderBattle();
+  checkBattleEnd();
+}
+function checkBattleEnd(){
+  if(!battle || battle.ended) return;
+  const alliesAlive=battle.allies.some(u=>u.hp>0);
+  const enemiesAlive=battle.enemies.some(u=>u.hp>0);
+  if(!enemiesAlive) endBattle(true);
+  if(!alliesAlive) endBattle(false);
+}
+function endBattle(win){
+  if(!battle) return;
+  battle.ended=true;
+  clearInterval(battleTimer);
+  const st=battle.stage;
+  if(win){
+    player.gold += st.rewards.find(r=>r[0]==="🪙")?.[1] || 100;
+    player.clearedStages[st.id]={cleared:true, stars:3, bestTime:battleSec, rewardReceived:true};
+    player.currentStage=st.id;
+    savePlayer();
+  }
+  renderResult(win, st);
+  showScreen("result");
+}
+function renderResult(win, st){
+  document.getElementById("resultTitle").textContent=win?"VICTORY":"DEFEAT";
+  document.getElementById("resultTitle").style.color=win?"#30b928":"#ff5555";
+  document.getElementById("resultStage").textContent=st.label+" "+st.name;
+  document.getElementById("resultExpText").textContent=win?"50/100":"0/100";
+  document.getElementById("resultRewards").innerHTML=(win?st.rewards:[["🪙",0],["🍮",0]]).map(r=>`<div class="item">${r[0]}<br>${r[1]}</div>`).join("");
+}
+function retryStage(){
+  showScreen("prep");
+}
+function nextStage(){
+  const idx=stageData.findIndex(s=>s.id===selectedStageId);
+  selectedStageId=stageData[Math.min(idx+1,stageData.length-1)].id;
+  showScreen("prep");
+}
+function toggleSpeed(){
+  speed=speed===1?2:1;
+  document.getElementById("speedBtn").textContent=speed===1?"▶":"×2";
+}
+function toggleAuto(){
+  auto=!auto;
+  document.getElementById("autoBtn").textContent=auto?"자동":"⚔";
+  toast(auto?"자동전투 ON":"자동전투 OFF");
+}
+function pauseBattle(){
+  if(!battle)return;
+  battle.paused=true;
+  document.getElementById("pauseModal").classList.add("show");
+}
+function resumeBattle(){
+  if(!battle)return;
+  battle.paused=false;
+  document.getElementById("pauseModal").classList.remove("show");
+}
+renderLobby();
+</script>
+</body>
+</html>
