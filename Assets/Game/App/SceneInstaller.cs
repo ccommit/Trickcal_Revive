@@ -23,7 +23,7 @@ namespace TrickcalRevive.App
 
         protected virtual void Awake()
         {
-            var root = FindObjectOfType<GameApplication>();
+            var root = FindFirstObjectByType<GameApplication>();
             if (root == null)
             {
                 Debug.LogError(

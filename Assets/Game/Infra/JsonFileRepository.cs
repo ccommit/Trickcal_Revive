@@ -1,13 +1,46 @@
-using System;
+using System.IO;
+using UnityEngine;
 
 namespace TrickcalRevive.Infra
 {
-    // 실제 파일 IO는 각 컨텐츠 이슈에서 채운다(08_저장_설계서). 지금은 뼈대만.
     public class JsonFileRepository : IFileStore
     {
-        public string LoadJson(string path) => throw new NotImplementedException();
-        public void SaveJson(string path, string data) => throw new NotImplementedException();
-        public bool Exists(string path) => throw new NotImplementedException();
-        public void Delete(string path) => throw new NotImplementedException();
+        private readonly string rootDirectory;
+
+        public JsonFileRepository() : this(Application.persistentDataPath)
+        {
+        }
+
+        public JsonFileRepository(string rootDirectory)
+        {
+            this.rootDirectory = rootDirectory;
+        }
+
+        public string LoadJson(string path)
+        {
+            var fullPath = ResolvePath(path);
+            return File.Exists(fullPath) ? File.ReadAllText(fullPath) : null;
+        }
+
+        public void SaveJson(string path, string data)
+        {
+            var fullPath = ResolvePath(path);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            File.WriteAllText(fullPath, data);
+        }
+
+        public bool Exists(string path)
+        {
+            return File.Exists(ResolvePath(path));
+        }
+
+        public void Delete(string path)
+        {
+            var fullPath = ResolvePath(path);
+            if (File.Exists(fullPath))
+                File.Delete(fullPath);
+        }
+
+        private string ResolvePath(string path) => Path.Combine(rootDirectory, path);
     }
 }

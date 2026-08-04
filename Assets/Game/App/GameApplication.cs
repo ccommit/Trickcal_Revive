@@ -6,6 +6,7 @@ using TrickcalRevive.Domain.Growth;
 using TrickcalRevive.Domain.Inventory;
 using TrickcalRevive.Domain.Stage;
 using TrickcalRevive.Infra;
+using TrickcalRevive.Presentation;
 
 namespace TrickcalRevive.App
 {
@@ -14,11 +15,12 @@ namespace TrickcalRevive.App
     /// 서비스만 여기서 등록하고, 씬 전용 서비스는 각 SceneInstaller가 맡는다.
     /// </summary>
     /// <remarks>
-    /// 첫 화면 전환(로그인/로비 분기)은 02_로비화면전환 이슈에서 SceneFlowController와
-    /// 함께 채운다. 지금은 루트 컨테이너 구성까지만.
+    /// Login 씬에 배치된다(인트로 부팅 씬은 아직 없음) — 항상 Login 화면부터 시작한다.
     /// </remarks>
     public class GameApplication : MonoBehaviour
     {
+        [SerializeField] private SceneFlowController sceneFlowController;
+
         public DI RootContainer { get; private set; }
 
         private void Awake()
@@ -37,6 +39,8 @@ namespace TrickcalRevive.App
             var masterData = new MasterDataRepository();
             var playerData = new PlayerDataRepository(files, session, saveManager);
             var accountAuth = new AccountAuthRepository(files);
+            var popups = new PopupService();
+            sceneFlowController.Configure(popups);
 
             container.Register<ISessionService>(session);
             container.Register<ISaveManager>(saveManager);
@@ -56,6 +60,9 @@ namespace TrickcalRevive.App
             container.Register<IInventoryRepository>(playerData);
             container.Register<IStageProgressRepository>(playerData);
             container.Register<IAccountAuthRepository>(accountAuth);
+
+            container.Register<IPopupService>(popups);
+            container.Register<INavigationService>(sceneFlowController);
 
             container.Register(new EventBus());
 

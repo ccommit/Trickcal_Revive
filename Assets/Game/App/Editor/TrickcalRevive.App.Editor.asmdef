@@ -1,0 +1,23 @@
+{
+  "name": "TrickcalRevive.App.Editor",
+  "rootNamespace": "TrickcalRevive.App.Editor",
+  "references": [
+    "TrickcalRevive.Core",
+    "TrickcalRevive.Data",
+    "TrickcalRevive.Domain",
+    "TrickcalRevive.Infra",
+    "TrickcalRevive.Presentation",
+    "TrickcalRevive.App"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
