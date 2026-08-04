@@ -11,6 +11,8 @@
 # Preserve Unity-generated YAML and pinned third-party package bytes without
 # rewriting their intentional trailing-space/EOL formatting.
 *.meta -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
+*.prefab -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
+*.unity -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 Assets/Editor/SpineSettings.asset -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 Packages/com.esotericsoftware.spine.spine-csharp/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
 Packages/com.esotericsoftware.spine.spine-unity/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab

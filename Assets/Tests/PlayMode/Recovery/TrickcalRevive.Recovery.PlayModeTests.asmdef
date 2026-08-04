@@ -1,17 +1,18 @@
 {
-  "name": "TrickcalRevive.Recovery.Editor",
-  "rootNamespace": "TrickcalRevive.Recovery.Editor",
+  "name": "TrickcalRevive.Recovery.PlayModeTests",
+  "rootNamespace": "TrickcalRevive.Recovery.Tests",
   "references": [
     "TrickcalRevive.Recovery.Harness",
     "Unity.UGUI"
   ],
-  "includePlatforms": ["Editor"],
+  "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
   "overrideReferences": false,
   "precompiledReferences": [],
-  "autoReferenced": true,
+  "autoReferenced": false,
   "defineConstraints": [],
   "versionDefines": [],
-  "noEngineReferences": false
+  "noEngineReferences": false,
+  "optionalUnityReferences": ["TestAssemblies"]
 }

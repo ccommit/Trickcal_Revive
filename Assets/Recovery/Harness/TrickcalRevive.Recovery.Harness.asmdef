@@ -1,11 +1,10 @@
 {
-  "name": "TrickcalRevive.Recovery.Editor",
-  "rootNamespace": "TrickcalRevive.Recovery.Editor",
+  "name": "TrickcalRevive.Recovery.Harness",
+  "rootNamespace": "TrickcalRevive.Recovery.Harness",
   "references": [
-    "TrickcalRevive.Recovery.Harness",
     "Unity.UGUI"
   ],
-  "includePlatforms": ["Editor"],
+  "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
   "overrideReferences": false,
