@@ -3,7 +3,9 @@
   "rootNamespace": "TrickcalRevive.Recovery.Editor",
   "references": [
     "TrickcalRevive.Recovery.Harness",
-    "Unity.UGUI"
+    "Unity.UGUI",
+    "spine-unity",
+    "spine-csharp"
   ],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],

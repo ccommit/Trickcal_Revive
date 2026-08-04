@@ -4,7 +4,9 @@
   "references": [
     "TrickcalRevive.Recovery.Harness",
     "TrickcalRevive.Recovery.Editor",
-    "Unity.UGUI"
+    "Unity.UGUI",
+    "spine-unity",
+    "spine-csharp"
   ],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],

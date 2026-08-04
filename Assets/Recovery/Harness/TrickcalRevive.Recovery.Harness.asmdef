@@ -2,7 +2,9 @@
   "name": "TrickcalRevive.Recovery.Harness",
   "rootNamespace": "TrickcalRevive.Recovery.Harness",
   "references": [
-    "Unity.UGUI"
+    "Unity.UGUI",
+    "spine-unity",
+    "spine-csharp"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
