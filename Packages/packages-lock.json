@@ -1,5 +1,19 @@
 {
   "dependencies": {
+    "com.esotericsoftware.spine.spine-csharp": {
+      "version": "file:com.esotericsoftware.spine.spine-csharp",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.esotericsoftware.spine.spine-unity": {
+      "version": "file:com.esotericsoftware.spine.spine-unity",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.esotericsoftware.spine.spine-csharp": "4.1.0"
+      }
+    },
     "com.unity.2d.animation": {
       "version": "13.0.5",
       "depth": 0,
