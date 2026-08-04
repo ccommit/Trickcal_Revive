@@ -28,7 +28,7 @@ namespace TrickcalRevive.App
             {
                 Debug.LogError(
                     $"{GetType().Name}: 씬에 GameApplication이 없어 루트 컨테이너를 못 찾았다. " +
-                    "부트 씬을 거치지 않고 이 씬을 바로 열었는지 확인하라.", this);
+                    "부 씬을 거치지 않고 이 씬을 바로 열었는지 확인하라.", this);
                 return;
             }
 

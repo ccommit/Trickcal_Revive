@@ -2,18 +2,26 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 using TrickcalRevive.App;
 using TrickcalRevive.Presentation;
 
 namespace TrickcalRevive.App.Editor
 {
-    // 인트로->로그인->로비 구조 씬을 코드로 생성한다. UI 배치는 여기서 하지 않는다 —
-    // 컨트롤러가 붙은 빈 GameObject와 DI 배선(SerializeField 참조)까지만 만들고,
-    // 실제 화면(Canvas 등)은 이후 UI 작업에서 이 GameObject들에 얹는다.
+    // 로그인->로비 구조 씬을 코드로 생성한다. 화면 배치(스프라이트·레이아웃)는 여기서
+    // 하지 않는다 — 컨트롤러가 붙은 빈 GameObject, DI 배선(SerializeField 참조),
+    // 그리고 어떤 UI 작업이든 요구하는 최소 기반(Camera/Canvas/EventSystem)까지만
+    // 만들고, 실제 화면 구성은 이후 UI 작업에서 이 GameObject들에 얹는다.
     public static class FlowSceneBuilder
     {
+        private const float ReferenceWidth = 1080f;
+        private const float ReferenceHeight = 1920f;
+
         private const string ScenesFolder = "Assets/Scenes/Flow";
         private const string LoginScenePath = ScenesFolder + "/Login.unity";
         private const string MainScenePath = ScenesFolder + "/Main.unity";
@@ -44,6 +52,8 @@ namespace TrickcalRevive.App.Editor
             // GameApplication.RootContainer를 참조하므로, 같은 프레임의 Awake 순서 중
             // GameApplication이 먼저 돌아야 한다(엔진이 공식 보장하진 않지만, 계층 순서로
             // 실질적으로 보장된다).
+            BuildBaseline();
+
             var appGo = new GameObject("GameApplication");
             var app = appGo.AddComponent<GameApplication>();
 
@@ -65,6 +75,8 @@ namespace TrickcalRevive.App.Editor
         private static void BuildMainScene()
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+
+            BuildBaseline();
 
             var installerGo = new GameObject("MainSceneInstaller");
             var installer = installerGo.AddComponent<MainSceneInstaller>();
@@ -89,6 +101,32 @@ namespace TrickcalRevive.App.Editor
                 new EditorBuildSettingsScene(LoginScenePath, true),
                 new EditorBuildSettingsScene(MainScenePath, true)
             };
+        }
+
+        // 어떤 화면이든 요구하는 최소 기반. UI 배치 작업이 여기 얹기만 하면 되게 한다.
+        private static void BuildBaseline()
+        {
+            var cameraGo = new GameObject("Main Camera");
+            cameraGo.tag = "MainCamera";
+            var camera = cameraGo.AddComponent<Camera>();
+            camera.orthographic = true;
+            camera.clearFlags = CameraClearFlags.SolidColor;
+            camera.backgroundColor = Color.black;
+            cameraGo.AddComponent<UniversalAdditionalCameraData>();
+            cameraGo.AddComponent<AudioListener>();
+
+            var canvasGo = new GameObject("Canvas");
+            var canvas = canvasGo.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            var scaler = canvasGo.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(ReferenceWidth, ReferenceHeight);
+            scaler.matchWidthOrHeight = 0.5f;
+            canvasGo.AddComponent<GraphicRaycaster>();
+
+            var eventSystemGo = new GameObject("EventSystem");
+            eventSystemGo.AddComponent<EventSystem>();
+            eventSystemGo.AddComponent<InputSystemUIInputModule>();
         }
 
         private static void SetSerializedField(UnityEngine.Object target, string fieldName, UnityEngine.Object value)
