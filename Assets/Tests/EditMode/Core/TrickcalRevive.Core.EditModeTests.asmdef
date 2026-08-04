@@ -1,0 +1,14 @@
+{
+  "name": "TrickcalRevive.Core.EditModeTests",
+  "rootNamespace": "TrickcalRevive.Core.Tests",
+  "references": [
+    "TrickcalRevive.Core"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}
