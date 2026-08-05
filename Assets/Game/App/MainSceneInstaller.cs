@@ -3,6 +3,7 @@ using TrickcalRevive.Core;
 using TrickcalRevive.Domain.Account;
 using TrickcalRevive.Domain.Inventory;
 using TrickcalRevive.Infra;
+using TrickcalRevive.MainUI;
 using TrickcalRevive.Presentation;
 
 namespace TrickcalRevive.App
@@ -13,6 +14,7 @@ namespace TrickcalRevive.App
     {
         [SerializeField] private LobbyController lobbyController;
         [SerializeField] private SettingsController settingsController;
+        [SerializeField] private LobbyScreenView lobbyScreenView;
 
         protected override void InstallBindings(DI container)
         {
@@ -23,9 +25,11 @@ namespace TrickcalRevive.App
             lobbyController.Configure(
                 container.Resolve<IAccountRepository>(),
                 container.Resolve<ICurrencyRepository>(),
-                container.Resolve<IPopupService>());
+                container.Resolve<IPopupService>(),
+                container.Resolve<INavigationService>());
 
             settingsController.Configure(container.Resolve<ISessionService>());
+            lobbyController.AttachView(lobbyScreenView);
         }
     }
 }

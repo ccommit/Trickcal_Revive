@@ -17,16 +17,32 @@ namespace TrickcalRevive.App
     /// <remarks>
     /// Login 씬에 배치된다(인트로 부팅 씬은 아직 없음) — 항상 Login 화면부터 시작한다.
     /// </remarks>
+    [DefaultExecutionOrder(-1000)]
     public class GameApplication : MonoBehaviour
     {
+        private static GameApplication instance;
+
         [SerializeField] private SceneFlowController sceneFlowController;
 
         public DI RootContainer { get; private set; }
 
         private void Awake()
         {
+            if (instance != null && instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            instance = this;
             DontDestroyOnLoad(gameObject);
             RootContainer = BuildRootContainer();
+        }
+
+        private void OnDestroy()
+        {
+            if (instance == this)
+                instance = null;
         }
 
         private DI BuildRootContainer()

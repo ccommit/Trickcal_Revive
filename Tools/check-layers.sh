@@ -12,8 +12,9 @@ declare -A ALLOWED=(
   [Data]="Core"
   [Domain]="Core Data"
   [Infra]="Core Data Domain"
-  [Presentation]="Core Data Domain Infra"
-  [App]="Core Data Domain Infra Presentation"
+  [MainUI]=""
+  [Presentation]="Core Data Domain Infra MainUI"
+  [App]="Core Data Domain Infra Presentation MainUI"
 )
 
 fail=0

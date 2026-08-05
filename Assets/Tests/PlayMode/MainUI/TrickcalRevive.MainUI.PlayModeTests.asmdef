@@ -1,0 +1,16 @@
+{
+  "name": "TrickcalRevive.MainUI.PlayModeTests",
+  "rootNamespace": "TrickcalRevive.MainUI.Tests",
+  "references": [
+    "TrickcalRevive.App",
+    "TrickcalRevive.MainUI",
+    "TrickcalRevive.Presentation",
+    "Unity.TextMeshPro",
+    "Unity.UGUI"
+  ],
+  "includePlatforms": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

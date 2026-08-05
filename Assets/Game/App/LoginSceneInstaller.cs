@@ -2,6 +2,7 @@ using UnityEngine;
 using TrickcalRevive.Core;
 using TrickcalRevive.Domain.Account;
 using TrickcalRevive.Infra;
+using TrickcalRevive.MainUI;
 using TrickcalRevive.Presentation;
 
 namespace TrickcalRevive.App
@@ -11,6 +12,7 @@ namespace TrickcalRevive.App
     public class LoginSceneInstaller : SceneInstaller
     {
         [SerializeField] private AuthController authController;
+        [SerializeField] private LoginScreenView loginScreenView;
 
         protected override void InstallBindings(DI container)
         {
@@ -20,7 +22,9 @@ namespace TrickcalRevive.App
         {
             authController.Configure(
                 container.Resolve<IAccountAuthRepository>(),
-                container.Resolve<ISessionService>());
+                container.Resolve<ISessionService>(),
+                container.Resolve<INavigationService>());
+            authController.AttachView(loginScreenView);
         }
     }
 }

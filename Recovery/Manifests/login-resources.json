@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "generatedUtc": "2026-08-05T01:47:25.260444+00:00",
+  "status": "unity-meta-finalized",
+  "productionComplete": false,
+  "sourceIdentity": {
+    "manifestRelativePath": "Recovery/Manifests/source-identity.json",
+    "sha256": "d33671f963b2ebaa2b92d47e35296ac3d953af3a10b8b93b0165b91836ee43a8"
+  },
+  "entries": [
+    {
+      "category": "login-title-spine-skeleton",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/00.title/spine/background/Title_Background.skel.bytes",
+      "supportingSourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/00.title/spine/background/Title_Background.skel.bytes",
+      "sourceBytes": 19698,
+      "sourceSha256": "1c0b82fbcb2666e6a9cd5b2a867718b675aee68a95837cbb19362c4c0481a74b",
+      "transformation": "byte-for-byte-copy",
+      "parameters": {
+        "spineVersionMarkers": [
+          "4.1.08"
+        ]
+      },
+      "outputRelativePath": "Assets/Game/Content/UI/Login/Spine/TitleBackground/Title_Background.skel.bytes",
+      "outputBytes": 19698,
+      "outputSha256": "1c0b82fbcb2666e6a9cd5b2a867718b675aee68a95837cbb19362c4c0481a74b",
+      "notes": "Source-backed Unity runtime resource; original evidence remains read-only."
+    },
+    {
+      "category": "login-title-spine-skeleton-meta",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/00.title/spine/background/Title_Background.skel.bytes.meta",
+      "sourceBytes": 216,
+      "sourceSha256": "b0e22d8edfbd69ccfba5baf53175673c4986654b85fc15837e049a7e73e2a813",
+      "transformation": "unity-normalized-meta-with-preserved-guid",
+      "parameters": {
+        "guid": "84a9d6bff5e23834cafb427e4dc5d1fa"
+      },
+      "outputRelativePath": "Assets/Game/Content/UI/Login/Spine/TitleBackground/Title_Background.skel.bytes.meta",
+      "outputBytes": 197,
+      "outputSha256": "247854828c107766c02932032fb5f38569b30229cd719abd6b605df8eebeb507",
+      "notes": "Unity GUID and blank AssetBundle labels are required invariants."
+    },
+    {
+      "category": "login-title-spine-atlas",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/00.title/spine/background/Title_Background.atlas.bytes",
+      "supportingSourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/00.title/spine/background/Title_Background.atlas.txt",
+      "sourceBytes": 1436,
+      "sourceSha256": "34789fc9631a0e467af02fd2b006c671b348340505398d7440465ead600b5840",
+      "transformation": "unity-import-extension-and-pma-flag-conversion",
+      "parameters": {
+        "atlasPage": "Title_Background.png",
+        "pma": true,
+        "sourcePma": true,
+        "outputPma": false
+      },
+      "outputRelativePath": "Assets/Game/Content/UI/Login/Spine/TitleBackground/Title_Background.atlas.txt",
+      "outputBytes": 1437,
+      "outputSha256": "117ed7a423e0f373cbe53160b90bd1af0960a6613005812980d7f530cc381586",
+      "notes": "Source-backed Unity runtime resource; original evidence remains read-only."
+    },
+    {
+      "category": "login-title-spine-atlas-meta",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/00.title/spine/background/Title_Background.atlas.txt.meta",
+      "sourceBytes": 216,
+      "sourceSha256": "9b29aa2919d4e9ed46396a497dde931f3d448d9bde1a50ce1354f3f7fe9ca904",
+      "transformation": "unity-normalized-meta-with-preserved-guid",
+      "parameters": {
+        "guid": "fe6c265cdbb17df4d933344a9b9b5f8a"
+      },
+      "outputRelativePath": "Assets/Game/Content/UI/Login/Spine/TitleBackground/Title_Background.atlas.txt.meta",
+      "outputBytes": 197,
+      "outputSha256": "b45933e9c0de935876601b85e3f1079ee627ac33caf5bd946cef31670db6fbd4",
+      "notes": "Unity GUID and blank AssetBundle labels are required invariants."
+    },
+    {
+      "category": "login-title-spine-texture",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/00.title/spine/background/Title_Background.png",
+      "supportingSourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/00.title/spine/background/Title_Background.png",
+      "sourceBytes": 2016015,
+      "sourceSha256": "6acb0b9dc9baf82f9e5f01a873fccc828f6661333a82df6aa42f1341bde1fe8f",
+      "transformation": "pma-to-straight-alpha-pixel-conversion",
+      "parameters": {
+        "width": 2048,
+        "height": 2048,
+        "sourceAlphaWorkflow": "premultiplied",
+        "outputAlphaWorkflow": "straight"
+      },
+      "outputRelativePath": "Assets/Game/Content/UI/Login/Spine/TitleBackground/Title_Background.png",
+      "outputBytes": 1665994,
+      "outputSha256": "dfdf8696242fec5f616d0930aeb52b13fe040ecf15d0d08f72a43a02ed4349d2",
+      "notes": "Source-backed Unity runtime resource; original evidence remains read-only."
+    },
+    {
+      "category": "login-title-spine-texture-meta",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/00.title/spine/background/Title_Background.png.meta",
+      "sourceBytes": 2807,
+      "sourceSha256": "b59928e0f066b4ef8bd2e5fa265f8384e81d18634c3e328116d36af251703e34",
+      "transformation": "unity-normalized-meta-with-preserved-guid",
+      "parameters": {
+        "guid": "91fff46d4610d2e49b63d406589176f3"
+      },
+      "outputRelativePath": "Assets/Game/Content/UI/Login/Spine/TitleBackground/Title_Background.png.meta",
+      "outputBytes": 2788,
+      "outputSha256": "a7343fb9748209721f5c252a04421e90cd9041d108fca251e2a60ed26771ae05",
+      "notes": "Unity GUID and blank AssetBundle labels are required invariants."
+    }
+  ]
+}

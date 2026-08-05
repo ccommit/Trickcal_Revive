@@ -21,8 +21,9 @@ namespace TrickcalRevive.Architecture.Tests
                 ["Data"] = new[] { "Core" },
                 ["Domain"] = new[] { "Core", "Data" },
                 ["Infra"] = new[] { "Core", "Data", "Domain" },
-                ["Presentation"] = new[] { "Core", "Data", "Domain", "Infra" },
-                ["App"] = new[] { "Core", "Data", "Domain", "Infra", "Presentation" },
+                ["MainUI"] = new string[0],
+                ["Presentation"] = new[] { "Core", "Data", "Domain", "Infra", "MainUI" },
+                ["App"] = new[] { "Core", "Data", "Domain", "Infra", "Presentation", "MainUI" },
             };
 
         private static readonly Regex UsingPattern =

@@ -1,12 +1,11 @@
 {
-  "name": "TrickcalRevive.Presentation",
-  "rootNamespace": "TrickcalRevive.Presentation",
+  "name": "TrickcalRevive.MainUI",
+  "rootNamespace": "TrickcalRevive.MainUI",
   "references": [
-    "TrickcalRevive.Core",
-    "TrickcalRevive.Data",
-    "TrickcalRevive.Domain",
-    "TrickcalRevive.Infra",
-    "TrickcalRevive.MainUI"
+    "spine-csharp",
+    "spine-unity",
+    "Unity.TextMeshPro",
+    "Unity.UGUI"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

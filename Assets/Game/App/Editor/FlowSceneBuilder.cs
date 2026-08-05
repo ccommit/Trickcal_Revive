@@ -1,4 +1,4 @@
-using System.IO;
+using System;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -8,66 +8,63 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-using TrickcalRevive.App;
+using Spine.Unity;
+using TrickcalRevive.MainUI;
 using TrickcalRevive.Presentation;
 
 namespace TrickcalRevive.App.Editor
 {
-    // 로그인->로비 구조 씬을 코드로 생성한다. 화면 배치(스프라이트·레이아웃)는 여기서
-    // 하지 않는다 — 컨트롤러가 붙은 빈 GameObject, DI 배선(SerializeField 참조),
-    // 그리고 어떤 UI 작업이든 요구하는 최소 기반(Camera/Canvas/EventSystem)까지만
-    // 만들고, 실제 화면 구성은 이후 UI 작업에서 이 GameObject들에 얹는다.
     public static class FlowSceneBuilder
     {
-        private const float ReferenceWidth = 1080f;
-        private const float ReferenceHeight = 1920f;
+        public const float ReferenceWidth = 2560f;
+        public const float ReferenceHeight = 1440f;
+
+        public const string LoginScenePath = "Assets/Scenes/Flow/Login.unity";
+        public const string MainScenePath = "Assets/Scenes/Flow/Main.unity";
 
         private const string ScenesFolder = "Assets/Scenes/Flow";
-        private const string LoginScenePath = ScenesFolder + "/Login.unity";
-        private const string MainScenePath = ScenesFolder + "/Main.unity";
 
         [MenuItem("Tools/Trickcal Revive/Flow/Build Login-Main Scenes")]
         public static void BuildAll()
         {
-            EnsureFolder();
+            EnsureFolder(ScenesFolder);
+            LoginLobbyUIBuilder.BuildPrefabs();
             BuildLoginScene();
             BuildMainScene();
             RegisterBuildSettings();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
-            Debug.Log("Login/Main 씬 생성 완료.");
-        }
-
-        private static void EnsureFolder()
-        {
-            if (!AssetDatabase.IsValidFolder(ScenesFolder))
-                AssetDatabase.CreateFolder("Assets/Scenes", "Flow");
+            Debug.Log("Login/Main scenes rebuilt at 2560x1440 reference resolution.");
         }
 
         private static void BuildLoginScene()
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
-            // GameApplication을 계층 맨 위에 둔다 — LoginSceneInstaller.Awake()가
-            // GameApplication.RootContainer를 참조하므로, 같은 프레임의 Awake 순서 중
-            // GameApplication이 먼저 돌아야 한다(엔진이 공식 보장하진 않지만, 계층 순서로
-            // 실질적으로 보장된다).
-            BuildBaseline();
-
             var appGo = new GameObject("GameApplication");
             var app = appGo.AddComponent<GameApplication>();
 
             var flowGo = new GameObject("SceneFlowController");
             var flow = flowGo.AddComponent<SceneFlowController>();
+            SetSerializedField(app, "sceneFlowController", flow);
+
+            BuildBaseline(out var camera, out var canvas);
+            BuildTitleBackground(camera);
+
+            var loginPrefab = Require<GameObject>(LoginLobbyUIBuilder.LoginPrefabPath);
+            var loginObject = (GameObject)PrefabUtility.InstantiatePrefab(loginPrefab, scene);
+            loginObject.transform.SetParent(canvas.transform, false);
+            Stretch((RectTransform)loginObject.transform);
+            var loginView = loginObject.GetComponent<LoginScreenView>();
+            if (loginView == null || !loginView.IsReady)
+                throw new InvalidOperationException("LoginScreen prefab is not ready.");
 
             var installerGo = new GameObject("LoginSceneInstaller");
             var installer = installerGo.AddComponent<LoginSceneInstaller>();
-
             var authGo = new GameObject("AuthController");
             var auth = authGo.AddComponent<AuthController>();
-
-            SetSerializedField(app, "sceneFlowController", flow);
             SetSerializedField(installer, "authController", auth);
+            SetSerializedField(installer, "loginScreenView", loginView);
 
             EditorSceneManager.SaveScene(scene, LoginScenePath);
         }
@@ -75,40 +72,57 @@ namespace TrickcalRevive.App.Editor
         private static void BuildMainScene()
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            BuildBaseline(out _, out var canvas);
 
-            BuildBaseline();
+            var lobbyPrefab = Require<GameObject>(LoginLobbyUIBuilder.LobbyPrefabPath);
+            var lobbyObject = (GameObject)PrefabUtility.InstantiatePrefab(lobbyPrefab, scene);
+            lobbyObject.transform.SetParent(canvas.transform, false);
+            Stretch((RectTransform)lobbyObject.transform);
+            var lobbyView = lobbyObject.GetComponent<LobbyScreenView>();
+            if (lobbyView == null || !lobbyView.IsReady)
+                throw new InvalidOperationException("LobbyScreen prefab is not ready.");
 
             var installerGo = new GameObject("MainSceneInstaller");
             var installer = installerGo.AddComponent<MainSceneInstaller>();
-
             var lobbyGo = new GameObject("LobbyController");
             var lobby = lobbyGo.AddComponent<LobbyController>();
-
             var settingsGo = new GameObject("SettingsController");
             var settings = settingsGo.AddComponent<SettingsController>();
 
             SetSerializedField(installer, "lobbyController", lobby);
             SetSerializedField(installer, "settingsController", settings);
+            SetSerializedField(installer, "lobbyScreenView", lobbyView);
             SetSerializedField(lobby, "settingsController", settings);
 
             EditorSceneManager.SaveScene(scene, MainScenePath);
         }
 
-        private static void RegisterBuildSettings()
+        private static void BuildTitleBackground(Camera camera)
         {
-            EditorBuildSettings.scenes = new[]
-            {
-                new EditorBuildSettingsScene(LoginScenePath, true),
-                new EditorBuildSettingsScene(MainScenePath, true)
-            };
+            camera.orthographic = false;
+            camera.fieldOfView = 60f;
+            camera.nearClipPlane = 0.1f;
+            camera.farClipPlane = 100f;
+            camera.transform.position = new Vector3(0f, 0f, 5.5f);
+
+            var skeletonData = Require<SkeletonDataAsset>(LoginLobbyUIBuilder.TitleSkeletonDataPath);
+            var title = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonData);
+            title.name = "Title_Background";
+            title.skeletonDataAsset = skeletonData;
+            title.initialSkinName = TitleBackgroundPresenter.ConfirmedSkin;
+            title.transform.position = new Vector3(0f, 0f, 20f);
+            title.transform.localScale = new Vector3(2f, 2f, 1f);
+            title.GetComponent<MeshRenderer>().sortingOrder = 0;
+            var presenter = title.gameObject.AddComponent<TitleBackgroundPresenter>();
+            presenter.Configure(title);
+            EditorUtility.SetDirty(title);
         }
 
-        // 어떤 화면이든 요구하는 최소 기반. UI 배치 작업이 여기 얹기만 하면 되게 한다.
-        private static void BuildBaseline()
+        private static void BuildBaseline(out Camera camera, out Canvas canvas)
         {
             var cameraGo = new GameObject("Main Camera");
             cameraGo.tag = "MainCamera";
-            var camera = cameraGo.AddComponent<Camera>();
+            camera = cameraGo.AddComponent<Camera>();
             camera.orthographic = true;
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = Color.black;
@@ -116,7 +130,7 @@ namespace TrickcalRevive.App.Editor
             cameraGo.AddComponent<AudioListener>();
 
             var canvasGo = new GameObject("Canvas");
-            var canvas = canvasGo.AddComponent<Canvas>();
+            canvas = canvasGo.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -129,12 +143,52 @@ namespace TrickcalRevive.App.Editor
             eventSystemGo.AddComponent<InputSystemUIInputModule>();
         }
 
+        private static void RegisterBuildSettings()
+        {
+            EditorBuildSettings.scenes = new[]
+            {
+                new EditorBuildSettingsScene(LoginScenePath, true),
+                new EditorBuildSettingsScene(MainScenePath, true)
+            };
+        }
+
+        private static T Require<T>(string path) where T : UnityEngine.Object
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (asset == null)
+                throw new InvalidOperationException($"Required asset is missing: {path}");
+            return asset;
+        }
+
+        private static void EnsureFolder(string path)
+        {
+            var segments = path.Split('/');
+            var current = segments[0];
+            for (var i = 1; i < segments.Length; i++)
+            {
+                var next = current + "/" + segments[i];
+                if (!AssetDatabase.IsValidFolder(next))
+                    AssetDatabase.CreateFolder(current, segments[i]);
+                current = next;
+            }
+        }
+
+        private static void Stretch(RectTransform rect)
+        {
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+        }
+
         private static void SetSerializedField(UnityEngine.Object target, string fieldName, UnityEngine.Object value)
         {
             var serialized = new SerializedObject(target);
             var property = serialized.FindProperty(fieldName);
+            if (property == null)
+                throw new MissingFieldException(target.GetType().Name, fieldName);
             property.objectReferenceValue = value;
-            serialized.ApplyModifiedProperties();
+            serialized.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "TrickcalRevive.MainUI.EditModeTests",
+  "rootNamespace": "TrickcalRevive.MainUI.Tests",
+  "references": [
+    "TrickcalRevive.App",
+    "TrickcalRevive.App.Editor",
+    "TrickcalRevive.MainUI",
+    "Unity.UGUI",
+    "spine-unity",
+    "spine-csharp"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

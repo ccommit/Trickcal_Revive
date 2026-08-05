@@ -6,7 +6,8 @@
     "TrickcalRevive.Data",
     "TrickcalRevive.Domain",
     "TrickcalRevive.Infra",
-    "TrickcalRevive.Presentation"
+    "TrickcalRevive.Presentation",
+    "TrickcalRevive.MainUI"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
