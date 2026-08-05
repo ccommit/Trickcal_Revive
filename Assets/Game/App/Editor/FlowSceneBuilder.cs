@@ -89,10 +89,24 @@ namespace TrickcalRevive.App.Editor
             var settingsGo = new GameObject("SettingsController");
             var settings = settingsGo.AddComponent<SettingsController>();
 
+            // StageSelect/PartySetup 화면(View)은 아직 없다 — UI 배치 전이라 컨트롤러만
+            // 빈 GameObject로 배치한다(로그인/로비 때와 같은 순서: 구조 먼저, 화면은 나중).
+            var stageSelectGo = new GameObject("StageSelectController");
+            var stageSelect = stageSelectGo.AddComponent<StageSelectController>();
+            var stageInfoGo = new GameObject("StageInfoPopupController");
+            var stageInfo = stageInfoGo.AddComponent<StageInfoPopupController>();
+            var partySetupGo = new GameObject("PartySetupController");
+            var partySetup = partySetupGo.AddComponent<PartySetupController>();
+
             SetSerializedField(installer, "lobbyController", lobby);
             SetSerializedField(installer, "settingsController", settings);
             SetSerializedField(installer, "lobbyScreenView", lobbyView);
+            SetSerializedField(installer, "stageSelectController", stageSelect);
+            SetSerializedField(installer, "stageInfoPopupController", stageInfo);
+            SetSerializedField(installer, "partySetupController", partySetup);
             SetSerializedField(lobby, "settingsController", settings);
+            SetSerializedField(stageSelect, "stageInfoPopupController", stageInfo);
+            SetSerializedField(stageInfo, "partySetupController", partySetup);
 
             EditorSceneManager.SaveScene(scene, MainScenePath);
         }

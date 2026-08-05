@@ -6,6 +6,7 @@ namespace TrickcalRevive.Presentation
     public class SceneFlowController : MonoBehaviour, INavigationService
     {
         private NavigationHistory history;
+        private IScreenNavigator screenNavigator;
 
         private void Awake()
         {
@@ -19,9 +20,10 @@ namespace TrickcalRevive.Presentation
         }
 
         /// <summary>GameApplication이 켜질 때 한 번 부른다. Go/Back보다 먼저 호출돼야 한다.</summary>
-        public void Configure(IPopupService popups)
+        public void Configure(IPopupService popups, IScreenNavigator screens = null)
         {
-            history = new NavigationHistory(popups);
+            screenNavigator = screens;
+            history = new NavigationHistory(popups, screens);
         }
 
         public void Go(string sceneId)
@@ -44,6 +46,13 @@ namespace TrickcalRevive.Presentation
         public void Back()
         {
             var result = history.ResolveBack();
+
+            if (result.Type == BackResult.Kind.ScreenChanged)
+            {
+                screenNavigator?.GoBack();
+                return;
+            }
+
             if (result.Type != BackResult.Kind.Navigate)
                 return;
 

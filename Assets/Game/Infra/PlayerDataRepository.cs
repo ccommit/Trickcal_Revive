@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TrickcalRevive.Data.Account;
 using TrickcalRevive.Data.Currency;
 using TrickcalRevive.Data.Character;
@@ -26,11 +27,15 @@ namespace TrickcalRevive.Infra
     {
         private readonly ISessionService sessionService;
         private readonly AccountSaveHandler accountHandler;
+        private readonly PartySaveHandler partyHandler;
+        private readonly StageProgressSaveHandler stageProgressHandler;
 
         public PlayerDataRepository(IFileStore fileStore, ISessionService sessionService, SaveManager saveManager)
         {
             this.sessionService = sessionService;
             accountHandler = new AccountSaveHandler(fileStore);
+            partyHandler = new PartySaveHandler(fileStore);
+            stageProgressHandler = new StageProgressSaveHandler(fileStore);
         }
 
         public AccountData GetAccount()
@@ -54,11 +59,19 @@ namespace TrickcalRevive.Infra
             };
         }
 
-        public List<PlayerCharacterData> GetOwnedCharacters() => throw new NotImplementedException();
+        // 사도 지급(가챠/스타터) 자체가 아직 없다 — "0개 보유"가 지금 시점의 실제 상태다.
+        public List<PlayerCharacterData> GetOwnedCharacters() => new List<PlayerCharacterData>();
         public void GrantCharacter(string characterId, int star) => throw new NotImplementedException();
         public void AddCharacterShard(string characterId, int count) => throw new NotImplementedException();
 
-        public List<PlayerPartySlotData> GetPartySlots(string partyId) => throw new NotImplementedException();
+        public List<PlayerPartySlotData> GetPartySlots(string partyId)
+        {
+            var accountId = sessionService.GetSession();
+            if (accountId == null)
+                return new List<PlayerPartySlotData>();
+
+            return partyHandler.Load(accountId).Where(slot => slot.PartyId == partyId).ToList();
+        }
 
         public long GetAmount(CurrencyType currencyType) => throw new NotImplementedException();
         public bool TryConsume(CurrencyType currencyType, long amount) => throw new NotImplementedException();
@@ -70,6 +83,29 @@ namespace TrickcalRevive.Infra
         public long GetCharacterShardCount(string characterId) => throw new NotImplementedException();
         public bool TryConsumeCharacterShard(string characterId, int count) => throw new NotImplementedException();
 
-        public PlayerStageProgressData GetStageProgress(string stageId) => throw new NotImplementedException();
+        public PlayerStageProgressData GetStageProgress(string stageId)
+        {
+            var accountId = sessionService.GetSession();
+            if (accountId == null)
+                return null;
+
+            return stageProgressHandler.Load(accountId).FirstOrDefault(progress => progress.StageId == stageId);
+        }
+
+        public void SaveStageProgress(PlayerStageProgressData progress)
+        {
+            var accountId = sessionService.GetSession();
+            if (accountId == null)
+                return;
+
+            var all = stageProgressHandler.Load(accountId);
+            var index = all.FindIndex(p => p.StageId == progress.StageId);
+            if (index >= 0)
+                all[index] = progress;
+            else
+                all.Add(progress);
+
+            stageProgressHandler.Save(accountId, all);
+        }
     }
 }

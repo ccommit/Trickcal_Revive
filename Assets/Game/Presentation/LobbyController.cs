@@ -9,7 +9,6 @@ using TrickcalRevive.MainUI;
 
 namespace TrickcalRevive.Presentation
 {
-    // OpenAdventure()(스테이지 진입)는 03_파티편성 이슈에서 채운다.
     public class LobbyController : MonoBehaviour
     {
         private IPopupService popups;
@@ -17,18 +16,21 @@ namespace TrickcalRevive.Presentation
         private IAccountRepository accountRepository;
         private ICurrencyRepository currencyRepository;
         private INavigationService navigationService;
+        private IScreenNavigator screenNavigator;
         private LobbyScreenView view;
 
         public void Configure(
             IAccountRepository accounts,
             ICurrencyRepository currencies,
             IPopupService popups,
-            INavigationService navigation = null)
+            INavigationService navigation = null,
+            IScreenNavigator screens = null)
         {
             accountRepository = accounts;
             currencyRepository = currencies;
             this.popups = popups;
             navigationService = navigation;
+            screenNavigator = screens;
         }
 
         public void AttachView(LobbyScreenView lobbyView)
@@ -40,6 +42,7 @@ namespace TrickcalRevive.Presentation
 
             view.SettingsRequested += HandleSettingsRequested;
             view.LogoutRequested += HandleLogoutRequested;
+            view.AdventureRequested += HandleAdventureRequested;
             RefreshView();
         }
 
@@ -57,6 +60,13 @@ namespace TrickcalRevive.Presentation
         {
             popups.Open("Settings");
             return settingsController;
+        }
+
+        /// <summary>스테이지 선택 화면으로. 별도 씬이 아니라 Main씬 내부 화면 전환이다
+        /// (02_로비화면전환_설계서 §2.4, §0의 AdventureController 흡수 결정).</summary>
+        public void OpenAdventure()
+        {
+            screenNavigator?.Show(ScreenIds.StageSelect);
         }
 
         public void RefreshView()
@@ -94,6 +104,7 @@ namespace TrickcalRevive.Presentation
 
             view.SettingsRequested -= HandleSettingsRequested;
             view.LogoutRequested -= HandleLogoutRequested;
+            view.AdventureRequested -= HandleAdventureRequested;
             view = null;
         }
 
@@ -108,6 +119,11 @@ namespace TrickcalRevive.Presentation
             settingsController.Logout();
             view?.SetSettingsOpen(false);
             navigationService?.Go(SceneIds.Login);
+        }
+
+        private void HandleAdventureRequested()
+        {
+            OpenAdventure();
         }
 
         private static long AmountFor(List<PlayerCurrencyData> currencies, string currencyType)
