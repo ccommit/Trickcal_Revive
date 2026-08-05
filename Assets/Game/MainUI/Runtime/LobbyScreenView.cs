@@ -36,6 +36,9 @@ namespace TrickcalRevive.MainUI
 
         public event Action SettingsRequested;
         public event Action LogoutRequested;
+        public event Action RecruitRequested;
+        public event Action ApostleRequested;
+        public event Action AdventureRequested;
 
         public bool IsReady =>
             background != null
@@ -45,15 +48,13 @@ namespace TrickcalRevive.MainUI
             && profileExperienceFill != null
             && goldLabel != null
             && elleafLabel != null
-            && macaronLabel != null
             && staminaLabel != null
             && settingsButton != null
             && settingsMenu != null
             && logoutButton != null
             && recruitButton != null
             && apostleButton != null
-            && adventureButton != null
-            && statusLabel != null;
+            && adventureButton != null;
 
         public string ProfileName => profileNameLabel != null ? profileNameLabel.text : string.Empty;
         public string ProfileLevel => profileLevelLabel != null ? profileLevelLabel.text : string.Empty;
@@ -62,6 +63,9 @@ namespace TrickcalRevive.MainUI
         public string Macaron => macaronLabel != null ? macaronLabel.text : string.Empty;
         public string Stamina => staminaLabel != null ? staminaLabel.text : string.Empty;
         public bool IsSettingsOpen => settingsMenu != null && settingsMenu.activeSelf;
+        public Button RecruitButton => recruitButton;
+        public Button ApostleButton => apostleButton;
+        public Button AdventureButton => adventureButton;
 
         public void Configure(
             Image lobbyBackground,
@@ -95,32 +99,29 @@ namespace TrickcalRevive.MainUI
             apostleButton = apostle;
             adventureButton = adventure;
             statusLabel = status;
-
-            if (recruitButton != null)
-                recruitButton.interactable = false;
-            if (apostleButton != null)
-                apostleButton.interactable = false;
-            if (adventureButton != null)
-                adventureButton.interactable = false;
         }
 
         private void Awake()
         {
             SetSettingsOpen(false);
-            if (statusLabel != null)
-                statusLabel.text = "Navigation opens in later content milestones.";
         }
 
         private void OnEnable()
         {
             settingsButton?.onClick.AddListener(RaiseSettingsRequested);
             logoutButton?.onClick.AddListener(RaiseLogoutRequested);
+            recruitButton?.onClick.AddListener(RaiseRecruitRequested);
+            apostleButton?.onClick.AddListener(RaiseApostleRequested);
+            adventureButton?.onClick.AddListener(RaiseAdventureRequested);
         }
 
         private void OnDisable()
         {
             settingsButton?.onClick.RemoveListener(RaiseSettingsRequested);
             logoutButton?.onClick.RemoveListener(RaiseLogoutRequested);
+            recruitButton?.onClick.RemoveListener(RaiseRecruitRequested);
+            apostleButton?.onClick.RemoveListener(RaiseApostleRequested);
+            adventureButton?.onClick.RemoveListener(RaiseAdventureRequested);
         }
 
         public void RenderProfile(string nickname, int level, int experience, int experienceToNextLevel)
@@ -171,6 +172,21 @@ namespace TrickcalRevive.MainUI
         private void RaiseLogoutRequested()
         {
             LogoutRequested?.Invoke();
+        }
+
+        private void RaiseRecruitRequested()
+        {
+            RecruitRequested?.Invoke();
+        }
+
+        private void RaiseApostleRequested()
+        {
+            ApostleRequested?.Invoke();
+        }
+
+        private void RaiseAdventureRequested()
+        {
+            AdventureRequested?.Invoke();
         }
     }
 }

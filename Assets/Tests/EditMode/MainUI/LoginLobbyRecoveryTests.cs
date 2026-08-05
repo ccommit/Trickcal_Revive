@@ -1,6 +1,9 @@
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Spine.Unity;
+using TMPro;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -64,6 +67,66 @@ namespace TrickcalRevive.MainUI.Tests
             Assert.That(GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(lobby), Is.Zero);
         }
 
+        [Test]
+        public void LobbyChromeManifest_RecordsNineResourcesAndTheirMetaFiles()
+        {
+            const string manifestPath = "Recovery/Manifests/lobby-ui-chrome.json";
+            Assert.That(File.Exists(manifestPath), Is.True, manifestPath);
+            var json = File.ReadAllText(manifestPath);
+            Assert.That(Regex.Matches(json, "\\\"outputRelativePath\\\"").Count, Is.EqualTo(18));
+            StringAssert.Contains("issue8-lobby-ui-chrome", json);
+            StringAssert.Contains("MainLobby_BattleBtn_Uros.png", json);
+            StringAssert.Contains("ONE Mobile POP.ttf", json);
+            StringAssert.DoesNotContain("E:\\\\", json);
+        }
+
+        [Test]
+        public void LobbyPrefab_UsesConfirmedChromeAndThreeInteractiveButtons()
+        {
+            var lobby = AssetDatabase.LoadAssetAtPath<GameObject>(LoginLobbyUIBuilder.LobbyPrefabPath);
+            Assert.That(lobby, Is.Not.Null);
+
+            var profile = lobby.transform.Find("ProfilePanel").GetComponent<Image>();
+            Assert.That(
+                AssetDatabase.GetAssetPath(profile.sprite),
+                Is.EqualTo("Assets/Game/Content/UI/Lobby/Chrome/MainLobby_UserInfoBase.png"));
+
+            var currencyPanels = lobby.transform.Cast<Transform>()
+                .Where(child => child.name.EndsWith("Currency"))
+                .ToArray();
+            Assert.That(currencyPanels.Select(child => child.name), Is.EquivalentTo(new[]
+            {
+                "StaminaCurrency",
+                "GoldCurrency",
+                "ElleafCurrency"
+            }));
+            foreach (var currencyPanel in currencyPanels)
+            {
+                var image = currencyPanel.GetComponent<Image>();
+                Assert.That(
+                    AssetDatabase.GetAssetPath(image.sprite),
+                    Is.EqualTo("Assets/Game/Content/UI/Lobby/Chrome/TopMenu_Base.png"));
+                Assert.That(currencyPanel.GetComponent<RectTransform>().sizeDelta, Is.EqualTo(new Vector2(336f, 76f)));
+                Assert.That(currencyPanel.Find("Plus").GetComponent<RectTransform>().sizeDelta, Is.EqualTo(new Vector2(76f, 76f)));
+            }
+
+            AssertLobbyButton(
+                lobby,
+                "RecruitButton",
+                "모집",
+                "Assets/Game/Content/UI/Lobby/Chrome/GachaButton.png");
+            AssertLobbyButton(
+                lobby,
+                "ApostleButton",
+                "사도",
+                "Assets/Game/Content/UI/Lobby/Chrome/HeroButton.png");
+            AssertLobbyButton(
+                lobby,
+                "AdventureButton",
+                "모험",
+                "Assets/Game/Content/UI/Lobby/Chrome/MainLobby_BattleBtn_Uros.png");
+        }
+
         [TestCase(FlowSceneBuilder.LoginScenePath, typeof(LoginScreenView))]
         [TestCase(FlowSceneBuilder.MainScenePath, typeof(LobbyScreenView))]
         public void FlowScene_UsesLandscapeReferenceAndExpectedView(string scenePath, System.Type viewType)
@@ -87,6 +150,34 @@ namespace TrickcalRevive.MainUI.Tests
             Assert.That(scenes[0].path, Is.EqualTo(FlowSceneBuilder.LoginScenePath));
             Assert.That(scenes[1].enabled, Is.True);
             Assert.That(scenes[1].path, Is.EqualTo(FlowSceneBuilder.MainScenePath));
+        }
+
+        private static void AssertLobbyButton(
+            GameObject lobby,
+            string buttonName,
+            string expectedLabel,
+            string expectedIconPath)
+        {
+            var button = lobby.GetComponentsInChildren<Button>(true)
+                .Single(candidate => candidate.name == buttonName);
+            Assert.That(button.interactable, Is.True);
+            Assert.That(button.GetComponent<RectTransform>().sizeDelta, Is.EqualTo(new Vector2(207f, 252f)));
+            Assert.That(
+                AssetDatabase.GetAssetPath(button.transform.Find("Base").GetComponent<Image>().sprite),
+                Is.EqualTo("Assets/Game/Content/UI/Lobby/Chrome/MainLobby_BtnBg.png"));
+            Assert.That(
+                AssetDatabase.GetAssetPath(button.transform.Find("RecoveredIcon").GetComponent<Image>().sprite),
+                Is.EqualTo(expectedIconPath));
+
+            var label = button.transform.Find("Label").GetComponent<TMP_Text>();
+            Assert.That(label.text, Is.EqualTo(expectedLabel));
+            Assert.That(AssetDatabase.GetAssetPath(label.font), Is.EqualTo(LoginLobbyUIBuilder.LobbyFontAssetPath));
+
+            var feedback = button.GetComponent<LobbyButtonPressFeedback>();
+            Assert.That(feedback, Is.Not.Null);
+            Assert.That(feedback.BaseScale, Is.EqualTo(Vector2.one));
+            Assert.That(feedback.PressedScale, Is.EqualTo(new Vector2(0.9f, 1.2f)));
+            Assert.That(feedback.ReleaseScale, Is.EqualTo(new Vector2(1.1f, 0.9f)));
         }
     }
 }

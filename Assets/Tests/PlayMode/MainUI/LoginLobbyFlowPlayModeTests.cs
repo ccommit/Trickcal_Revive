@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEngine.UI;
@@ -60,6 +61,25 @@ namespace TrickcalRevive.MainUI.Tests
             Assert.That(lobbyView.ProfileLevel, Is.EqualTo("Lv.1"));
             Assert.That(lobbyView.Gold, Is.EqualTo("0"));
             Assert.That(lobbyView.Stamina, Is.EqualTo("21/21"));
+
+            var feedback = lobbyView.RecruitButton.GetComponent<LobbyButtonPressFeedback>();
+            Assert.That(feedback, Is.Not.Null);
+            var pointer = new PointerEventData(EventSystem.current);
+            ExecuteEvents.Execute(
+                lobbyView.RecruitButton.gameObject,
+                pointer,
+                ExecuteEvents.pointerDownHandler);
+            yield return new WaitForSecondsRealtime(0.12f);
+            Assert.That(feedback.CurrentScale.x, Is.EqualTo(0.9f).Within(0.02f));
+            Assert.That(feedback.CurrentScale.y, Is.EqualTo(1.2f).Within(0.02f));
+
+            ExecuteEvents.Execute(
+                lobbyView.RecruitButton.gameObject,
+                pointer,
+                ExecuteEvents.pointerUpHandler);
+            yield return new WaitForSecondsRealtime(0.22f);
+            Assert.That(feedback.CurrentScale.x, Is.EqualTo(1f).Within(0.02f));
+            Assert.That(feedback.CurrentScale.y, Is.EqualTo(1f).Within(0.02f));
 
             Click(lobbyView, "SettingsButton");
             Assert.That(lobbyView.IsSettingsOpen, Is.True);

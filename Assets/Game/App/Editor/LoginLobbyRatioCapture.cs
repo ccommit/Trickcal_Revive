@@ -28,7 +28,8 @@ namespace TrickcalRevive.App.Editor
         private static readonly CaptureSize[] Sizes =
         {
             new CaptureSize(1920, 1080, "16x9"),
-            new CaptureSize(1440, 1080, "4x3")
+            new CaptureSize(1440, 1080, "4x3"),
+            new CaptureSize(2200, 1000, "reference-wide")
         };
 
         [MenuItem("Tools/Trickcal Revive/Flow/Capture Login-Lobby Ratios")]

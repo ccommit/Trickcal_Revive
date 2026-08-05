@@ -5,6 +5,7 @@
     "TrickcalRevive.App",
     "TrickcalRevive.App.Editor",
     "TrickcalRevive.MainUI",
+    "Unity.TextMeshPro",
     "Unity.UGUI",
     "spine-unity",
     "spine-csharp"

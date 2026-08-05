@@ -23,6 +23,9 @@ namespace TrickcalRevive.App.Editor
         private const string FontPath =
             "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset";
         private const string LobbyRoot = "Assets/Game/Content/UI/Lobby";
+        private const string LobbyChromeRoot = "Assets/Game/Content/UI/Lobby/Chrome";
+        private const string LobbyFontSourcePath = "Assets/Game/Content/UI/Fonts/ONE Mobile POP.ttf";
+        public const string LobbyFontAssetPath = "Assets/Game/Content/UI/Fonts/ONE Mobile POP SDF.asset";
 
         private static readonly Color CardColor = new Color32(37, 31, 42, 244);
         private static readonly Color FieldColor = new Color32(66, 57, 72, 255);
@@ -34,11 +37,42 @@ namespace TrickcalRevive.App.Editor
         {
             EnsureFolder("Assets/Game/MainUI/Prefabs");
             ConfigureTitleMaterialForLinearColorSpace();
-            var font = Require<TMP_FontAsset>(FontPath);
-            BuildLoginPrefab(font);
-            BuildLobbyPrefab(font);
+            var loginFont = Require<TMP_FontAsset>(FontPath);
+            var lobbyFont = EnsureLobbyFont();
+            BuildLoginPrefab(loginFont);
+            BuildLobbyPrefab(lobbyFont);
             AssetDatabase.SaveAssets();
             Debug.Log("Login/Lobby UI prefabs built.");
+        }
+
+        private static TMP_FontAsset EnsureLobbyFont()
+        {
+            var fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(LobbyFontAssetPath);
+            if (fontAsset == null)
+            {
+                EnsureFolder("Assets/Game/Content/UI/Fonts");
+                var sourceFont = Require<Font>(LobbyFontSourcePath);
+                fontAsset = TMP_FontAsset.CreateFontAsset(sourceFont);
+                if (fontAsset == null)
+                    throw new InvalidOperationException($"Could not create TMP font from {LobbyFontSourcePath}");
+
+                fontAsset.name = "ONE Mobile POP SDF";
+                fontAsset.atlasTexture.name = "ONE Mobile POP SDF Atlas";
+                fontAsset.material.name = "ONE Mobile POP SDF Material";
+                AssetDatabase.CreateAsset(fontAsset, LobbyFontAssetPath);
+                AssetDatabase.AddObjectToAsset(fontAsset.atlasTexture, fontAsset);
+                AssetDatabase.AddObjectToAsset(fontAsset.material, fontAsset);
+            }
+
+            const string requiredGlyphs = "모집사도모험새로운교주설정로그아웃회복미리보기";
+            if (!fontAsset.TryAddCharacters(requiredGlyphs, out var missingCharacters))
+            {
+                throw new InvalidOperationException(
+                    $"Lobby font is missing required Korean glyphs: {missingCharacters}");
+            }
+
+            EditorUtility.SetDirty(fontAsset);
+            return fontAsset;
         }
 
         private static void ConfigureTitleMaterialForLinearColorSpace()
@@ -123,13 +157,13 @@ namespace TrickcalRevive.App.Editor
         private static void BuildLobbyPrefab(TMP_FontAsset font)
         {
             var backgroundSprite = Require<Sprite>(LobbyRoot + "/Background/Lobby_Default.png");
-            var currencyBase = Require<Sprite>(LobbyRoot + "/Sprites/TopMenu_CurrencyBase.png");
-            var plus = Require<Sprite>(LobbyRoot + "/Sprites/TopMenu_Plus.png");
-            var profileBase = Require<Sprite>(LobbyRoot + "/Sprites/MainLobby_UserInfoBase.png");
-            var levelBase = Require<Sprite>(LobbyRoot + "/Sprites/MainLobby_LevelBase.png");
+            var currencyValueBase = Require<Sprite>(LobbyChromeRoot + "/TopMenu_Base.png");
+            var currencyPlusBase = Require<Sprite>(LobbyChromeRoot + "/TopMenu_CurrencyBase.png");
+            var profileBase = Require<Sprite>(LobbyChromeRoot + "/MainLobby_UserInfoBase.png");
+            var levelBase = Require<Sprite>(LobbyChromeRoot + "/MainLobby_LevelBase.png");
             var buttonBase = Require<Sprite>(LobbyRoot + "/Sprites/TopMenu_ButtonBase.png");
             var menuIcon = Require<Sprite>(LobbyRoot + "/Sprites/TopMenu_IconMenu.png");
-            var navigationBase = Require<Sprite>(LobbyRoot + "/Sprites/MainLobby_BtnBg.png");
+            var navigationBase = Require<Sprite>(LobbyChromeRoot + "/MainLobby_BtnBg.png");
 
             var root = RectObject("LobbyScreen", null);
             Stretch((RectTransform)root.transform);
@@ -138,69 +172,150 @@ namespace TrickcalRevive.App.Editor
             Stretch(background.rectTransform);
             background.raycastTarget = false;
 
-            var topShade = Image(root.transform, "TopShade", new Color32(18, 15, 22, 130));
-            SetRect(topShade.rectTransform, new Vector2(0f, 1f), Vector2.one, new Vector2(0f, -170f), Vector2.zero);
-            topShade.raycastTarget = false;
-
             var profile = Image(root.transform, "ProfilePanel", Color.white, profileBase);
-            Anchored(profile.rectTransform, new Vector2(0f, 1f), new Vector2(195f, -82f), new Vector2(360f, 128f), new Vector2(0f, 1f));
-            profile.preserveAspect = true;
-            var profileName = Text(profile.transform, "ProfileName", "New Leader", font, 21f, TextAlignmentOptions.MidlineLeft, Color.white);
-            SetRect(profileName.rectTransform, new Vector2(0.16f, 0.43f), new Vector2(0.78f, 1f), Vector2.zero, new Vector2(0f, -8f));
+            Anchored(
+                profile.rectTransform,
+                new Vector2(0f, 1f),
+                new Vector2(92f, -32f),
+                new Vector2(578f, 112f),
+                new Vector2(0f, 1f));
+            profile.type = UnityEngine.UI.Image.Type.Sliced;
+
+            // The account portrait is dynamic in the original client.  Until account
+            // portrait data is restored, the confirmed HeroButton art is used as a
+            // visibly marked reconstruction inside the confirmed green profile chrome.
+            var avatarFrame = Image(profile.transform, "ProfileAvatarFrame", Color.white, buttonBase);
+            Anchored(avatarFrame.rectTransform, new Vector2(0f, 0.5f), new Vector2(35f, 0f), new Vector2(132f, 132f));
+            avatarFrame.preserveAspect = true;
+            avatarFrame.raycastTarget = false;
+            var avatar = Image(
+                avatarFrame.transform,
+                "ProfileAvatarReconstructed",
+                Color.white,
+                Require<Sprite>(LobbyChromeRoot + "/HeroButton.png"));
+            Anchored(avatar.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, 3f), new Vector2(103f, 103f));
+            avatar.preserveAspect = true;
+            avatar.raycastTarget = false;
+
+            var profileName = Text(
+                profile.transform,
+                "ProfileName",
+                "새로운 교주",
+                font,
+                30f,
+                TextAlignmentOptions.MidlineLeft,
+                Color.white);
+            Anchored(
+                profileName.rectTransform,
+                new Vector2(0f, 1f),
+                new Vector2(150f, -31f),
+                new Vector2(350f, 44f),
+                new Vector2(0f, 1f));
             var levelImage = Image(profile.transform, "LevelBase", Color.white, levelBase);
-            Anchored(levelImage.rectTransform, new Vector2(1f, 0.5f), new Vector2(-46f, 5f), new Vector2(76f, 66f));
-            levelImage.preserveAspect = true;
-            var profileLevel = Text(levelImage.transform, "Level", "Lv.1", font, 18f, TextAlignmentOptions.Center, Color.white);
-            Stretch(profileLevel.rectTransform, 4f);
-            var expTrack = Image(profile.transform, "ExperienceTrack", new Color32(31, 27, 33, 255));
-            SetRect(expTrack.rectTransform, new Vector2(0.21f, 0.12f), new Vector2(0.70f, 0.25f), Vector2.zero, Vector2.zero);
-            var expFill = Image(expTrack.transform, "Fill", AccentColor);
+            Anchored(
+                levelImage.rectTransform,
+                new Vector2(0f, 0f),
+                new Vector2(150f, 25f),
+                new Vector2(102f, 38f),
+                new Vector2(0f, 0.5f));
+            levelImage.type = UnityEngine.UI.Image.Type.Sliced;
+            var profileLevel = Text(
+                levelImage.transform,
+                "Level",
+                "Lv.1",
+                font,
+                22f,
+                TextAlignmentOptions.Center,
+                new Color32(39, 88, 39, 255));
+            Stretch(profileLevel.rectTransform, 2f);
+            var expTrack = Image(profile.transform, "ExperienceTrack", new Color32(36, 70, 44, 255));
+            Anchored(
+                expTrack.rectTransform,
+                new Vector2(0f, 0f),
+                new Vector2(268f, 25f),
+                new Vector2(200f, 17f),
+                new Vector2(0f, 0.5f));
+            var expFill = Image(expTrack.transform, "Fill", new Color32(55, 235, 204, 255));
             Stretch(expFill.rectTransform);
             expFill.type = UnityEngine.UI.Image.Type.Filled;
             expFill.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal;
             expFill.fillAmount = 0f;
 
-            var gold = Currency(root.transform, "Gold", Require<Sprite>(LobbyRoot + "/Sprites/Currency_Gold.png"), currencyBase, plus, font, -1010f);
-            var macaron = Currency(root.transform, "Macaron", Require<Sprite>(LobbyRoot + "/Sprites/Currency_Macaron.png"), currencyBase, plus, font, -770f);
-            var stamina = Currency(root.transform, "Stamina", Require<Sprite>(LobbyRoot + "/Sprites/Currency_Stamina.png"), currencyBase, plus, font, -530f);
-            var elleaf = Currency(root.transform, "Elleaf", Require<Sprite>(LobbyRoot + "/Sprites/Currency_Elif.png"), currencyBase, plus, font, -290f);
+            // TopCurrencySlot.prefab serializes a 336x76 sliced value base, a 90x90
+            // currency icon, and a 76x76 plus base.  The screenshot shows three slots.
+            var stamina = Currency(
+                root.transform,
+                "Stamina",
+                Require<Sprite>(LobbyRoot + "/Sprites/Currency_Stamina.png"),
+                currencyValueBase,
+                currencyPlusBase,
+                font,
+                -1082f);
+            var gold = Currency(
+                root.transform,
+                "Gold",
+                Require<Sprite>(LobbyRoot + "/Sprites/Currency_Gold.png"),
+                currencyValueBase,
+                currencyPlusBase,
+                font,
+                -736f);
+            var elleaf = Currency(
+                root.transform,
+                "Elleaf",
+                Require<Sprite>(LobbyRoot + "/Sprites/Currency_Elif.png"),
+                currencyValueBase,
+                currencyPlusBase,
+                font,
+                -390f);
 
             var settingsButton = Button(root.transform, "SettingsButton", string.Empty, font, Color.white, buttonBase);
-            Anchored(settingsButton.GetComponent<RectTransform>(), new Vector2(1f, 1f), new Vector2(-67f, -82f), new Vector2(105f, 105f), new Vector2(1f, 1f));
+            Anchored(
+                settingsButton.GetComponent<RectTransform>(),
+                new Vector2(1f, 1f),
+                new Vector2(-64f, -48f),
+                new Vector2(96f, 96f),
+                new Vector2(1f, 1f));
             var settingsIcon = Image(settingsButton.transform, "Icon", Color.white, menuIcon);
-            Anchored(settingsIcon.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(58f, 58f));
+            Anchored(settingsIcon.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(54f, 54f));
             settingsIcon.preserveAspect = true;
             settingsIcon.raycastTarget = false;
 
-            var bottomShade = Image(root.transform, "BottomShade", new Color32(18, 15, 22, 145));
-            SetRect(bottomShade.rectTransform, Vector2.zero, new Vector2(1f, 0f), Vector2.zero, new Vector2(0f, 220f));
-            bottomShade.raycastTarget = false;
-
             var recruit = NavigationButton(
-                root.transform, "RecruitButton", "RECRUIT", navigationBase,
-                Require<Sprite>(LobbyRoot + "/Sprites/Lobby_GachaButton.png"), font, -340f);
-            var apostle = NavigationButton(
-                root.transform, "ApostleButton", "APOSTLE", navigationBase,
-                Require<Sprite>(LobbyRoot + "/Sprites/Lobby_HeroButton.png"), font, 0f);
-            var adventure = NavigationButton(
-                root.transform, "AdventureButton", "ADVENTURE", navigationBase,
-                Require<Sprite>(LobbyRoot + "/Sprites/Lobby_StoryButton.png"), font, 340f);
-
-            var status = Text(
                 root.transform,
-                "ScopeStatus",
-                "Lobby resource recovery preview - navigation is reserved for later branches.",
+                "RecruitButton",
+                "모집",
+                navigationBase,
+                Require<Sprite>(LobbyChromeRoot + "/GachaButton.png"),
                 font,
-                18f,
-                TextAlignmentOptions.MidlineLeft,
-                new Color32(228, 220, 232, 255));
-            Anchored(status.rectTransform, new Vector2(0f, 0f), new Vector2(28f, 24f), new Vector2(850f, 44f), Vector2.zero);
+                -300f,
+                new Vector2(174f, 174f),
+                new Vector2(0f, 142f));
+            var apostle = NavigationButton(
+                root.transform,
+                "ApostleButton",
+                "사도",
+                navigationBase,
+                Require<Sprite>(LobbyChromeRoot + "/HeroButton.png"),
+                font,
+                0f,
+                new Vector2(174f, 174f),
+                new Vector2(0f, 142f));
+            var adventure = NavigationButton(
+                root.transform,
+                "AdventureButton",
+                "모험",
+                navigationBase,
+                Require<Sprite>(LobbyChromeRoot + "/MainLobby_BattleBtn_Uros.png"),
+                font,
+                300f,
+                new Vector2(248f, 233f),
+                new Vector2(0f, 178f));
 
             var settingsMenu = Image(root.transform, "SettingsMenu", new Color32(37, 30, 41, 248));
             Anchored(settingsMenu.rectTransform, new Vector2(1f, 1f), new Vector2(-78f, -198f), new Vector2(380f, 220f), Vector2.one);
-            var settingsTitle = Text(settingsMenu.transform, "Title", "SETTINGS", font, 26f, TextAlignmentOptions.Center, Color.white);
+            var settingsTitle = Text(settingsMenu.transform, "Title", "설정", font, 30f, TextAlignmentOptions.Center, Color.white);
             SetRect(settingsTitle.rectTransform, new Vector2(0f, 0.62f), Vector2.one, Vector2.zero, new Vector2(0f, -6f));
-            var logout = Button(settingsMenu.transform, "LogoutButton", "LOG OUT", font, new Color32(156, 70, 76, 255));
+            var logout = Button(settingsMenu.transform, "LogoutButton", "로그아웃", font, new Color32(156, 70, 76, 255));
             Anchored(logout.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0f, 55f), new Vector2(300f, 72f), new Vector2(0.5f, 0f));
 
             var view = root.AddComponent<LobbyScreenView>();
@@ -211,7 +326,7 @@ namespace TrickcalRevive.App.Editor
                 expFill,
                 gold,
                 elleaf,
-                macaron,
+                null,
                 stamina,
                 settingsButton,
                 settingsMenu.gameObject,
@@ -219,7 +334,7 @@ namespace TrickcalRevive.App.Editor
                 recruit,
                 apostle,
                 adventure,
-                status);
+                null);
             view.SetSettingsOpen(false);
 
             SavePrefab(root, LobbyPrefabPath, view.IsReady);
@@ -230,25 +345,46 @@ namespace TrickcalRevive.App.Editor
             string name,
             Sprite icon,
             Sprite baseSprite,
-            Sprite plusSprite,
+            Sprite plusBaseSprite,
             TMP_FontAsset font,
             float x)
         {
-            var panel = Image(parent, name + "Currency", new Color32(42, 35, 45, 235));
-            Anchored(panel.rectTransform, new Vector2(1f, 1f), new Vector2(x, -82f), new Vector2(225f, 82f), new Vector2(1f, 1f));
+            var panel = Image(parent, name + "Currency", Color.white, baseSprite);
+            Anchored(
+                panel.rectTransform,
+                new Vector2(1f, 1f),
+                new Vector2(x, -48f),
+                new Vector2(336f, 76f),
+                new Vector2(1f, 1f));
+            panel.type = UnityEngine.UI.Image.Type.Sliced;
+            panel.raycastTarget = false;
 
-            var iconBase = Image(panel.transform, "IconBase", Color.white, baseSprite);
-            Anchored(iconBase.rectTransform, new Vector2(0f, 0.5f), new Vector2(38f, 0f), new Vector2(76f, 76f));
-            iconBase.preserveAspect = true;
-            var iconImage = Image(iconBase.transform, "Icon", Color.white, icon);
-            Anchored(iconImage.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(60f, 60f));
+            var iconImage = Image(panel.transform, "Icon", Color.white, icon);
+            Anchored(
+                iconImage.rectTransform,
+                new Vector2(0f, 0.5f),
+                new Vector2(20f, -30f),
+                new Vector2(90f, 90f),
+                new Vector2(0.5f, 0f));
             iconImage.preserveAspect = true;
             iconImage.raycastTarget = false;
 
-            var value = Text(panel.transform, "Value", "0", font, 23f, TextAlignmentOptions.MidlineRight, Color.white);
-            SetRect(value.rectTransform, new Vector2(0.31f, 0f), new Vector2(0.84f, 1f), Vector2.zero, Vector2.zero);
-            var plus = Image(panel.transform, "Plus", Color.white, plusSprite);
-            Anchored(plus.rectTransform, new Vector2(1f, 0.5f), new Vector2(-18f, 0f), new Vector2(31f, 31f));
+            var value = Text(
+                panel.transform,
+                "Value",
+                "0",
+                font,
+                26f,
+                TextAlignmentOptions.MidlineRight,
+                new Color32(39, 39, 34, 255));
+            SetRect(
+                value.rectTransform,
+                Vector2.zero,
+                Vector2.one,
+                new Vector2(92f, 10f),
+                new Vector2(-83f, -10f));
+            var plus = Image(panel.transform, "Plus", Color.white, plusBaseSprite);
+            Anchored(plus.rectTransform, new Vector2(1f, 0.5f), new Vector2(-38f, 0f), new Vector2(76f, 76f));
             plus.preserveAspect = true;
             plus.raycastTarget = false;
             return value;
@@ -261,16 +397,52 @@ namespace TrickcalRevive.App.Editor
             Sprite baseSprite,
             Sprite icon,
             TMP_FontAsset font,
-            float x)
+            float x,
+            Vector2 iconSize,
+            Vector2 iconPosition)
         {
-            var button = Button(parent, name, string.Empty, font, Color.white, baseSprite);
-            Anchored(button.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(x, 112f), new Vector2(300f, 185f), new Vector2(0.5f, 0f));
+            var root = RectObject(name, parent, typeof(Image), typeof(Button));
+            var hitImage = root.GetComponent<Image>();
+            hitImage.color = new Color(1f, 1f, 1f, 0.002f);
+            hitImage.raycastTarget = true;
+            var button = root.GetComponent<Button>();
+            button.targetGraphic = hitImage;
+            button.transition = Selectable.Transition.None;
+            button.interactable = true;
+            var rect = root.GetComponent<RectTransform>();
+            Anchored(rect, new Vector2(0.5f, 0f), new Vector2(x, 126f), new Vector2(207f, 252f));
+
+            var baseImage = Image(root.transform, "Base", Color.white, baseSprite);
+            Anchored(
+                baseImage.rectTransform,
+                new Vector2(0.5f, 0f),
+                new Vector2(0f, 12f),
+                new Vector2(231f, 170f),
+                new Vector2(0.5f, 0f));
+            baseImage.raycastTarget = false;
             var iconImage = Image(button.transform, "RecoveredIcon", Color.white, icon);
-            Anchored(iconImage.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, 12f), new Vector2(185f, 116f));
+            Anchored(iconImage.rectTransform, new Vector2(0.5f, 0f), iconPosition, iconSize);
             iconImage.preserveAspect = true;
             iconImage.raycastTarget = false;
-            var text = Text(button.transform, "Label", label, font, 22f, TextAlignmentOptions.Center, Color.white);
-            SetRect(text.rectTransform, Vector2.zero, new Vector2(1f, 0.28f), new Vector2(8f, 0f), new Vector2(-8f, 0f));
+            var text = Text(
+                button.transform,
+                "Label",
+                label,
+                font,
+                34f,
+                TextAlignmentOptions.Center,
+                new Color32(38, 32, 29, 255));
+            Anchored(text.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 49f), new Vector2(170f, 52f));
+            text.fontStyle = FontStyles.Bold;
+            text.outlineColor = Color.white;
+            text.outlineWidth = 0.2f;
+
+            var feedback = root.AddComponent<LobbyButtonPressFeedback>();
+            feedback.Configure(
+                rect,
+                Vector2.one,
+                new Vector2(0.9f, 1.2f),
+                new Vector2(1.1f, 0.9f));
             return button;
         }
 
