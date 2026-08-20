@@ -48,8 +48,8 @@ namespace TrickcalRevive.Infra.Tests
         private JsonFileRepository files;
         private SessionService session;
         private AccountAuthRepository accountAuth;
-        private SaveManager saveManager;
-        private PlayerDataRepository playerData;
+        private PartyRepository parties;
+        private PlayerCharacterRepository playerCharacters;
 
         [SetUp]
         public void SetUp()
@@ -58,8 +58,8 @@ namespace TrickcalRevive.Infra.Tests
             files = new JsonFileRepository(tempRoot);
             session = new SessionService(files);
             accountAuth = new AccountAuthRepository(files, new PlaintextPasswordHasher());
-            saveManager = new SaveManager(files, session);
-            playerData = new PlayerDataRepository(files, session, saveManager);
+            parties = new PartyRepository(files, session);
+            playerCharacters = new PlayerCharacterRepository(session);
 
             accountAuth.CreateAccount("player1", "pw", "닉네임");
             session.SaveSession("player1");
@@ -81,7 +81,7 @@ namespace TrickcalRevive.Infra.Tests
                 new PlayerPartySlotData { PartyId = "party_main", PlayerCharacterId = "a", PosX = 1, PosY = 1 }
             });
 
-            var slots = playerData.GetPartySlots("party_main");
+            var slots = parties.GetPartySlots("party_main");
 
             Assert.That(slots, Has.Count.EqualTo(1));
             Assert.That(slots[0].PlayerCharacterId, Is.EqualTo("a"));
@@ -93,11 +93,11 @@ namespace TrickcalRevive.Infra.Tests
             var controller = new GameObject("PartySetupController").AddComponent<PartySetupController>();
             var stages = new FakeStageRepository();
             controller.Configure(
-                playerData,
-                playerData,
+                parties,
+                playerCharacters,
                 new PartyFormationValidator(),
-                new BattleStartRequestBuilder(playerData),
-                new BattleContextBuilder(stages, playerData));
+                new BattleStartRequestBuilder(parties),
+                new BattleContextBuilder(stages, parties));
 
             controller.SelectCharacter("hero_1");
             var assignResult = controller.AssignToSlot(1, 1);
@@ -120,11 +120,11 @@ namespace TrickcalRevive.Infra.Tests
                 Stage = new StageMasterData { StageId = "stage_1", WavesJson = "", RewardsJson = "{}" }
             };
             controller.Configure(
-                playerData,
-                playerData,
+                parties,
+                playerCharacters,
                 new PartyFormationValidator(),
-                new BattleStartRequestBuilder(playerData),
-                new BattleContextBuilder(stages, playerData));
+                new BattleStartRequestBuilder(parties),
+                new BattleContextBuilder(stages, parties));
             controller.EnterForStage("stage_1");
             controller.SelectCharacter("hero_1");
             controller.AssignToSlot(1, 1);
@@ -144,11 +144,11 @@ namespace TrickcalRevive.Infra.Tests
             var controller = new GameObject("PartySetupController").AddComponent<PartySetupController>();
             var stages = new FakeStageRepository { Stage = new StageMasterData { StageId = "stage_1" } };
             controller.Configure(
-                playerData,
-                playerData,
+                parties,
+                playerCharacters,
                 new PartyFormationValidator(),
-                new BattleStartRequestBuilder(playerData),
-                new BattleContextBuilder(stages, playerData));
+                new BattleStartRequestBuilder(parties),
+                new BattleContextBuilder(stages, parties));
             controller.EnterForStage("stage_1");
 
             var result = controller.StartBattle();
@@ -265,11 +265,11 @@ namespace TrickcalRevive.Infra.Tests
         {
             var controller = new GameObject("PartySetupController").AddComponent<PartySetupController>();
             controller.Configure(
-                playerData,
-                playerData,
+                parties,
+                playerCharacters,
                 new PartyFormationValidator(),
-                new BattleStartRequestBuilder(playerData),
-                new BattleContextBuilder(new FakeStageRepository(), playerData));
+                new BattleStartRequestBuilder(parties),
+                new BattleContextBuilder(new FakeStageRepository(), parties));
 
             var repositoryField = typeof(PartySetupController).GetField(
                 "characterRepository",

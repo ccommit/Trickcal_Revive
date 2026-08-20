@@ -61,7 +61,12 @@ namespace TrickcalRevive.App
             var session = new SessionService(files);
             var saveManager = new SaveManager(files, session);
             var masterData = new MasterDataRepository();
-            var playerData = new PlayerDataRepository(files, session, saveManager);
+            var account = new AccountRepository(files, session);
+            var currency = new CurrencyRepository(account);
+            var playerCharacters = new PlayerCharacterRepository(session);
+            var party = new PartyRepository(files, session);
+            var inventory = new InventoryRepository();
+            var stageProgress = new StageProgressRepository(files, session);
             var accountAuth = new AccountAuthRepository(files, new PlaintextPasswordHasher());
             var popups = new PopupService();
             var screens = new ScreenNavigator();
@@ -78,17 +83,17 @@ namespace TrickcalRevive.App
             container.Register<IStageRepository>(masterData);
             container.Register<IGrowthRepository>(masterData);
 
-            // PlayerDataRepository/AccountAuthRepository는 씬 특유의 상태가 없는
+            // 플레이어 데이터 Repository들과 AccountAuthRepository는 씬 특유의 상태가 없는
             // 무상태 데이터 접근자라 루트에 둔다(09_공통기반_설계서 §2.2, 결정 2026-08-05).
             // 씬 컨테이너는 루트만 부모로 삼고 씬↔씬으로는 안 이어지므로(§2.1),
             // MainSceneInstaller에만 등록하면 Battle/Login 씬이 이 서비스들을 못 쓴다.
-            container.Register<IAccountRepository>(playerData);
-            container.Register<IPlayerCharacterRepository>(playerData);
-            container.Register<IPartyRepository>(playerData);
-            container.Register<ICurrencyRepository>(playerData);
-            container.Register<ICurrencyWallet>(playerData);
-            container.Register<IInventoryRepository>(playerData);
-            container.Register<IStageProgressRepository>(playerData);
+            container.Register<IAccountRepository>(account);
+            container.Register<ICurrencyRepository>(currency);
+            container.Register<ICurrencyWallet>(currency);
+            container.Register<IPlayerCharacterRepository>(playerCharacters);
+            container.Register<IPartyRepository>(party);
+            container.Register<IInventoryRepository>(inventory);
+            container.Register<IStageProgressRepository>(stageProgress);
             container.Register<IAccountAuthRepository>(accountAuth);
 
             container.Register<IPopupService>(popups);

@@ -16,8 +16,8 @@ namespace TrickcalRevive.Infra.Tests
         private JsonFileRepository files;
         private SessionService session;
         private AccountAuthRepository accountAuth;
-        private SaveManager saveManager;
-        private PlayerDataRepository playerData;
+        private AccountRepository accounts;
+        private CurrencyRepository currencyRepository;
 
         [SetUp]
         public void SetUp()
@@ -26,8 +26,8 @@ namespace TrickcalRevive.Infra.Tests
             files = new JsonFileRepository(tempRoot);
             session = new SessionService(files);
             accountAuth = new AccountAuthRepository(files, new PlaintextPasswordHasher());
-            saveManager = new SaveManager(files, session);
-            playerData = new PlayerDataRepository(files, session, saveManager);
+            accounts = new AccountRepository(files, session);
+            currencyRepository = new CurrencyRepository(accounts);
         }
 
         [TearDown]
@@ -48,12 +48,12 @@ namespace TrickcalRevive.Infra.Tests
             Assert.That(auth.SignUp("player1", "pw1234", "닉네임"), Is.EqualTo(AuthResult.Success));
             Assert.That(session.GetSession(), Is.EqualTo("player1"), "가입 직후 세션이 저장돼야 한다");
 
-            var account = playerData.GetAccount();
+            var account = accounts.GetAccount();
             Assert.That(account, Is.Not.Null);
             Assert.That(account.Nickname, Is.EqualTo("닉네임"));
             Assert.That(account.Stamina, Is.EqualTo(21), "20 + player_level(1)");
 
-            var currencies = playerData.GetCurrencies();
+            var currencies = currencyRepository.GetCurrencies();
             Assert.That(currencies, Has.Count.EqualTo(4));
 
             settings.Logout();
