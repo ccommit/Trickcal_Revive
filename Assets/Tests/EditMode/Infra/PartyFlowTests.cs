@@ -57,7 +57,7 @@ namespace TrickcalRevive.Infra.Tests
             tempRoot = Path.Combine(Path.GetTempPath(), "TrickcalReviveTest_" + Guid.NewGuid());
             files = new JsonFileRepository(tempRoot);
             session = new SessionService(files);
-            accountAuth = new AccountAuthRepository(files);
+            accountAuth = new AccountAuthRepository(files, new PlaintextPasswordHasher());
             saveManager = new SaveManager(files, session);
             playerData = new PlayerDataRepository(files, session, saveManager);
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TrickcalRevive.Core;
 using TrickcalRevive.Domain.Account;
@@ -16,13 +17,20 @@ namespace TrickcalRevive.App
     /// </summary>
     /// <remarks>
     /// Login 씬에 배치된다(인트로 부팅 씬은 아직 없음) — 항상 Login 화면부터 시작한다.
-    /// </remarks>
+    /// </remarks>  
     [DefaultExecutionOrder(-1000)]
     public class GameApplication : MonoBehaviour
     {
         private static GameApplication instance;
 
         [SerializeField] private SceneFlowController sceneFlowController;
+
+        /// <summary>
+        /// 루트 컨테이너를 다 만든 살아있는 인스턴스. 준비 전이거나 중복으로 파괴되는
+        /// 개체는 여기 잡히지 않는다 — <c>FindFirstObjectByType</c>은 파괴 예정인
+        /// 개체도 찾아내므로 씬 설치는 반드시 이 속성을 거친다.
+        /// </summary>
+        public static GameApplication Ready => instance != null && instance.RootContainer != null ? instance : null;
 
         public DI RootContainer { get; private set; }
 
@@ -54,9 +62,14 @@ namespace TrickcalRevive.App
             var saveManager = new SaveManager(files, session);
             var masterData = new MasterDataRepository();
             var playerData = new PlayerDataRepository(files, session, saveManager);
-            var accountAuth = new AccountAuthRepository(files);
+            var accountAuth = new AccountAuthRepository(files, new PlaintextPasswordHasher());
             var popups = new PopupService();
             var screens = new ScreenNavigator();
+            if (sceneFlowController == null)
+                throw new InvalidOperationException(
+                    "GameApplication에 SceneFlowController가 연결되지 않았다. " +
+                    "GameApplication 오브젝트의 인스펙터에서 Scene Flow Controller를 지정하라.");
+
             sceneFlowController.Configure(popups, screens);
 
             container.Register<ISessionService>(session);

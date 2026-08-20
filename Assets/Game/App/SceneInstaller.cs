@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TrickcalRevive.Core;
 
@@ -23,14 +24,12 @@ namespace TrickcalRevive.App
 
         protected virtual void Awake()
         {
-            var root = FindFirstObjectByType<GameApplication>();
-            if (root == null)
-            {
-                Debug.LogError(
-                    $"{GetType().Name}: 씬에 GameApplication이 없어 루트 컨테이너를 못 찾았다. " +
-                    "부 씬을 거치지 않고 이 씬을 바로 열었는지 확인하라.", this);
-                return;
-            }
+            // 로그만 남기고 넘어가면 등록이 통째로 빠진 채 씬이 계속 굴러가 원인을 못 찾는다.
+            // 준비된 루트가 없으면 여기서 끊는다.
+            var root = GameApplication.Ready
+                ?? throw new InvalidOperationException(
+                    $"{GetType().Name}: 루트 컨테이너가 준비되지 않았다. " +
+                    "Login 씬을 거치지 않고 이 씬을 바로 열었는지 확인하라.");
 
             container = new DI(root.RootContainer);
             InstallBindings(container);
