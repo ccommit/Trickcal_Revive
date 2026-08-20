@@ -1,0 +1,68 @@
+{
+  "schema": "trickcal-recovery/text-style-manifest/v1",
+  "scope": [
+    "Lobby",
+    "StageSelect",
+    "StageInfoPopup",
+    "PartySetup"
+  ],
+  "font": {
+    "projectPath": "Assets/Game/Content/UI/Fonts/ONE Mobile POP.ttf",
+    "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/fonts/ONE Mobile POP.ttf",
+    "sha256": "ee3c6d7eee63c91620b4617df15e9542512484bccb74db93047f265300801560",
+    "status": "byte-identical"
+  },
+  "sourceMaterials": [
+    {
+      "name": "SystemFont_Outlined",
+      "sourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/addressableresources/fonts/SystemFont_Outlined.mat",
+      "sha256": "e3425606c18a28eb2d7d8c9e794237266b212bf67c88884b4dbab8905c64d727",
+      "generatedProjectPath": "Assets/Game/Content/UI/Fonts/Materials/ONE Mobile POP SDF - Recovered White Border.mat",
+      "generatedSha256": "0c58ecb4741dce703bb96363bdbd0dff4b30919a47a29e64c4ad79b422a323ba",
+      "parameters": {
+        "keyword": "UNDERLAY_ON",
+        "underlayColor": [1.0, 1.0, 1.0, 1.0],
+        "underlayDilate": 1.0,
+        "underlayOffset": [0.0, 0.0],
+        "underlaySoftness": 0.0,
+        "outlineWidth": 0.0
+      }
+    },
+    {
+      "name": "SystemFont_Outlined_Black",
+      "sourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/addressableresources/fonts/SystemFont_Outlined_Black.mat",
+      "sha256": "ba0c2172c789d8e92a9d72063721d2fb69a012a96ae4a6d0dd9a38c522fe0b32",
+      "generatedProjectPath": "Assets/Game/Content/UI/Fonts/Materials/ONE Mobile POP SDF - Recovered Black Border.mat",
+      "generatedSha256": "1f2dec2452a284bfd763296ba5dad71b681bd81826e0e8a3aa66e1f3c42eca35",
+      "parameters": {
+        "keyword": "UNDERLAY_ON",
+        "underlayColor": [0.0, 0.0, 0.0, 1.0],
+        "underlayDilate": 1.0,
+        "underlayOffset": [0.0, 0.0],
+        "underlaySoftness": 0.0,
+        "outlineWidth": 0.0
+      }
+    },
+    {
+      "name": "SystemFont_Z_BattleList",
+      "sourceRelativePath": "03_extracted_resources/01_unity_data/ExportedProject/Assets/02.resources/addressableresources/fonts/SystemFont_Z_BattleList.mat",
+      "sha256": "628bdc385a683bda8b346420bfc9393fda0f692ce4f0a7e1b5329c4fd769d1ab",
+      "generatedProjectPath": "Assets/Game/Content/UI/Fonts/Materials/ONE Mobile POP SDF - Recovered Battle List.mat",
+      "generatedSha256": "db45410a1ef64985234bc3f61cc9404f2c35e6c2c6e373b5c7b459acd3d1061b",
+      "parameters": {
+        "keyword": "UNDERLAY_ON",
+        "underlayColor": [0.41960785, 0.32941177, 0.5882353, 1.0],
+        "underlayDilate": 1.0,
+        "underlayOffset": [0.0, 0.0],
+        "underlaySoftness": 0.0,
+        "outlineWidth": 0.0
+      }
+    }
+  ],
+  "fontTextureImports": [],
+  "notes": [
+    "Generated materials share the current Unity-compatible TMP font atlas.",
+    "No rawsprites/fonttexture asset is required by the selected source materials.",
+    "Original and extracted evidence files remain read-only and unmodified."
+  ]
+}

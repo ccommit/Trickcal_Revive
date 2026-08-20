@@ -59,8 +59,15 @@ namespace TrickcalRevive.Infra
             };
         }
 
-        // 사도 지급(가챠/스타터) 자체가 아직 없다 — "0개 보유"가 지금 시점의 실제 상태다.
-        public List<PlayerCharacterData> GetOwnedCharacters() => new List<PlayerCharacterData>();
+        // 가챠/스타터 지급은 아직 없다. UI 복구 검증을 위해 RecoveryFixture(정식 원본
+        // 아님)의 사도 30명을 보유분으로 제공한다.
+        public List<PlayerCharacterData> GetOwnedCharacters()
+        {
+            var accountId = sessionService.GetSession();
+            return accountId == null
+                ? new List<PlayerCharacterData>()
+                : Fixtures.RecoveryFixture.OwnedCharacters(accountId);
+        }
         public void GrantCharacter(string characterId, int star) => throw new NotImplementedException();
         public void AddCharacterShard(string characterId, int count) => throw new NotImplementedException();
 
@@ -89,7 +96,9 @@ namespace TrickcalRevive.Infra
             if (accountId == null)
                 return null;
 
-            return stageProgressHandler.Load(accountId).FirstOrDefault(progress => progress.StageId == stageId);
+            var saved = stageProgressHandler.Load(accountId).FirstOrDefault(progress => progress.StageId == stageId);
+            // 저장분이 없으면 RecoveryFixture의 초기 진행상태로 대체(1-1 클리어/1-2 해금/나머지 잠금).
+            return saved ?? Fixtures.RecoveryFixture.DefaultStageProgress(accountId, stageId);
         }
 
         public void SaveStageProgress(PlayerStageProgressData progress)

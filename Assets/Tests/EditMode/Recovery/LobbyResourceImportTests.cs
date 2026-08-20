@@ -25,6 +25,7 @@ namespace TrickcalRevive.Recovery.Tests
             LobbyRecoveryHarnessBuilder.SpriteRoot + "/Currency_Stamina.png",
             LobbyRecoveryHarnessBuilder.SpriteRoot + "/TopMenu_ButtonBase.png",
             LobbyRecoveryHarnessBuilder.SpriteRoot + "/TopMenu_IconMenu.png",
+            LobbyRecoveryHarnessBuilder.SpriteRoot + "/TopMenu_IconHome.png",
             LobbyRecoveryHarnessBuilder.SpriteRoot + "/TopMenu_CurrencyBase.png",
             LobbyRecoveryHarnessBuilder.SpriteRoot + "/TopMenu_Plus.png",
             LobbyRecoveryHarnessBuilder.SpriteRoot + "/MainLobby_UserInfoBase.png",
@@ -81,7 +82,7 @@ namespace TrickcalRevive.Recovery.Tests
             var manifest = JsonUtility.FromJson<RecoveryManifest>(json);
             Assert.That(manifest, Is.Not.Null);
             Assert.That(manifest.schemaVersion, Is.EqualTo(1));
-            Assert.That(manifest.entries, Has.Length.EqualTo(30));
+            Assert.That(manifest.entries, Has.Length.EqualTo(32));
             Assert.That(manifest.entries.Count(entry => entry.evidenceStatus == "inferred"), Is.EqualTo(2));
             Assert.That(manifest.entries.Any(entry => entry.evidenceStatus == "unconfirmed"), Is.False);
 

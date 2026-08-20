@@ -29,6 +29,10 @@ namespace TrickcalRevive.App.Editor
         {
             EnsureFolder(ScenesFolder);
             LoginLobbyUIBuilder.BuildPrefabs();
+            StageSelectUIBuilder.BuildPrefab();
+            StageInfoPopupUIBuilder.BuildPrefab();
+            PartySetupUIBuilder.BuildPrefab();
+            TopCurrencyPanelBuilder.BuildPrefab();
             BuildLoginScene();
             BuildMainScene();
             RegisterBuildSettings();
@@ -82,6 +86,48 @@ namespace TrickcalRevive.App.Editor
             if (lobbyView == null || !lobbyView.IsReady)
                 throw new InvalidOperationException("LobbyScreen prefab is not ready.");
 
+            var stageSelectPrefab = Require<GameObject>(StageSelectUIBuilder.StageSelectPrefabPath);
+            var stageSelectObject = (GameObject)PrefabUtility.InstantiatePrefab(stageSelectPrefab, scene);
+            stageSelectObject.transform.SetParent(canvas.transform, false);
+            Stretch((RectTransform)stageSelectObject.transform);
+            var stageSelectView = stageSelectObject.GetComponent<StageSelectView>();
+            if (stageSelectView == null || !stageSelectView.IsReady)
+                throw new InvalidOperationException("StageSelectScreen prefab is not ready.");
+
+            var partyPrefab = Require<GameObject>(PartySetupUIBuilder.PartyPrefabPath);
+            var partyObject = (GameObject)PrefabUtility.InstantiatePrefab(partyPrefab, scene);
+            partyObject.transform.SetParent(canvas.transform, false);
+            Stretch((RectTransform)partyObject.transform);
+            var partySetupView = partyObject.GetComponent<PartySetupView>();
+            if (partySetupView == null || !partySetupView.IsReady)
+                throw new InvalidOperationException("PartySetupScreen prefab is not ready.");
+
+            // 화면 프리팹 밖에 한 번만 배치되는 공통 상단 통화 패널.
+            // 팝업보다는 아래, 모든 화면 패널보다는 위에 렌더된다.
+            var currencyPrefab = Require<GameObject>(TopCurrencyPanelBuilder.PrefabPath);
+            var currencyObject = (GameObject)PrefabUtility.InstantiatePrefab(currencyPrefab, scene);
+            currencyObject.transform.SetParent(canvas.transform, false);
+            var topCurrencyPanelView = currencyObject.GetComponent<TopCurrencyPanelView>();
+            if (topCurrencyPanelView == null || !topCurrencyPanelView.IsReady)
+                throw new InvalidOperationException("TopCurrencyPanel prefab is not ready.");
+
+            var hostGo = new GameObject("ScreenPanelHost");
+            var host = hostGo.AddComponent<ScreenPanelHost>();
+            SetSerializedField(host, "lobbyPanel", lobbyObject);
+            SetSerializedField(host, "stageSelectPanel", stageSelectObject);
+            SetSerializedField(host, "partySetupPanel", partyObject);
+
+            // 팝업은 화면 위에 뜬다 — Canvas 하위 마지막(최상위 렌더)으로 배치.
+            var popupPrefab = Require<GameObject>(StageInfoPopupUIBuilder.PopupPrefabPath);
+            var popupObject = (GameObject)PrefabUtility.InstantiatePrefab(popupPrefab, scene);
+            popupObject.transform.SetParent(canvas.transform, false);
+            Stretch((RectTransform)popupObject.transform);
+            var stageInfoPopupView = popupObject.GetComponent<StageInfoPopupView>();
+            if (stageInfoPopupView == null || !stageInfoPopupView.IsReady)
+                throw new InvalidOperationException("StageInfoPopupScreen prefab is not ready.");
+
+            var screenTransitionView = BuildScreenTransition(canvas.transform);
+
             var installerGo = new GameObject("MainSceneInstaller");
             var installer = installerGo.AddComponent<MainSceneInstaller>();
             var lobbyGo = new GameObject("LobbyController");
@@ -97,6 +143,8 @@ namespace TrickcalRevive.App.Editor
             var stageInfo = stageInfoGo.AddComponent<StageInfoPopupController>();
             var partySetupGo = new GameObject("PartySetupController");
             var partySetup = partySetupGo.AddComponent<PartySetupController>();
+            var topCurrencyGo = new GameObject("TopCurrencyController");
+            var topCurrency = topCurrencyGo.AddComponent<TopCurrencyController>();
 
             SetSerializedField(installer, "lobbyController", lobby);
             SetSerializedField(installer, "settingsController", settings);
@@ -104,6 +152,13 @@ namespace TrickcalRevive.App.Editor
             SetSerializedField(installer, "stageSelectController", stageSelect);
             SetSerializedField(installer, "stageInfoPopupController", stageInfo);
             SetSerializedField(installer, "partySetupController", partySetup);
+            SetSerializedField(installer, "stageSelectView", stageSelectView);
+            SetSerializedField(installer, "screenPanelHost", host);
+            SetSerializedField(installer, "stageInfoPopupView", stageInfoPopupView);
+            SetSerializedField(installer, "partySetupView", partySetupView);
+            SetSerializedField(installer, "screenTransitionView", screenTransitionView);
+            SetSerializedField(installer, "topCurrencyController", topCurrency);
+            SetSerializedField(installer, "topCurrencyPanelView", topCurrencyPanelView);
             SetSerializedField(lobby, "settingsController", settings);
             SetSerializedField(stageSelect, "stageInfoPopupController", stageInfo);
             SetSerializedField(stageInfo, "partySetupController", partySetup);
@@ -164,6 +219,54 @@ namespace TrickcalRevive.App.Editor
                 new EditorBuildSettingsScene(LoginScenePath, true),
                 new EditorBuildSettingsScene(MainScenePath, true)
             };
+        }
+
+        private static ScreenTransitionView BuildScreenTransition(Transform canvas)
+        {
+            var root = new GameObject("ScreenTransition", typeof(RectTransform));
+            root.transform.SetParent(canvas, false);
+            Stretch((RectTransform)root.transform);
+            var view = root.AddComponent<ScreenTransitionView>();
+
+            var content = new GameObject("Content", typeof(RectTransform));
+            content.transform.SetParent(root.transform, false);
+            Stretch((RectTransform)content.transform);
+
+            var coverGo = new GameObject("Cover", typeof(RectTransform), typeof(Image));
+            coverGo.transform.SetParent(content.transform, false);
+            Stretch((RectTransform)coverGo.transform);
+            var cover = coverGo.GetComponent<Image>();
+            cover.color = Color.white;
+            cover.raycastTarget = true;
+            cover.material = EnsureStarWipeMaterial();
+
+            view.Configure(content, cover);
+            // 별 구멍 중심 = 로비의 우측정렬 모험 버튼 위치(우하단, 추론 UV).
+            view.SetHoleCenter(0.86f, 0.13f);
+            if (!view.IsReady)
+                throw new InvalidOperationException("ScreenTransition overlay is not ready.");
+            return view;
+        }
+
+        private static Material EnsureStarWipeMaterial()
+        {
+            var shader = Shader.Find("TrickcalRevive/StarWipe");
+            if (shader == null)
+                throw new InvalidOperationException("StarWipe shader not found.");
+            const string path = "Assets/Game/Content/UI/StageSelect/StarWipe.mat";
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat == null)
+            {
+                mat = new Material(shader) { name = "StarWipe" };
+                AssetDatabase.CreateAsset(mat, path);
+            }
+            else
+            {
+                mat.shader = shader;
+            }
+            mat.SetFloat("_Progress", 0f);
+            EditorUtility.SetDirty(mat);
+            return mat;
         }
 
         private static T Require<T>(string path) where T : UnityEngine.Object
