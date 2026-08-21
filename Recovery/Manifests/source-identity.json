@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "recordedUtc": "2026-08-04T06:30:00Z",
+  "description": "Private learning reference snapshot identity. Absolute source paths are intentionally excluded.",
+  "files": [
+    {
+      "relativePath": "00_original_apk/trickcal.apk",
+      "bytes": 116824059,
+      "sha256": "5c5c872e076fd5c88fa78047cc6f94960382d22b9f9bbaa6eb79c89155795d28"
+    },
+    {
+      "relativePath": "file_manifest.csv",
+      "bytes": 92840616,
+      "sha256": "860283a82429e84f36e81b05d3759e147260c6772279ff5a04d3443da60a5736"
+    }
+  ]
+}

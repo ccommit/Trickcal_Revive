@@ -1,0 +1,16 @@
+{
+  "name": "TrickcalRevive.Domain.EditModeTests",
+  "rootNamespace": "TrickcalRevive.Domain.Tests",
+  "references": [
+    "TrickcalRevive.Core",
+    "TrickcalRevive.Data",
+    "TrickcalRevive.Domain"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

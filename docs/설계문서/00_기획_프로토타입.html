@@ -1,0 +1,1480 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>트릭컬 리바이브풍 모작 - 1인 개발 범위 프로토타입</title>
+<style>
+:root{
+  --ink:#25331f; --muted:#64725d; --panel:#fffdf2; --line:rgba(42,78,35,.22);
+  --green:#86df47; --green2:#34b54a; --green3:#236f2d; --yellow:#ffd45b; --orange:#ffae34;
+  --red:#ff6161; --blue:#60c8ff; --purple:#a88cff; --cream:#fff5d6; --dark:#172016;
+  --shadow:0 10px 24px rgba(0,0,0,.32); --text-shadow:0 2px 0 rgba(0,0,0,.34),0 5px 12px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;min-height:100%;background:#101510;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif;}
+body{padding:14px 12px 42px;}
+button,input{font-family:inherit;}button{border:0;cursor:pointer;font-weight:900;color:inherit;}button:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.6);}
+.notice{max-width:1280px;margin:0 auto 10px;padding:9px 13px;border-radius:12px;background:#273522;color:#e9ffe0;font-size:12px;line-height:1.45;}
+#game{position:relative;width:min(100%,calc((100vh - 90px) * 16 / 9),1280px);aspect-ratio:16/9;margin:0 auto;overflow:hidden;border-radius:18px;background:#b7f1ff;box-shadow:0 0 0 1px rgba(255,255,255,.22),0 22px 70px rgba(0,0,0,.58);user-select:none;}
+.screen{display:none;position:absolute;inset:0;overflow:hidden;}.screen.active{display:block;}
+.btn{min-height:50px;padding:9px 22px;border-radius:20px;background:linear-gradient(#fff7b7,#ffc33b);border:4px solid #fff2a2;box-shadow:0 6px 0 #c17c13,var(--shadow);font-size:18px;color:#50390a;text-shadow:0 1px 0 #fff;}
+.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #c17c13,var(--shadow);} .btn.green{background:linear-gradient(#dcff9e,#75db3f);border-color:#d7ffab;box-shadow:0 6px 0 #2f9632,var(--shadow);color:#1f420d;} .btn.gray{background:linear-gradient(#fff,#d8d8d8);border-color:#fff;box-shadow:0 6px 0 #8b8b8b,var(--shadow);color:#565656;} .btn.red{background:linear-gradient(#ffd4d4,#ff7373);border-color:#ffe5e5;box-shadow:0 6px 0 #b83b3b,var(--shadow);color:#5c2020;} .btn.small{min-height:38px;padding:6px 14px;font-size:14px;border-radius:15px;border-width:3px;box-shadow:0 4px 0 #c17c13,var(--shadow);} .btn.blue{background:linear-gradient(#c8ecff,#5fb6ff);border-color:#e3f6ff;box-shadow:0 6px 0 #2b74b3,var(--shadow);color:#0d3355;}
+.round{width:56px;height:56px;border-radius:50%;background:linear-gradient(#e5ffb5,#73d941);border:5px solid #bdf984;box-shadow:var(--shadow);font-size:25px;display:inline-flex;align-items:center;justify-content:center;color:#29490e;}.round.dark{background:rgba(20,38,18,.78);border-color:#c5ff8b;color:#ddffb0;text-shadow:var(--text-shadow);}
+.hud-pill{border-radius:999px;background:rgba(246,255,225,.94);border:4px solid rgba(128,211,77,.95);box-shadow:0 4px 10px rgba(0,0,0,.25);}.top-currency{position:absolute;top:16px;right:16px;display:flex;gap:10px;z-index:70;align-items:center;}.currency{height:38px;min-width:108px;padding:0 9px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:1000;}.icon{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:1000;text-shadow:0 1px 3px #000;box-shadow:inset 0 2px 4px rgba(255,255,255,.45),0 2px 5px rgba(0,0,0,.25);}.i-stamina{background:radial-gradient(#ff9fa7,#dd2b52);}.i-coin{background:radial-gradient(#ffe68d,#d99818);}.i-leaf{background:radial-gradient(#e9ffff,#45bc8e);}.i-macaron{background:radial-gradient(#ffd7f0,#e069b8);}.i-exp{background:radial-gradient(#b5e2ff,#327fca);} .i-item{background:radial-gradient(#fff,#c09040);} .i-star{background:radial-gradient(#fff37c,#75c90e);} .i-ticket{background:radial-gradient(#ffd6d6,#e05a5a);}
+.toast{position:absolute;left:50%;bottom:72px;transform:translateX(-50%);max-width:82%;padding:12px 20px;border-radius:20px;background:rgba(24,37,20,.94);color:#fff;font-weight:900;box-shadow:var(--shadow);z-index:3000;opacity:0;pointer-events:none;transition:.18s;text-align:center;}.toast.show{opacity:1;transform:translateX(-50%) translateY(-8px);}
+.title-row{position:absolute;left:18px;top:18px;right:18px;height:64px;display:flex;align-items:center;gap:12px;z-index:80;color:#fff;text-shadow:var(--text-shadow);pointer-events:none;}.title-row>*{pointer-events:auto;}.title-text{font-size:32px;font-weight:1000;letter-spacing:-1px;}.subtitle{font-size:13px;font-weight:800;color:#edffe6;}
+.bg-login{background:radial-gradient(circle at 18% 18%,rgba(255,255,255,.95) 0 8%,transparent 9%),radial-gradient(circle at 73% 14%,rgba(255,255,255,.84) 0 7%,transparent 8%),linear-gradient(#a7e9ff 0 51%,#8fd779 52% 100%);} .bg-login:before{content:"";position:absolute;left:-4%;right:-4%;bottom:70px;height:230px;background:linear-gradient(4deg,#e6f6c5,#7cc75f);border-top:8px solid rgba(255,255,255,.55);}
+.bg-lobby{background:radial-gradient(circle at 42% 35%,rgba(255,255,255,.34),transparent 18%),linear-gradient(#b9efff 0 43%,#e8f8bd 44% 49%,#8ad670 50% 100%);} .bg-stage{background:radial-gradient(circle at 20% 80%,rgba(22,225,203,.35),transparent 20%),radial-gradient(circle at 76% 22%,rgba(255,96,194,.25),transparent 20%),linear-gradient(135deg,#d2e58a 0 25%,#7fbf70 26% 62%,#5a9b4c 63% 100%);} .bg-party,.bg-battle{background:radial-gradient(circle at 50% 16%,rgba(255,230,135,.55),transparent 16%),radial-gradient(circle at 13% 44%,rgba(94,255,201,.20),transparent 15%),radial-gradient(circle at 87% 38%,rgba(94,255,201,.20),transparent 17%),linear-gradient(#b9efff 0 44%,#f3e6a2 45% 72%,#4d7c36 73%);} .bg-loading{background:radial-gradient(circle at 48% 38%,rgba(151,255,83,.35),transparent 28%),linear-gradient(135deg,#1b351c,#466a31 46%,#b9e885);} .bg-gacha{background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.35),transparent 20%),linear-gradient(#bfe9ff 0 55%,#8fd0e8 56% 100%);} .bg-roster{background:linear-gradient(#dff7c8 0 100%);} .bg-detail{background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.3),transparent 22%),linear-gradient(#d3f3a9 0 100%);}
+.house{position:absolute;width:132px;height:126px;border-radius:34px 34px 12px 12px;background:#fff1c9;border:5px solid #69bd66;box-shadow:var(--shadow);}.house:before{content:"";position:absolute;left:-14px;right:-14px;top:-38px;height:58px;background:#86d9bd;border:5px solid #58a86b;border-radius:45px 45px 12px 12px;}.house.h1{left:92px;top:170px}.house.h2{right:92px;top:125px;transform:scale(1.15)}.road{position:absolute;left:-80px;right:-80px;bottom:76px;height:205px;background:linear-gradient(6deg,#efd5a0,#f7e7bb);transform:skewY(-3deg);border-top:7px solid rgba(255,255,255,.58);}.tree{position:absolute;left:48%;top:40px;width:92px;height:330px;background:#9a7047;border-radius:50px;box-shadow:var(--shadow);}.tree:before{content:"";position:absolute;left:-150px;top:-92px;width:390px;height:182px;background:#69b86a;border-radius:52%;box-shadow:inset 0 -18px 0 rgba(0,0,0,.06);}.crops{position:absolute;left:0;right:0;bottom:0;height:95px;background:repeating-linear-gradient(82deg,rgba(27,113,40,.7) 0 12px,rgba(37,136,48,.35) 12px 24px);opacity:.85;}
+.unit-shape{position:relative;width:100%;height:100%;border-radius:42% 42% 20% 20%;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 10px 5px rgba(0,0,0,.2));}.unit-shape:after{content:"";position:absolute;left:18%;right:18%;bottom:-2%;height:12%;background:rgba(0,0,0,.18);border-radius:50%;}.unit-body{position:absolute;left:18%;right:18%;bottom:6%;height:50%;border-radius:45% 45% 25% 25%;background:var(--body,#fff);border:4px solid var(--line2,#62bd4a);}.unit-head{position:absolute;left:22%;right:22%;top:18%;height:42%;border-radius:48%;background:var(--head,#fff);border:4px solid var(--line2,#62bd4a);}.unit-ear{position:absolute;top:2%;width:24%;height:35%;border-radius:50% 50% 35% 35%;background:var(--ear,#fff);border:4px solid var(--line2,#62bd4a);}.unit-ear.left{left:22%;transform:rotate(-18deg)}.unit-ear.right{right:22%;transform:rotate(18deg)}.unit-face{position:absolute;top:38%;left:34%;right:34%;height:8%;border-radius:99px;background:#28301f;box-shadow:18px 0 0 #28301f;}.unit-name-tag{position:absolute;left:-20%;right:-20%;bottom:-19px;text-align:center;color:#fff;text-shadow:var(--text-shadow);font-size:12px;font-weight:1000;}.hero-alice{--head:#fff0f4;--body:#ffe8ef;--ear:#fff;--line2:#e988a4}.hero-ran{--head:#f8ecff;--body:#dcd1ff;--ear:#f6e9ff;--line2:#8d69e0}.hero-joanne{--head:#e7fff2;--body:#cfffe3;--ear:#effff6;--line2:#52b36e}.hero-uros{--head:#fff7df;--body:#f0c865;--ear:#fff2c7;--line2:#c48925}.hero-miro{--head:#e8f7ff;--body:#bde8ff;--ear:#effaff;--line2:#48a8cc}.hero-amelia{--head:#fff2ef;--body:#ffd8ca;--ear:#fff5ef;--line2:#e37d62}.hero-roi{--head:#ffe4e4;--body:#ffc2c2;--ear:#fff0f0;--line2:#c24545}.hero-nell{--head:#eaf6ff;--body:#c7e8ff;--ear:#f2fbff;--line2:#5f9fcf}.hero-pio{--head:#f4ffe0;--body:#dcf5a8;--ear:#f8ffe8;--line2:#8bb83f}.hero-dahlia{--head:#f1e7ff;--body:#cbb3f5;--ear:#f6efff;--line2:#6b4aa8}.hero-yuki{--head:#eefdff;--body:#c9f3ff;--ear:#f4feff;--line2:#3fa0b8}.hero-kobi{--head:#fff1e0;--body:#ffcf9e;--ear:#fff7ec;--line2:#c97a2c}.enemy .unit-ear{display:none}.enemy .unit-head{top:15%;left:16%;right:16%;height:47%;border-radius:45% 45% 34% 34%;background:var(--head,#f19999);border-color:var(--line2,#9b3737)}.enemy .unit-body{background:var(--body,#c76565);border-color:var(--line2,#9b3737)}.enemy .unit-face{left:30%;right:30%;box-shadow:22px 0 0 #261818}.enemy-blanketghost{--head:#e9e4ff;--body:#cac1ff;--line2:#796cc6}.enemy-meow{--head:#ffe8c4;--body:#ffbd69;--line2:#b46c1e}.enemy-crayonarcher{--head:#ffe0d6;--body:#ff7f6b;--line2:#aa4037}.enemy-crayonknightcool{--head:#dff1ff;--body:#88bde7;--line2:#4178a9}.enemy-nururingwarrior{--head:#e8ffcb;--body:#a6dd5c;--line2:#5f9624}.enemy-golem{--head:#d4d0c6;--body:#938b7b;--line2:#5f5a50;}.silhouette .unit-body,.silhouette .unit-head,.silhouette .unit-ear{background:#3a463a!important;border-color:#2a332a!important;}.silhouette .unit-face{display:none;}
+.login-logo{position:absolute;top:56px;left:55px;width:280px;height:130px;background:#fff;border:6px solid #fff;border-radius:34px 38px 45px 14px;box-shadow:var(--shadow);transform:rotate(-6deg);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#ff7160;font-weight:1000;font-size:46px;line-height:.85;text-shadow:2px 2px 0 #fff,5px 5px 0 #66cfff;z-index:20;}.login-logo small{font-size:18px;color:#5098bd;text-shadow:none;letter-spacing:2px;}.version{position:absolute;top:10px;left:24px;color:#fff;font-weight:900;text-shadow:var(--text-shadow);z-index:15;font-size:13px;}.policy{position:absolute;top:12px;right:18px;color:#fff;font-size:12px;font-weight:800;text-shadow:var(--text-shadow);z-index:15;text-align:right;}.login-panel{position:absolute;left:44px;bottom:30px;width:500px;display:grid;grid-template-columns:1fr auto;gap:10px;background:rgba(255,255,255,.84);border:5px solid #fff;border-radius:26px;padding:14px;box-shadow:var(--shadow);z-index:50;}.login-panel input{height:48px;border-radius:17px;border:4px solid #8dde57;outline:none;font-size:18px;font-weight:900;padding:0 16px;color:#26351f;background:#fff;}.login-actions{grid-column:1/3;display:flex;gap:10px;}.login-actions .btn{flex:1;}.login-copy{position:absolute;left:575px;right:70px;bottom:46px;text-align:center;color:#fff;font-size:29px;font-weight:1000;text-shadow:0 3px 0 #fb7b73,0 5px 12px rgba(0,0,0,.45);z-index:40;}.login-preview{position:absolute;right:95px;bottom:120px;width:300px;height:330px;z-index:25;display:flex;gap:18px;align-items:flex-end;justify-content:center;}.login-preview .css-unit{width:130px;height:180px;animation:idle 2.2s ease-in-out infinite;}.login-preview .css-unit:nth-child(2){width:160px;height:215px;animation-delay:.4s;}
+.profile-card{position:absolute;left:18px;top:17px;width:315px;height:56px;display:flex;align-items:center;gap:10px;z-index:80;}.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(#fff,#ffdfe5);border:3px solid #78ca4f;display:flex;align-items:center;justify-content:center;font-weight:1000;}.profile-text{font-size:15px;font-weight:1000;line-height:1.1;}.profile-text small{display:block;color:#217c2b;font-size:12px;}.quest-bubble{position:absolute;right:70px;top:82px;width:310px;height:62px;padding:9px 18px;border-radius:28px;background:#fff;border:5px solid #dfffbd;box-shadow:var(--shadow);z-index:50;font-weight:1000;display:flex;align-items:center;justify-content:space-between;}.event-banner{position:absolute;left:28px;top:120px;width:260px;height:110px;border-radius:18px;background:linear-gradient(135deg,#233a5e,#6750aa);border:4px solid rgba(255,255,255,.65);box-shadow:var(--shadow);color:#fff;font-size:24px;font-weight:1000;padding:18px;text-shadow:var(--text-shadow);z-index:30;}.lobby-characters{position:absolute;left:250px;right:240px;top:170px;bottom:125px;z-index:35;display:flex;align-items:flex-end;justify-content:space-around;}.lobby-characters .css-unit{width:115px;height:165px;animation:idle 2.1s ease-in-out infinite;}.lobby-characters .css-unit:nth-child(2){width:135px;height:190px}.bottom-menu{position:absolute;left:32px;width:220px;bottom:22px;height:92px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;z-index:90;}.menu-btn{border-radius:22px;background:linear-gradient(#ddffab,#81dc50);border:4px solid #eefed9;box-shadow:0 6px 0 #3b9e35,var(--shadow);font-size:16px;color:#233f0c;text-shadow:0 1px #fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}.menu-btn .mi{font-size:27px;line-height:1;}.adventure-btn{position:absolute;right:32px;bottom:24px;width:166px;height:140px;border-radius:34px;background:linear-gradient(#fff,#f1f9df);border:5px solid #fff;box-shadow:var(--shadow);z-index:95;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;color:#26351f;text-shadow:0 1px #fff;}.big-emoji{font-size:54px;line-height:1;}
+.stage-track-wrap{position:absolute;left:32px;right:32px;top:130px;bottom:118px;overflow-x:auto;overflow-y:hidden;z-index:20;}.stage-track{display:flex;align-items:center;gap:6px;height:100%;padding:20px 40px 70px;min-width:max-content;}
+.stage-node-wrap{position:relative;flex:0 0 auto;width:108px;height:100%;display:flex;align-items:center;justify-content:center;}.stage-node-wrap.zig-up{transform:translateY(-38px);}.stage-node-wrap.zig-down{transform:translateY(38px);}
+.stage-node{position:relative;width:96px;height:96px;transform:rotate(45deg);border-radius:20px;background:linear-gradient(135deg,#ffe87e,#f5c62d);border:6px solid #d09118;box-shadow:var(--shadow);cursor:pointer;}
+.stage-node.locked{background:linear-gradient(135deg,#c8c8c8,#767e87);border-color:#525961;}
+.stage-node.selected{outline:6px solid rgba(184,255,94,.75);}
+.stage-node-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transform:rotate(-45deg);}
+.stage-node .lock-ic{font-size:32px;}
+.stage-node .clear-check{font-size:40px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35);}
+.node-badge{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);background:linear-gradient(#ff6796,#ca1f65);border:4px solid #b61d58;border-radius:16px;padding:5px 12px;text-align:center;min-width:64px;z-index:5;color:#fff;}
+.node-badge .nb-stars{font-size:11px;letter-spacing:1px;color:#ffe15b;display:block;}
+.node-badge .nb-no{font-size:15px;font-weight:1000;display:block;}.stage-progress{position:absolute;left:28px;right:430px;bottom:24px;height:76px;border-radius:26px;background:rgba(255,255,255,.86);border:4px solid #fff;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center;gap:6px;padding:8px 18px;z-index:50;}.milestone-row{position:relative;height:14px;border-radius:8px;background:#e4e0cf;}.milestone-fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:linear-gradient(#9dff70,#4bb52e);}.milestone-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid #c7bd94;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:1000;color:#7a6a2c;}.milestone-dot.done{background:#ffe15b;border-color:#c99a13;color:#5c4200;}.milestone-label{font-size:12px;font-weight:900;color:#4a5a3c;}.world-btn{position:absolute;right:30px;bottom:24px;width:190px;height:76px;border-radius:26px;background:#fff4d7;border:5px solid #fff;box-shadow:var(--shadow);font-size:20px;font-weight:1000;color:#4d3909;z-index:50;}.stage-tip{position:absolute;left:32px;top:118px;width:430px;min-height:74px;border-radius:36px 36px 36px 12px;background:#fff;border:7px solid #2aad43;box-shadow:var(--shadow);z-index:44;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:1000;gap:4px;text-align:center;padding:6px 12px;}.stage-tip strong{background:#8fe14c;color:#1d561e;border-radius:18px;padding:4px 18px;font-size:14px;}.stage-tip span{font-size:19px;}
+#StageInfoPopup{position:absolute;inset:0;z-index:600;display:none;background:rgba(17,34,17,.25);}#StageInfoPopup.show{display:block;}.stage-popup-panel{position:absolute;right:42px;top:92px;width:485px;min-height:486px;background:#fffef8;border:8px solid #d92b70;border-radius:34px;box-shadow:var(--shadow);padding:62px 30px 24px;}.popup-stars{position:absolute;left:50%;top:-48px;transform:translateX(-50%);width:220px;height:86px;background:linear-gradient(#ff6796,#ca1f65);border:8px solid #b61d58;border-radius:28px;color:#4c1126;font-size:44px;display:flex;align-items:center;justify-content:center;letter-spacing:6px;}.popup-close{position:absolute;right:20px;top:16px;background:none;font-size:42px;color:#66524a;}.popup-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:18px;font-weight:1000;border-bottom:2px dashed #e8e0d0;}.reward-list{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:14px;}.reward-item{position:relative;height:68px;border-radius:16px;background:linear-gradient(#fff,#ffeac7);border:4px solid #eed084;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:1000;}.reward-item span{position:absolute;right:5px;bottom:2px;font-size:12px;color:#333;}.popup-actions{position:absolute;left:25px;right:25px;bottom:24px;display:flex;gap:12px;}.popup-actions .btn{flex:1;}
+.popup-cols{display:flex;gap:16px;margin:6px 0 14px;}.popup-col{flex:1;text-align:center;}.popup-col-label{font-size:13px;font-weight:1000;color:#4a3a10;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:8px;}.popup-col-label .mag-btn{width:24px;height:24px;border-radius:50%;background:#eee;font-size:12px;line-height:1;}.popup-col-icon{width:60px;height:60px;border-radius:16px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;box-shadow:var(--shadow);cursor:pointer;}
+.popup-exempt-row{position:absolute;left:25px;right:25px;bottom:24px;display:flex;gap:12px;}.popup-exempt-row .btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;}.stage-popup-panel.compact{padding-bottom:30px;}.stage-popup-panel.compact .popup-exempt-row{display:none;}
+#PersonalityGuidePopup,#MonsterDetailPopup{position:absolute;inset:0;z-index:650;display:none;background:rgba(17,34,17,.35);}#PersonalityGuidePopup.show,#MonsterDetailPopup.show{display:flex;align-items:center;justify-content:center;}
+.pg-panel{width:480px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;}.pg-body{padding:20px;}
+.pg-diagram{position:relative;width:100%;height:230px;}.pg-node{position:absolute;width:64px;height:64px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:1000;box-shadow:var(--shadow);transform:translate(-50%,-50%);}.pg-arrow{position:absolute;font-size:22px;color:#3a7a2a;font-weight:1000;transform-origin:center;}
+.pg-note{background:#f7f9f1;border-radius:14px;padding:14px;font-size:13px;color:#4a5a3c;line-height:1.7;margin-top:8px;}.pg-note b{color:#d9453f;}
+.md-panel{width:660px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;padding:20px;}.md-body{display:flex;gap:20px;}
+.md-preview{width:260px;height:260px;border-radius:20px;background:linear-gradient(135deg,#c9a876,#a9855c);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto;}.md-preview.boss{background:linear-gradient(135deg,#8a5cc9,#5c3a99);}
+.md-preview .md-attr-icon{position:absolute;left:10px;top:10px;width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:1000;box-shadow:var(--shadow);}
+.md-preview .md-boss-mark{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.md-info{flex:1;display:flex;flex-direction:column;min-width:0;}.md-name-banner{background:linear-gradient(#ff9fc0,#ff6796);color:#fff;border-radius:14px;padding:8px 14px;text-align:center;font-weight:1000;margin-bottom:10px;}
+.md-lore{flex:1;font-size:13px;color:#4a5a3c;line-height:1.7;background:#f7f9f1;border-radius:14px;padding:14px;}
+.md-list{display:flex;gap:10px;margin-top:16px;padding-top:16px;border-top:2px dashed #e8e0d0;}.md-list-item{position:relative;width:60px;height:60px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:4px solid transparent;}.md-list-item.selected{border-color:#4bb52e;}.md-list-item .md-mini-boss{position:absolute;right:-5px;top:-5px;font-size:14px;}
+.party-left{position:absolute;left:0;top:0;bottom:0;width:63%;}.party-right{position:absolute;right:0;top:0;bottom:0;width:37%;background:rgba(255,255,245,.96);border-left:8px solid #d8ffd0;box-shadow:-10px 0 26px rgba(0,0,0,.25);z-index:45;padding:82px 16px 20px;}.formation-ground{position:absolute;left:60px;right:60px;bottom:95px;height:440px;border-radius:28px;background:rgba(255,255,255,.12);box-shadow:inset 0 0 80px rgba(255,255,255,.12);}.formation-ground:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.16) 0 2px,transparent 2px 33%),linear-gradient(180deg,rgba(255,255,255,.18) 0 2px,transparent 2px 50%);background-size:33.33% 100%,100% 50%;border-radius:28px;}.party-slot{position:absolute;width:122px;height:82px;border-radius:44px;border:5px solid rgba(255,255,255,.65);background:rgba(255,255,255,.22);box-shadow:0 0 24px rgba(143,227,74,.35);z-index:20;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:1000;color:#35572a;text-align:center;}.party-slot.filled{background:rgba(201,255,152,.55);border-color:#9dff70;cursor:grab;}.party-slot.filled:active{cursor:grabbing;}.party-slot button{position:absolute;right:-8px;top:-8px;width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid #54bf36;color:#276c1d;}.party-slot .css-unit{position:absolute;left:10px;right:10px;bottom:12px;width:96px;height:118px;animation:idle 2.1s ease-in-out infinite;}.party-slot .slot-label{position:absolute;left:0;right:0;bottom:-26px;color:#fff;text-shadow:var(--text-shadow);font-size:12px;line-height:1.4;}
+.party-power-box{position:absolute;right:60px;top:96px;background:rgba(20,32,22,.72);border-radius:20px;padding:10px 22px;color:#fff;font-weight:1000;font-size:22px;display:flex;align-items:center;gap:10px;z-index:40;box-shadow:var(--shadow);}.party-power-box .ppb-icon{font-size:20px;}
+.party-actions-left{position:absolute;left:16px;bottom:18px;width:150px;display:flex;flex-direction:column;gap:10px;z-index:40;}.party-actions-left .btn.small{min-height:40px;font-size:14px;padding:6px 10px;}
+.party-bottom-info{position:absolute;left:180px;right:16px;bottom:18px;display:flex;gap:14px;z-index:40;}.party-bottom-info .pbi-item{flex:1;background:rgba(255,255,255,.88);border-radius:16px;padding:8px 14px;text-align:center;font-weight:1000;color:#345226;}.party-bottom-info .pbi-item span{display:block;font-size:12px;color:#6a7a5c;}.party-bottom-info .pbi-item strong{font-size:18px;}
+.roster-tabs{position:absolute;left:16px;right:16px;top:22px;height:44px;display:flex;gap:10px;}.roster-tabs button{flex:1;border-radius:16px;background:#ecffe0;border:3px solid #b9e99f;font-size:15px;color:#334;}.roster-tabs button.active{background:#c8f79b;}.roster-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-height:554px;overflow:auto;padding-right:3px;}.roster-list.cols6{grid-template-columns:repeat(6,1fr);}
+.party-buttons{position:absolute;left:16px;right:16px;bottom:18px;display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px;}.party-buttons .btn{font-size:16px;}
+.ros-card .ros-mag-btn{position:absolute;right:6px;top:6px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.85);font-size:12px;z-index:6;}
+.ros-card .ros-center-level{position:absolute;bottom:20px;text-align:center;font-size:13px;font-weight:1000;color:#fff;background-color:rgba(0,0,0,.7);text-shadow:0 1px 2px rgba(0,0,0,.5);z-index:3;}
+.ros-card .ros-center-stars{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:11px;color:#ffce31;text-shadow:0 1px 2px rgba(0,0,0,.5);z-index:3;}.ros-card .ros-center-stars .ros-star-empty,.slot-label .ros-star-empty,.pcd-stars .ros-star-empty{color:rgba(255,255,255,.35);}
+.ros-card.assigned{filter:grayscale(1);opacity:.5;}
+.pcd-panel{width:600px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;padding:20px;}
+.pcd-body{display:flex;gap:20px;margin-top:16px;}
+.pcd-icon{width:130px;height:130px;border-radius:20px;position:relative;flex:0 0 auto;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;box-shadow:var(--shadow);}.pcd-icon .css-unit{width:96px;height:120px;}
+.pcd-icon .pcd-lv{position:absolute;left:6px;bottom:26px;background:rgba(0,0,0,.5);color:#fff;font-size:11px;font-weight:1000;padding:2px 8px;border-radius:10px;z-index:3;}
+.pcd-icon .pcd-stars{position:absolute;left:0;right:0;bottom:4px;text-align:center;font-size:12px;color:#ffce31;text-shadow:0 1px 2px rgba(0,0,0,.5);z-index:3;}
+.pcd-side{flex:1;display:flex;flex-direction:column;gap:10px;}
+.pcd-power{background:linear-gradient(#dcffab,#81dc50);color:#1f420d;border-radius:14px;padding:10px 14px;font-weight:1000;text-align:center;}
+.pcd-attrs{display:flex;gap:10px;flex:1;}.pcd-attr-chip{flex:1;background:#f4f8ea;border-radius:14px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;justify-content:center;}.pcd-attr-chip .ac-icon{width:36px;height:36px;border-radius:10px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:1000;}.pcd-attr-chip span{font-size:11px;font-weight:900;color:#4a5a3c;}
+.pcd-skill{display:flex;gap:16px;margin-top:18px;padding-top:16px;border-top:2px dashed #e8e0d0;}
+.pcd-skill-tabs{display:flex;flex-direction:column;gap:10px;}.pcd-skill-tabs button{width:58px;height:58px;border-radius:16px;font-size:24px;background:#eef8e2;border:3px solid #cdeaa0;}.pcd-skill-tabs button.active{background:linear-gradient(#ffe9ad,#ffc33b);border-color:#fff2a2;}
+.pcd-skill-info{flex:1;background:#f7f9f1;border-radius:14px;padding:14px;}.pcd-skill-info .si-name2{font-weight:1000;font-size:16px;margin-bottom:8px;color:#233;}.pcd-skill-info .si-desc2{font-size:13px;color:#4a5a3c;line-height:1.6;}
+#PartyCharDetailPopup{position:absolute;inset:0;z-index:650;display:none;background:rgba(17,34,17,.35);}#PartyCharDetailPopup.show{display:flex;align-items:center;justify-content:center;}
+.loading-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:530px;min-height:280px;border-radius:34px;background:rgba(255,255,255,.92);border:7px solid #cfff9a;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px;z-index:50;}.loading-spinner{width:96px;height:96px;border-radius:50%;border:10px solid #dfffb3;border-top-color:#38a934;animation:spin 1s linear infinite;margin-bottom:18px;}.loading-type{font-size:16px;color:#327323;font-weight:1000;background:#e8ffd9;border-radius:99px;padding:5px 14px;margin-bottom:8px;}.loading-title{font-size:32px;font-weight:1000;color:#24551f;}.loading-message{margin-top:7px;color:#5f715c;font-weight:800;}.loading-error{display:none;margin-top:16px;}.loading-panel.error .loading-error{display:block;}.loading-panel.error .loading-spinner{border-top-color:#e33d31;}
+.battle-grid{position:absolute;left:65px;right:65px;top:170px;bottom:185px;background:rgba(255,255,255,.10);border-radius:28px;box-shadow:inset 0 0 70px rgba(255,255,255,.13);}.battle-grid:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.16) 0 2px,transparent 2px 33.33%),linear-gradient(180deg,rgba(255,255,255,.14) 0 2px,transparent 2px 50%);background-size:33.33% 100%,100% 50%;border-radius:28px;}.battle-top{position:absolute;left:12px;right:12px;top:8px;height:70px;display:flex;align-items:center;justify-content:space-between;z-index:120;color:#fff;text-shadow:var(--text-shadow);}.battle-timer{width:100px;height:100px;margin-top:28px;border-radius:50%;border:6px solid #91e758;background:rgba(13,30,22,.66);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:1000;}.wave-pill{position:absolute;left:120px;top:4px;font-size:21px;font-weight:1000;display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.45);border-radius:18px;padding:6px 16px;}.battle-controls{display:flex;align-items:center;gap:12px;}.battle-unit{position:absolute;width:116px;height:160px;z-index:50;transition:left .1s linear,top .1s linear,opacity .25s;}.battle-unit.dead{opacity:.42;filter:grayscale(1);}.battle-unit .css-unit{height:112px;animation:idle 2.1s ease-in-out infinite;}.battle-unit.attack .css-unit{animation:attack .24s ease-in-out 1, idle 2.1s ease-in-out infinite .25s;}.battle-unit.hit .css-unit{animation:hit .22s ease-in-out 1, idle 2.1s ease-in-out infinite .22s;}.unit-name{position:absolute;left:-8px;right:-8px;top:104px;text-align:center;color:#fff;font-size:12px;font-weight:1000;text-shadow:var(--text-shadow);}.bar{position:absolute;left:8px;right:8px;border-radius:9px;background:#222;border:2px solid rgba(0,0,0,.45);overflow:hidden;}.hpbar{top:125px;height:12px}.spbar{top:141px;height:8px}.hpbar span{display:block;height:100%;background:#49e253;width:100%;}.spbar span{display:block;height:100%;background:#65a8ff;width:0%;}.damage-text{position:absolute;z-index:300;font-size:30px;font-weight:1000;color:#ff7a21;text-shadow:0 3px 0 #fff,0 5px 8px rgba(0,0,0,.4);animation:float 1s ease-out forwards;pointer-events:none;}.heal-text{color:#60ff76;}
+.unit-grade{position:absolute;left:0;right:0;top:-16px;text-align:center;font-size:12px;color:#ffd34c;text-shadow:0 1px 2px rgba(0,0,0,.6);z-index:6;letter-spacing:1px;}
+.prep-start-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:76px;height:76px;border-radius:50%;background:linear-gradient(#dcffab,#81dc50);border:5px solid #eefed9;box-shadow:0 6px 0 #3b9e35,var(--shadow);font-size:15px;font-weight:1000;color:#1f420d;z-index:135;display:none;flex-direction:column;align-items:center;justify-content:center;line-height:1.3;}
+.battle-phase-spelllist-btn{position:absolute;right:16px;bottom:16px;z-index:135;}
+#activeSkillBar{position:absolute;left:0;right:0;bottom:0;height:160px;z-index:130;display:none;align-items:flex-end;justify-content:center;gap:10px;padding-bottom:8px;}
+.as-slot{width:130px;height:130px;border-radius:16px;background:#fff;border:3px solid #d9ffc2;box-shadow:var(--shadow);position:relative;padding:0;transition:transform .15s;}
+.as-slot.as-active{transform:translateY(-16px);border-color:#ffd34c;box-shadow:0 4px 0 #d9a520,var(--shadow);}
+.as-slot.as-locked{opacity:.55;height:80px;}
+.as-icon-wrap{position:absolute;inset:0;z-index:1;}
+.as-slot.as-locked .as-icon-wrap{clip-path:inset(0 0 30% 0);}
+.as-icon{font-size:52px;line-height:130px;text-align:center;}
+.as-slot .bar{position:absolute;left:8px;right:8px;border-radius:6px;background:#222;border:1px solid rgba(0,0,0,.45);overflow:hidden;height:8px;z-index:2;}
+.as-cd-mask{position:absolute;inset:0;z-index:3;border-radius:16px;pointer-events:none;}
+.as-cd-num{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:1000;color:#fff;text-shadow:var(--text-shadow);pointer-events:none;}
+.as-hp{bottom:16px;}.as-hp span{display:block;height:100%;background:#49e253;}
+.as-sp{bottom:6px;}.as-sp span{display:block;height:100%;background:#65a8ff;}
+#PausePopup{position:absolute;inset:0;z-index:700;display:none;background:rgba(17,34,17,.45);}#PausePopup.show{display:flex;align-items:center;justify-content:center;}
+.pause-popup-panel{width:520px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);padding:24px;}
+#SignupNicknamePopup{position:absolute;inset:0;z-index:750;display:none;background:rgba(17,34,17,.45);}#SignupNicknamePopup.show{display:flex;align-items:center;justify-content:center;}
+.signup-nickname-panel{width:420px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);padding:24px;display:flex;flex-direction:column;gap:14px;}
+.signup-nickname-panel p{margin:0;font-size:14px;color:#3a4a30;font-weight:700;line-height:1.5;}
+.signup-nickname-panel input{height:48px;border-radius:17px;border:4px solid #8dde57;outline:none;font-size:18px;font-weight:900;padding:0 16px;color:#26351f;background:#fff;}
+.pause-popup-title{background:linear-gradient(#7fd955,#3fa233);color:#fff;font-weight:1000;font-size:18px;border-radius:16px;padding:14px 18px;text-align:center;}
+.pause-popup-goals{padding:20px 8px;display:flex;flex-direction:column;gap:16px;}
+.pause-goal{display:flex;align-items:center;gap:10px;font-weight:900;color:#3a4a30;font-size:15px;}
+.pause-popup-buttons{display:flex;gap:10px;}.pause-popup-buttons .btn{flex:1;}
+/* 준비 단계 카드 상점 */
+.prep-shop-panel{position:absolute;left:0;right:0;bottom:0;height:186px;background:linear-gradient(0deg,#eaffd9 0 78%,rgba(234,255,217,0));z-index:130;display:grid;grid-template-columns:1fr auto 1fr;align-items:flex-end;padding:0 16px 16px;gap:14px;}
+.prep-shop-panel .prep-coin-box{justify-self:start;}
+.prep-shop-panel .prep-center-group{justify-self:center;display:flex;align-items:flex-end;gap:12px;}
+.prep-shop-panel .prep-spelllist-btn{justify-self:end;}
+.prep-coin-box{flex:0 0 auto;background:rgba(20,32,22,.75);border-radius:20px;padding:10px 18px;color:#fff;font-weight:1000;font-size:20px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow);}.prep-coin-box .pcb-icon{font-size:22px;}
+.prep-card-slots{flex:0 0 auto;width:460px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.prep-card{position:relative;height:150px;border-radius:16px;border:4px solid rgba(255,255,255,.7);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;padding:0;color:#fff;}
+.prep-card.empty{background:rgba(255,255,255,.15);border-style:dashed;}
+.prep-card .pc-cost{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:#ffe15b;border:3px solid #c99a13;color:#5c4200;display:flex;align-items:center;justify-content:center;font-weight:1000;font-size:15px;z-index:6;}
+.prep-card.apostle-card{align-items:center;justify-content:flex-end;}.prep-card.apostle-card .css-unit{width:70%;height:70%;}
+.prep-card.apostle-card .ros-badge{width:22px;height:22px;font-size:11px;}
+.prep-card .pc-grade-stars{position:absolute;left:0;right:0;top:24px;text-align:center;font-size:12px;color:#ffd34c;text-shadow:0 1px 2px rgba(0,0,0,.5);z-index:5;}
+.prep-card.apostle-card .ros-footer{width:100%;height:26px;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:1000;}
+.prep-card.spell-card,.prep-card.equip-card{align-items:center;justify-content:center;gap:6px;background:linear-gradient(160deg,#f2e9ff,#8ef481);color:#2e2b33;}
+.prep-card .pc-icon{font-size:36px;margin-top:12px;}.prep-card .pc-name{font-size:12px;font-weight:1000;text-align:center;padding:0 6px;}
+.prep-lock-btn{flex:0 0 auto;width:56px;height:56px;border-radius:50%;background:#fff;border:4px solid #d9ffc2;font-size:22px;box-shadow:var(--shadow);}.prep-lock-btn.active{background:linear-gradient(#ffe9ad,#ffc33b);border-color:#fff2a2;}
+.prep-refresh-btn{flex:0 0 auto;width:64px;height:56px;border-radius:20px;background:#fff;border:4px solid #d9ffc2;font-size:14px;font-weight:1000;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2d5511;}
+.prep-spelllist-btn{flex:0 0 auto;width:72px;height:56px;border-radius:20px;background:#fff;border:4px solid #d9ffc2;font-size:11px;font-weight:1000;box-shadow:var(--shadow);color:#2d5511;line-height:1.3;}
+/* 전투 진입 슬롯머신 연출 */
+#BattleIntroOverlay{position:absolute;inset:0;z-index:700;display:none;background:rgba(10,20,10,.55);align-items:center;justify-content:center;}#BattleIntroOverlay.show{display:flex;}
+.intro-title{font-size:38px;font-weight:1000;color:#fff;text-shadow:var(--text-shadow);text-align:center;}
+.intro-slots{display:none;gap:20px;}
+.intro-slot{width:150px;height:180px;border-radius:22px;background:rgba(255,255,255,.92);border:6px solid #ffe15b;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.intro-slot .is-icon{font-size:48px;}.intro-slot .is-label{font-size:13px;font-weight:1000;color:#4a3a10;margin-top:6px;}.intro-slot .css-unit{width:80%;height:75%;}
+/* 스펠 목록 / 상세 팝업 */
+#SpellListPopup,#SpellDetailPopup,#EquipPopup{position:absolute;inset:0;z-index:650;display:none;background:rgba(17,34,17,.35);}#SpellListPopup.show,#SpellDetailPopup.show,#EquipPopup.show{display:flex;align-items:center;justify-content:center;}
+.spell-list-panel{width:640px;max-height:520px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;}
+.spell-list-totals{padding:12px 20px;background:#eef8e2;font-weight:900;color:#345226;font-size:13px;display:flex;gap:16px;flex-wrap:wrap;}
+.spell-list-body{padding:20px;overflow:auto;}
+.spell-list-grid{display:flex;flex-wrap:wrap;gap:12px;}
+.spell-empty{width:100%;text-align:center;color:#6a9a4a;font-weight:900;padding:40px 0;font-size:15px;line-height:1.8;}
+.spell-card-mini{position:relative;width:96px;height:120px;border-radius:16px;background:linear-gradient(160deg,#f2e9ff,#8ef481);border:4px solid #cdeaa0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px;}
+.spell-card-mini .sc-icon{font-size:30px;}.spell-card-mini .sc-name{font-size:11px;font-weight:900;text-align:center;color:#2e2b33;}.spell-card-mini .sc-count{position:absolute;right:-6px;top:-6px;background:#7a5cd8;color:#fff;font-size:11px;font-weight:1000;border-radius:10px;padding:2px 7px;box-shadow:var(--shadow);}
+.spell-detail-panel{width:420px;background:#fffef8;border-radius:24px;box-shadow:var(--shadow);padding:24px;text-align:center;}
+.spell-detail-panel .sd-icon{font-size:48px;}.spell-detail-panel .sd-name{font-size:20px;font-weight:1000;margin:10px 0;}.spell-detail-panel .sd-desc{font-size:14px;color:#4a5a3c;font-weight:900;}
+.equip-popup-panel{width:1100px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;padding:20px;}
+.equip-target-list{display:flex;gap:20px;margin-top:16px;border-radius:18px;overflow:hidden;justify-content:center;}
+.equip-group{display:flex;align-items:flex-end;gap:10px;padding:14px 12px;justify-content:center;}
+.equip-group.pos-back{background:rgba(90,150,255,.18);}
+.equip-group.pos-mid{background:rgba(90,220,110,.18);}
+.equip-group.pos-front{background:rgba(255,90,90,.18);}
+.equip-target{width:110px;height:150px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;position:relative;}
+.equip-target .css-unit{width:80%;height:75%;}
+.equip-target.disabled{opacity:.45;filter:grayscale(.7);}
+.equip-target .et-name{font-size:11px;font-weight:1000;color:#233;background:rgba(255,255,255,.8);border-radius:8px;padding:1px 6px;margin-top:2px;}
+.equip-slots{display:flex;gap:4px;margin-top:6px;}
+.equip-slot{width:24px;height:24px;border-radius:50%;background:#8a8a8a;border:2px solid #6a6a6a;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.equip-slot.filled{background:#fff2c7;border-color:#c99a13;}
+.equip-flash{outline:5px solid #fff36d;}
+#ResultOverlay{position:absolute;inset:0;z-index:800;display:none;background:rgba(16,24,13,.58);}#ResultOverlay.show{display:block;}
+/* 결과 1단계: VICTORY/DEFEAT 타이틀 + 별 애니메이션 */
+#ResultTitleStage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+.rt-star-row{display:flex;gap:14px;}
+.rt-star{font-size:56px;color:#ffd34c;text-shadow:0 3px #925e00;opacity:0;transform:scale(.2);transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .2s;}
+.rt-star.rt-pop{opacity:1;transform:scale(1);}
+.rt-title-text{font-size:76px;font-weight:1000;letter-spacing:-3px;}
+.rt-title-text.victory{color:#55dc38;text-shadow:0 5px 0 #114f10,0 0 24px rgba(90,255,62,.8);}
+.rt-title-text.defeat{color:#ff6565;text-shadow:0 5px 0 #4b1515,0 0 24px rgba(255,82,82,.7);}
+/* 결과 2단계: 세부 화면 */
+#ResultDetailStage{position:absolute;inset:0;display:none;}
+.rd-left{position:absolute;left:0;top:0;bottom:0;width:47%;}
+.rd-left.victory-bg{background:radial-gradient(circle at 42% 48%,rgba(131,255,63,.7),transparent 33%);}
+.rd-left.defeat-bg{background:radial-gradient(circle at 42% 48%,rgba(255,90,90,.35),transparent 33%);}
+.rd-hero{position:absolute;left:160px;top:100px;width:290px;height:260px;display:flex;align-items:flex-end;justify-content:center;}
+.rd-hero .css-unit{width:170px;height:240px;}
+.rd-title{position:absolute;left:160px;bottom:130px;width:290px;font-size:76px;font-weight:1000;letter-spacing:-3px;z-index:35;display:flex;justify-content:center;}
+.rd-title.victory{color:#55dc38;text-shadow:0 5px 0 #114f10,0 0 24px rgba(90,255,62,.8);}
+.rd-title.defeat{color:#ff6565;text-shadow:0 5px 0 #4b1515,0 0 24px rgba(255,82,82,.7);}
+.rd-stars{position:absolute;left:160px;bottom:210px;width:290px;font-size:56px;color:#ffd34c;text-shadow:0 3px #925e00;z-index:36;display:flex;justify-content:center;}
+.rd-stage{position:absolute;left:140px;bottom:100px;width:330px;height:38px;border-radius:18px;background:#f5fff0;border:4px solid #dbffbd;color:#295715;font-weight:1000;display:flex;align-items:center;justify-content:center;z-index:36;}
+.rd-tip{position:absolute;left:60px;bottom:20px;width:440px;font-size:13px;color:#3a2020;background:rgba(255,255,255,.85);border-radius:14px;padding:10px 16px;font-weight:800;line-height:1.5;}
+.rd-right{position:absolute;right:46px;top:70px;width:570px;height:480px;z-index:40;color:#eaffdc;}
+.rd-user-row{height:46px;border-radius:16px;background:rgba(30,40,28,.82);display:flex;align-items:center;padding:0 16px;font-weight:1000;font-size:16px;gap:14px;}
+.rd-exp-bar{flex:1;height:14px;border-radius:8px;background:rgba(255,255,255,.2);position:relative;overflow:hidden;}.rd-exp-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#9dff70,#4bb52e);}
+.rd-reward-title{height:42px;display:flex;align-items:center;justify-content:center;color:#96ff88;font-size:23px;font-weight:1000;margin:18px 0 8px;border-top:3px solid rgba(139,255,98,.65);border-bottom:3px solid rgba(139,255,98,.65);}
+.rd-rewards{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.rd-noreward{grid-column:1/7;text-align:center;background:rgba(255,255,255,.82);border-radius:18px;padding:24px;color:#333;font-weight:1000;}
+.rd-buttons-v{position:absolute;right:46px;bottom:32px;width:570px;display:grid;grid-template-columns:1fr 1fr;gap:10px;z-index:60;}.rd-buttons-v .btn{font-size:16px;min-height:58px;}
+/* 패배 우측: 레벨업/스킬/승급 삼각 배치 */
+.rd-defeat-right{position:absolute;right:120px;top:120px;width:320px;height:320px;}
+.rd-grow-btn{position:absolute;width:110px;height:110px;border-radius:50%;background:linear-gradient(#dcffab,#81dc50);border:5px solid #eefed9;box-shadow:0 6px 0 #3b9e35,var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1f420d;font-weight:1000;font-size:15px;gap:6px;}
+.rd-grow-btn .rg-ic{font-size:30px;}
+.rd-grow-btn.rg-top{left:50%;top:0;transform:translateX(-50%);}
+.rd-grow-btn.rg-left{left:0;bottom:0;}
+.rd-grow-btn.rg-right{right:0;bottom:0;}
+.rd-buttons-d{position:absolute;right:46px;bottom:32px;width:570px;display:grid;grid-template-columns:1fr 1fr;gap:10px;z-index:60;}.rd-buttons-d .btn{font-size:16px;min-height:58px;}
+.side-tabs{position:absolute;left:18px;top:92px;width:150px;display:flex;flex-direction:column;gap:10px;z-index:60;}.side-tabs button{height:50px;border-radius:20px;background:rgba(255,255,255,.85);border:4px solid #cdeaa0;font-size:15px;font-weight:1000;color:#345226;}.side-tabs button.active{background:linear-gradient(#dcffab,#81dc50);border-color:#fff;}
+.gacha-splash{position:absolute;left:190px;right:330px;top:96px;bottom:140px;z-index:20;display:flex;align-items:flex-end;justify-content:center;gap:24px;}.gacha-splash .css-unit{width:150px;height:220px;animation:idle 2.4s ease-in-out infinite;}.gacha-info{position:absolute;right:24px;top:96px;width:300px;background:rgba(255,255,255,.9);border:5px solid #fff;border-radius:24px;padding:18px;z-index:40;box-shadow:var(--shadow);}.gacha-info h3{margin:0 0 8px;font-size:24px;}.gacha-info p{margin:4px 0;font-size:13px;color:#3a4a30;font-weight:700;line-height:1.5;}.gacha-rates{margin-top:10px;display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:900;}.gacha-actions{position:absolute;left:190px;right:24px;bottom:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;z-index:50;}.gacha-actions .btn{min-height:64px;display:flex;flex-direction:column;justify-content:center;font-size:15px;line-height:1.4;}.gacha-actions .btn small{font-size:12px;font-weight:800;opacity:.8;}.gacha-side-actions{position:absolute;left:190px;bottom:96px;display:flex;gap:10px;z-index:50;}
+#GachaRevealOverlay{position:absolute;inset:0;z-index:800;display:none;}#GachaRevealOverlay.show{display:flex;}
+.gacha-reveal-card{position:relative;flex:1;overflow:hidden;cursor:pointer;}
+.gacha-reveal-skip{position:absolute;right:20px;top:20px;z-index:5;background:rgba(20,20,20,.4);color:#fff;border-radius:16px;padding:8px 20px;font-size:14px;font-weight:900;}
+.gacha-reveal-personality{position:absolute;right:24px;top:70px;z-index:5;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.gr-p-icon{width:56px;height:56px;border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:1000;color:#fff;box-shadow:var(--shadow);}
+.gr-p-label{background:rgba(0,0,0,.4);color:#fff;font-size:12px;font-weight:900;border-radius:10px;padding:2px 10px;}
+.gacha-reveal-left{position:absolute;left:40px;top:38%;z-index:5;color:#233;display:flex;flex-direction:column;align-items:flex-start;}
+.gr-new-badge{display:none;background:#4bb06a;color:#fff;font-weight:1000;font-size:20px;border-radius:8px;padding:4px 14px;margin-bottom:10px;border:solid;margin-left:20px;}
+.gr-stars{font-size:55px;color:#ffd34c;text-shadow:0 2px 0 rgba(0,0,0,.15);line-height:30px;letter-spacing:-15px;}
+.gr-name{font-size:90px;font-weight:1000;margin-top:15px;text-shadow:2px 2px 0 #fff,-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff;}
+.gacha-reveal-portrait{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:320px;height:80%;}
+.gacha-reveal-portrait .css-unit{width:100%;height:100%;}
+.gr-dup-badge{display:none;position:absolute;right:30px;bottom:30px;z-index:5;background:#4bb06a;border-radius:16px;padding:12px;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--shadow);}
+.gr-dup-text{color:#fff;font-size:13px;font-weight:1000;}
+.gr-dup-icon{width:60px;height:60px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;}
+#GachaResultOverlay{position:absolute;inset:0;z-index:800;display:none;align-items:center;justify-content:center;background:rgba(20,15,5,.55);width:100%;height:100%;}#GachaResultOverlay.show{display:flex;}
+.gacha-result-panel{width:100%;height:100%;background:linear-gradient(#c9885a,#a8623c);padding:32px;box-shadow:var(--shadow);}
+.gacha-result-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;width:900px;height: 335px;align-content: center;justify-items:center;justify-self:center;margin-top:100px;}
+.gr-cell{position:relative;border-radius:16px;box-shadow:var(--shadow);width:160px;height:160px;}
+.gr-cell-front,.gr-cell-back{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;border-radius:16px;overflow:hidden;transition:opacity .6s;padding-bottom:6px;}
+.gr-cell-front .css-unit{width:100%;height:100%;position:absolute;top:15px;}
+.gr-cell-back{opacity:0;align-items:center;justify-content:center;}
+.gr-cell-cycle.flipped .gr-cell-front{opacity:0;}
+.gr-cell-cycle.flipped .gr-cell-back{opacity:1;}
+.gr-cell-new{position:absolute;left:4px;top:4px;z-index:3;background:#4bb06a;color:#fff;font-size:17px;font-weight:1000;border-radius:10px;padding:2px 8px;border:white 3px solid;}
+.gr-cell-stars{font-size:13px;color:#ffd34c;z-index: 1;}
+.gr-cell-shard{width:50%;height:50%;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.gacha-result-buttons{margin-top:100px;display:flex;justify-content:center;}.gacha-result-buttons .btn{width:220px;}
+.roster-toolbar{position:absolute;left:16px;right:16px;top:90px;height:44px;display:flex;gap:10px;z-index:50;}.roster-toolbar button{flex:0 0 auto;padding:0 16px;border-radius:16px;background:#ecffe0;border:3px solid #b9e99f;font-size:14px;color:#334;}.roster-toolbar button.active{background:#c8f79b;}.roster-page{position:absolute;left:16px;right:16px;top:146px;bottom:20px;overflow:auto;z-index:40;}.roster-page .roster-list{grid-template-columns:repeat(6,1fr);align-items:start;}
+.ros-section{grid-column:1/-1;background:#fff;border:3px solid #cdeaa0;border-radius:20px;text-align:center;font-weight:1000;padding:10px;margin:4px 0;color:#345226;font-size:15px;}
+.ros-card{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 5px 10px rgba(0,0,0,.18);display:flex;flex-direction:column;height:190px;padding:0;border:none;}
+.ros-top{position:relative;flex:1;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;}.ros-top .css-unit{width:74%;height:88%;}
+.ros-stars{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:15px;color:#ffce31;text-shadow:0 1px 2px rgba(0,0,0,.4);letter-spacing:1px;z-index:3;}.ros-stars .ros-star-empty{color:rgba(255,255,255,.5);}
+.ros-footer{height:32px;flex:0 0 32px;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:1000;font-size:13px;color:#2f4a24;}
+.ros-badge{position:absolute;width:24px;height:24px;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center;color:#fff;text-shadow:0 1px 2px #000;box-shadow:var(--shadow);z-index:5;left:6px;}.ros-badge.personality{bottom:90px;}.ros-badge.role{bottom:60px;}
+.ros-chevron{position:absolute;right:6px;bottom:38px;display:flex;gap:1px;align-items:flex-end;z-index:4;}.ros-chevron span{line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.5);}
+.ros-card.unowned::after{content:'';position:absolute;left:0;right:0;top:0;bottom:32px;background:rgba(80,80,80,.55);z-index:2;pointer-events:none;}
+.detail-portrait{position:absolute;left:190px;right:330px;top:70px;bottom:80px;display:flex;align-items:center;justify-content:center;z-index:20;}.detail-portrait .css-unit{width:220px;height:340px;animation:idle 2.4s ease-in-out infinite;}.detail-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.85);border:3px solid #cdeaa0;font-size:24px;z-index:30;}.detail-nav.prev{left:190px;}.detail-nav.next{right:340px;}.detail-panel{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:300px;background:rgba(20,32,22,.78);border-radius:22px;padding:16px;color:#fff;z-index:40;box-shadow:var(--shadow);}.detail-panel .power-box{background:rgba(255,255,255,.14);border-radius:14px;padding:8px 12px;margin:8px 0;font-weight:1000;}.detail-panel .power-box-cp{background:linear-gradient(#dcffab,#81dc50);color:#1f420d;}.detail-stat-line{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.14);font-weight:900;font-size:14px;}.detail-tags{position:absolute;left:190px;right:330px;bottom:20px;height:56px;background:rgba(255,255,255,.9);border:3px solid #cdeaa0;border-radius:28px;display:flex;align-items:center;padding:0 22px;gap:16px;z-index:30;}.detail-tags .dt-name{font-size:18px;font-weight:1000;color:#233;flex:0 0 auto;}.detail-tags .dt-chips{flex:1;display:flex;justify-content:flex-end;gap:16px;}.detail-tags .dt-chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:900;color:#345226;}.detail-tags .dt-ic{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;text-shadow:0 1px 2px #000;flex:0 0 auto;}
+.levelup-box{position:absolute;right:20px;top:70px;bottom:20px;width:300px;background:rgba(255,255,255,.92);border-radius:20px;padding:14px;z-index:45;box-shadow:var(--shadow);display:flex;flex-direction:column;color:#233;}.levelup-box .cost-row{display:flex;justify-content:space-between;font-size:13px;font-weight:900;color:#3a4a30;margin:10px 0;}#levelupPreview{flex:1;}#levelupPreview .lv-change{font-size:22px;font-weight:1000;color:#1f420d;margin-bottom:10px;}#levelupPreview .power-change{background:#eef8e2;border-radius:14px;padding:8px 12px;font-weight:1000;margin-bottom:8px;display:flex;justify-content:space-between;}#levelupPreview .stat-change{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.08);font-weight:900;font-size:14px;}#levelupPreview .stat-change .delta{color:#2f8f3a;}
+.skill-panel{position:absolute;inset:0;display:none;}
+.skill-preview{position:absolute;left:190px;right:330px;top:70px;bottom:80px;border-radius:24px;background:rgba(0,0,0,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;overflow:hidden;z-index:20;color:#fff;text-align:center;}.skill-preview .css-unit{height:190px;animation:idle 2.4s ease-in-out infinite;}.skill-preview .css-unit.idle-attack{animation:attack 1.3s ease-in-out infinite;}.skill-preview .sp-caption{font-size:13px;font-weight:800;color:#dff0cf;padding:0 30px;}
+.skill-subtabs{position:absolute;right:20px;top:70px;width:300px;display:flex;gap:8px;z-index:40;}.skill-subtabs button{flex:1;padding:10px 4px;border-radius:16px;background:rgba(255,255,255,.85);border:3px solid #cdeaa0;font-size:13px;font-weight:1000;color:#345226;}.skill-subtabs button.active{background:linear-gradient(#ffe9ad,#ffc33b);border-color:#fff2a2;color:#5a3d0a;}
+.skill-info{position:absolute;right:20px;top:126px;bottom:20px;width:300px;background:rgba(20,32,22,.78);border-radius:22px;padding:16px;color:#fff;box-shadow:var(--shadow);z-index:40;display:flex;flex-direction:column;}.skill-info .si-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;}.skill-info .si-icon{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:28px;flex:0 0 auto;}.skill-info .si-name{font-size:17px;font-weight:1000;}.skill-info .si-level{font-size:12px;color:#cdeaa0;font-weight:900;}.skill-info .si-desc{flex:1;font-size:13px;line-height:1.6;color:#e8f5df;overflow:auto;}
+#SkillEnhancePopup{position:absolute;inset:0;z-index:600;display:none;background:rgba(17,34,17,.35);}#SkillEnhancePopup.show{display:flex;align-items:center;justify-content:center;}.skill-enhance-panel{width:520px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;}.skill-enhance-head{height:56px;background:linear-gradient(#7fd955,#3fa233);color:#fff;font-weight:1000;font-size:20px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}.skill-enhance-head button{background:none;color:#fff;font-size:28px;}.skill-enhance-body{padding:24px;}.se-head{display:flex;align-items:center;gap:14px;margin-bottom:14px;}.se-icon{width:64px;height:64px;border-radius:18px;background:#eef8e2;display:flex;align-items:center;justify-content:center;font-size:32px;}.se-lv{font-size:22px;font-weight:1000;color:#233;}.se-name{font-size:15px;font-weight:900;color:#4a5a3c;}.se-desc{font-size:13px;color:#4a5a3c;line-height:1.6;background:#f7f9f1;border-radius:14px;padding:12px;margin-bottom:14px;}.se-cost-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #e0dcc8;font-weight:900;}.se-cost-row .short{color:#d9453f;}.se-master{text-align:center;font-size:16px;font-weight:1000;color:#2f8f3a;padding:16px 0;}
+.promo-panel{display:flex;flex-direction:column;gap:14px;}
+.promo-stars{font-size:19px;text-align:center;color:#ffce31;text-shadow:0 1px 2px rgba(0,0,0,.4);background:rgba(255,255,255,.12);border-radius:14px;padding:10px;font-weight:1000;}.promo-stars .ros-star-empty{color:rgba(255,255,255,.35);}.promo-popup-left .promo-stars .ros-star-empty{color:rgba(0,0,0,.22);}
+.promo-mat{display:flex;flex-direction:column;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:16px;padding:14px;}.promo-mat .pm-icon{width:64px;height:64px;border-radius:16px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:30px;}.promo-mat .pm-name{font-weight:900;font-size:13px;}.promo-mat .pm-bar{width:100%;height:12px;border-radius:8px;background:rgba(0,0,0,.3);position:relative;overflow:hidden;}.promo-mat .pm-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(#9dff70,#4bb52e);}.promo-mat .pm-count{font-size:12px;font-weight:900;}
+.promo-gold-row{display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,.14);border-radius:14px;padding:10px;font-weight:1000;}
+.popup-power{background:linear-gradient(#dcffab,#81dc50);color:#1f420d;border-radius:14px;padding:10px 14px;font-weight:1000;text-align:center;}
+#PromotePopup{position:absolute;inset:0;z-index:600;display:none;background:rgba(17,34,17,.35);}#PromotePopup.show{display:flex;align-items:center;justify-content:center;}.promo-popup-panel{width:760px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;}.promo-popup-body{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px;}.promo-popup-left{display:flex;flex-direction:column;gap:14px;}.promo-popup-left .promo-stars{color:#4a3a10;background:#fdf6df;}.promo-popup-left .promo-mat{background:#f4f8ea;}.promo-popup-left .promo-gold-row{background:#eef8e2;color:#233;}.promo-popup-right{color:#233;}.promo-popup-right .stat-header{color:#5a7a4a;border-top-color:#e8f0dd;}.promo-popup-right .detail-stat-line{color:#233;border-bottom-color:#e8f0dd;}
+.promo-popup-actions{display:flex;gap:12px;padding:0 24px 24px;}.promo-popup-actions .btn{flex:1;}
+.stat-header{margin:10px 0 6px;font-size:13px;font-weight:1000;color:#cdeaa0;letter-spacing:1px;border-top:2px solid rgba(255,255,255,.18);padding-top:10px;}
+.menu-btn-round{font-size:26px;letter-spacing:-2px;}
+#LobbyMenuPopup,#SettingsPopup{position:absolute;inset:0;z-index:700;display:none;background:rgba(17,34,17,.35);}#LobbyMenuPopup.show,#SettingsPopup.show{display:flex;align-items:center;justify-content:center;}.menu-popup-panel{width:520px;background:#fffef8;border-radius:28px;box-shadow:var(--shadow);overflow:hidden;}.menu-popup-head{height:56px;background:linear-gradient(#7fd955,#3fa233);color:#fff;font-weight:1000;font-size:20px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}.menu-popup-head button{background:none;color:#fff;font-size:28px;}.menu-popup-body{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;padding:30px;}.menu-popup-item{display:flex;flex-direction:column;align-items:center;gap:10px;}.menu-popup-item .circle{width:96px;height:96px;border-radius:50%;background:linear-gradient(#eafde0,#c7f4a9);border:3px solid #cdeaa0;display:flex;align-items:center;justify-content:center;font-size:38px;}.menu-popup-item span{font-weight:1000;color:#2f4a24;}
+.backpack-toolbar{position:absolute;left:16px;right:16px;top:90px;height:40px;display:flex;align-items:center;gap:10px;z-index:40;font-weight:900;color:#3a4a30;}
+.backpack-body{position:absolute;left:16px;right:330px;top:140px;bottom:20px;overflow:auto;z-index:40;}.backpack-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}.backpack-card{position:relative;height:110px;border-radius:18px;background:linear-gradient(#fff,#f2ffd9);border:4px solid #b9e99f;box-shadow:0 4px 10px rgba(0,0,0,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:900;}.backpack-card.selected{outline:5px solid #fff36d;}.backpack-card .bp-icon{font-size:34px;}.backpack-card .bp-count{font-size:13px;color:#333;}.backpack-card .bp-face{width:54px;height:62px;border-radius:12px;overflow:hidden;}
+.backpack-detail{position:absolute;right:16px;top:140px;bottom:20px;width:300px;background:rgba(255,255,255,.92);border-radius:22px;padding:18px;z-index:45;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;}.backpack-detail h3{margin:0;font-size:20px;}.backpack-detail .bp-qty{background:#eef8e2;border-radius:12px;padding:8px 12px;font-weight:900;display:flex;justify-content:space-between;}.backpack-detail p{font-size:13px;color:#4a5a3c;line-height:1.5;flex:1;}
+.design-doc{max-width:1280px;margin:18px auto 0;background:#f8fbf4;border:1px solid #d8e3d2;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.18);overflow:hidden;color:#243124;}.design-doc summary{cursor:pointer;padding:18px 22px;background:#203223;color:#e7f7df;font-weight:1000;font-size:18px;}.design-doc-body{padding:24px;}.design-doc h2{font-size:22px;margin:28px 0 12px;border-bottom:3px solid #e8f6dc;padding-bottom:8px;}.design-doc h3{font-size:17px;margin:18px 0 8px;}.doc-wrap{overflow:auto;border:1px solid #d8e3d2;border-radius:14px;margin:10px 0;background:#fff;}.doc-table{width:100%;border-collapse:collapse;min-width:800px;}.doc-table th,.doc-table td{border-bottom:1px solid #edf2e9;padding:9px 11px;text-align:left;vertical-align:top;font-size:13px;}.doc-table th{background:#edf7e5;color:#263b28;font-weight:900;white-space:nowrap;}.code-card{border:1px solid #244329;border-radius:14px;overflow:hidden;margin:12px 0;background:#142017;}.code-head{background:#203223;color:#e7f7df;padding:8px 12px;font-size:12px;font-weight:900;}pre{margin:0;padding:16px;overflow:auto;background:#142017;color:#e8ffe2;font-size:13px;line-height:1.55;}code{font-family:Consolas,monospace;}
+@keyframes idle{0%,100%{translate:0 0}50%{translate:0 -6px}}@keyframes attack{0%{translate:0 0}50%{translate:18px -4px}100%{translate:0 0}}@keyframes hit{0%,100%{translate:0 0}25%{translate:-9px 0}75%{translate:8px 0}}@keyframes pulse{0%,100%{scale:1}50%{scale:1.07}}@keyframes float{0%{translate:0 0;opacity:1}100%{translate:0 -48px;opacity:0}}@keyframes spin{to{rotate:360deg}}
+@media(max-width:980px){body{padding:0 0 24px}.notice{display:none}#game{width:100vw;border-radius:0}.title-text{font-size:25px}.currency{min-width:88px;font-size:12px}.top-currency{gap:5px}.btn{font-size:15px}.bottom-menu{gap:6px;width:170px}.menu-btn{font-size:12px}.adventure-btn{width:145px}.stage-popup-panel{right:16px;width:410px}.party-right{padding-left:10px;padding-right:10px}.roster-list{gap:6px}.roster-card{height:98px}.skill-bar{left:124px;right:175px;gap:7px}.result-title{font-size:56px}.result-right{right:20px;width:500px}.result-buttons{right:20px;width:590px}.result-buttons .btn{font-size:13px}.battle-unit{scale:.86}.design-doc{border-radius:0;margin-top:0}.design-doc-body{padding:16px}.side-tabs{width:120px}.gacha-splash,.gacha-actions,.gacha-side-actions,.detail-portrait,.detail-tags{left:140px}.detail-nav.prev{left:140px}}
+</style>
+</head>
+<body>
+<div class="notice">이미지, 외부 폴더, 외부 라이브러리 없이 동작하는 기능 검증용 HTML입니다. 모든 배경, 캐릭터, 적, UI는 CSS와 텍스트로 표현하며, 모든 수치는 원작이 아닌 이 프로젝트 자체 설계(DB_설계서.md, 레벨디자인_설계서.md)를 따릅니다.</div>
+<div id="game">
+  <div id="toast" class="toast"></div>
+  <section id="Login" class="screen bg-login active">
+    <div class="version">1인 개발 프로토타입 v1 / 16:9</div><div class="policy">외부 이미지 없음<br>CSS 도형 기반</div>
+    <div class="login-logo">트릭컬<small>PORTFOLIO</small></div><div class="login-preview" id="loginPreview"></div>
+    <div class="login-copy">아이디와 비밀번호를 입력해 로그인하세요<br>처음 사용하는 아이디는 자동으로 신규 등록됩니다</div>
+    <div class="login-panel" style="grid-template-columns:1fr;"><input id="loginIdInput" maxlength="16" placeholder="아이디 입력" autocomplete="off"><input id="loginPwInput" type="password" maxlength="16" placeholder="비밀번호 입력" autocomplete="off"><button class="btn green" onclick="attemptLogin()">로그인</button></div>
+    <div id="SignupNicknamePopup">
+      <div class="signup-nickname-panel">
+        <div class="skill-enhance-head"><span>닉네임 설정</span></div>
+        <p>처음 로그인하는 아이디입니다. 사용할 닉네임을 입력해주세요.</p>
+        <input id="signupNicknameInput" maxlength="12" placeholder="닉네임 입력" autocomplete="off">
+        <button class="btn green" style="width:100%" onclick="confirmSignupNickname()">시작하기</button>
+      </div>
+    </div>
+  </section>
+  <section id="Lobby" class="screen bg-lobby">
+    <div class="house h1"></div><div class="house h2"></div><div class="tree"></div><div class="road"></div><div class="crops"></div>
+    <div class="profile-card hud-pill"><div class="avatar">Lv</div><div class="profile-text"><span id="profileName">게스트</span><small id="profileLevel">Lv.1</small></div></div><div class="top-currency" id="LobbyCurrencies"></div>
+    <div class="quest-bubble"><span id="lobbyQuestText">1-1 침략 진행 가능</span><button class="btn small green" onclick="showLoading({type:'scene',message:'스테이지 리스트로 이동합니다.',target:'StageSelect'})">이동</button></div>
+    <div class="event-banner">1인 개발<br>포트폴리오</div><div class="lobby-characters" id="lobbyCharacters"></div>
+    <div class="bottom-menu">
+      <button class="menu-btn" onclick="showLoading({type:'scene',message:'모집 화면으로 이동합니다.',target:'Gacha'})"><span class="mi">🎟</span>모집</button>
+      <!-- 상점: 기획 범위 안이지만 우선 비활성화. 재개 시 아래 주석을 해제.
+      <button class="menu-btn" onclick="future('상점')"><span class="mi">🛒</span>상점</button>
+      -->
+      <button class="menu-btn" onclick="showLoading({type:'scene',message:'사도 화면으로 이동합니다.',target:'Roster'})"><span class="mi">🐰</span>사도</button>
+    </div>
+    <button class="adventure-btn" onclick="showLoading({type:'scene',message:'스테이지 리스트로 이동합니다.',target:'StageSelect'})"><span class="big-emoji">⚔</span>모험</button>
+    <div id="LobbyMenuPopup"><div class="menu-popup-panel"><div class="menu-popup-head"><span>메뉴</span><button onclick="closeLobbyMenu()">×</button></div><div class="menu-popup-body">
+      <button class="menu-popup-item" onclick="closeLobbyMenu();showLoading({type:'scene',message:'배낭을 불러옵니다.',target:'Backpack'})"><span class="circle">🎒</span><span>배낭</span></button>
+      <button class="menu-popup-item" onclick="closeLobbyMenu();openSettingsPopup()"><span class="circle">⚙</span><span>설정</span></button>
+    </div></div></div>
+    <div id="SettingsPopup"><div class="menu-popup-panel"><div class="menu-popup-head"><span>설정</span><button onclick="closeSettingsPopup()">×</button></div><div class="menu-popup-body">
+      <button class="menu-popup-item" onclick="logout()"><span class="circle">🚪</span><span>로그아웃</span></button>
+      <button class="menu-popup-item" onclick="confirmAccountReset()"><span class="circle">🗑</span><span>계정 초기화</span></button>
+    </div></div></div>
+  </section>
+  <section id="StageSelect" class="screen bg-stage">
+    <div class="title-row"><button class="round" onclick="showLoading({type:'scene',message:'로비로 돌아갑니다.',target:'Lobby'})">‹</button><div><div class="title-text">스테이지 리스트</div><div class="subtitle" id="stageChapterSub">챕터 1 · 스테이지 클리어 시 다음 스테이지 해금</div></div></div><div class="top-currency" id="StageCurrencies"></div>
+    <div class="stage-tip"><strong id="stageTipLevel">권장 전투력: -</strong><span id="stageTipName">스테이지를 선택하세요</span></div>
+    <div class="stage-track-wrap"><div class="stage-track" id="stageNodes"></div></div>
+    <div class="stage-progress"><div class="milestone-row" id="milestoneRow"><div class="milestone-fill" id="milestoneFill"></div></div><div class="milestone-label" id="milestoneLabel">챕터 누적 별 0 / 30 (10/20/30 단계 보상)</div></div>
+    <button class="world-btn" onclick="future('세계지도')">세계지도</button>
+  </section>
+  <div id="StageInfoPopup">
+    <div class="stage-popup-panel" id="stagePopupPanel">
+      <div class="popup-stars" id="popupStars">☆☆☆</div>
+      <button class="popup-close" onclick="closeStagePopup()">×</button>
+      <div class="popup-row"><span>스테이지</span><strong id="popupStageName">-</strong></div>
+      <div class="popup-row"><span>권장 전투력</span><strong id="popupLevel">-</strong></div>
+      <div class="popup-cols">
+        <div class="popup-col">
+          <div class="popup-col-label">추천 성격 <button class="mag-btn" onclick="openPersonalityGuide()">🔍</button></div>
+          <div class="popup-col-icon" id="popupRecommendIcon"></div>
+        </div>
+        <div class="popup-col">
+          <div class="popup-col-label">출현 몬스터 <button class="mag-btn" onclick="openMonsterDetail()">🔍</button></div>
+          <div class="popup-col-icon" id="popupMonsterIcon" onclick="openMonsterDetail()"></div>
+        </div>
+      </div>
+      <div style="font-size:18px;font-weight:1000;text-align:center;background:#f4f1e8;border-radius:18px;padding:9px;">보상 목록</div>
+      <div class="reward-list" id="popupRewards"></div>
+      <div class="popup-exempt-row" id="popupExemptRow">
+        <button class="btn gray" id="popupExemptBtn" onclick="exemptStage()">면제</button>
+        <button class="btn" id="popupDeckBtn" onclick="enterPartySetup()">덱 선택</button>
+      </div>
+    </div>
+  </div>
+  <div id="PersonalityGuidePopup">
+    <div class="pg-panel">
+      <div class="skill-enhance-head"><span>성격 상성 정보</span><button onclick="closePersonalityGuide()">×</button></div>
+      <div class="pg-body">
+        <div class="pg-diagram" id="pgDiagram"></div>
+        <div class="pg-note">상성이 유리한 성격에게 주는 피해량이 <b>150%</b>, 받는 피해량이 <b>75%</b>가 됩니다.<br>활발과 우울 성격은 서로에게 주는 피해량만 영향을 받습니다.</div>
+      </div>
+    </div>
+  </div>
+  <div id="MonsterDetailPopup">
+    <div class="md-panel">
+      <div class="skill-enhance-head"><span>출현 몬스터</span><button onclick="closeMonsterDetail()">×</button></div>
+      <div class="md-body" style="margin-top:16px;">
+        <div class="md-preview" id="mdPreview"></div>
+        <div class="md-info">
+          <div class="md-name-banner" id="mdName">-</div>
+          <div class="md-lore" id="mdLore">-</div>
+        </div>
+      </div>
+      <div class="md-list" id="mdList"></div>
+    </div>
+  </div>
+  <section id="PartySetup" class="screen bg-party">
+    <div class="party-left"><div class="title-row"><button class="round" onclick="showLoading({type:'scene',message:'스테이지 선택으로 돌아갑니다.',target:'StageSelect'})">‹</button><div><div class="title-text" id="partyTitle">전투 준비</div><div class="subtitle">아군: x=1 후열, x=2 중열, x=3 전열</div></div></div><div class="formation-ground" id="formationGround"></div>
+      <div class="party-power-box"><span class="ppb-icon">⚔</span><span id="partyPower">0</span></div>
+      <div class="party-actions-left"><button class="btn gray small" onclick="resetParty()">일괄 해제</button><button class="btn gray small" onclick="openStageInfoReadonly()">스테이지 정보</button></div>
+      <div class="party-bottom-info"><div class="pbi-item"><span>시작 코인</span><strong id="partyStartCoin">100</strong></div><div class="pbi-item"><span>권장 전투력</span><strong id="partyRecommended">0</strong></div></div>
+    </div>
+    <aside class="party-right"><div class="roster-tabs"><button>보유 사도</button><button onclick="future('필터')">필터 OFF</button><button onclick="future('정렬')">레벨순</button></div><div class="roster-list" id="rosterList"></div><div class="party-buttons"><button class="btn green" onclick="autoBuildParty()">자동 편성</button><button class="btn gray" onclick="resetParty()">초기화</button><button class="btn" onclick="prepareBattleStart()">출발</button></div></aside>
+    <div id="PartyCharDetailPopup">
+      <div class="pcd-panel">
+        <div class="skill-enhance-head"><span id="pcdName">-</span><button onclick="closePartyCharDetail()">×</button></div>
+        <div class="pcd-body">
+          <div class="pcd-icon" id="pcdIcon"></div>
+          <div class="pcd-side">
+            <div class="pcd-power" id="pcdPower">전투력 -</div>
+            <div class="pcd-attrs" id="pcdAttrs"></div>
+          </div>
+        </div>
+        <div class="pcd-skill">
+          <div class="pcd-skill-tabs" id="pcdSkillTabs"></div>
+          <div class="pcd-skill-info" id="pcdSkillInfo"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="Loading" class="screen bg-loading"><div id="loadingPanel" class="loading-panel"><div class="loading-spinner"></div><div class="loading-type" id="loadingType">scene</div><div class="loading-title">Loading</div><div class="loading-message" id="loadingMessage">데이터를 준비합니다.</div><div class="loading-error"><button class="btn gray" onclick="loadingBack()">이전 화면으로</button></div></div></section>
+  <section id="Battle" class="screen bg-battle">
+    <div class="battle-grid"></div>
+    <div class="battle-top"><div class="battle-timer" id="battleTimer">00:00</div><div class="wave-pill">⚔ <span id="battleWaveText">준비 1/5</span></div><div class="battle-controls"><button id="battleAutoBtn" class="round dark" onclick="toggleAutoBattle()">AUTO</button><button id="battleSpeedBtn" class="round dark" onclick="toggleSpeed()">x1</button><button class="round dark" onclick="openPausePopup()">Ⅱ</button></div></div>
+    <div id="battleUnitLayer"></div>
+    <div id="damageLayer"></div>
+    <div id="activeSkillBar" style="display:none;"></div>
+    <button id="battleSpellListBtn" class="prep-spelllist-btn battle-phase-spelllist-btn" style="display:none;" onclick="openSpellListPopup()">📖<br>스펠 목록</button>
+    <button class="prep-start-btn" id="prepStartBtn" onclick="skipToNextBattle()">≫<br>출발</button>
+    <div class="prep-shop-panel" id="prepShopPanel">
+      <div class="prep-coin-box"><span class="pcb-icon">🪙</span><span id="prepCoinDisplay">0</span></div>
+      <div class="prep-center-group">
+        <button class="prep-lock-btn" id="prepLockBtn" onclick="toggleCardLock()">🔒</button>
+        <div class="prep-card-slots" id="prepCardSlots"></div>
+        <button class="prep-refresh-btn" onclick="refreshCardSlots()">🔄<span id="prepRefreshCost">4</span></button>
+      </div>
+      <button class="prep-spelllist-btn" onclick="openSpellListPopup()">📖<br>스펠 목록</button>
+    </div>
+    <div id="BattleIntroOverlay">
+      <div class="intro-title" id="battleIntroTitle"></div>
+      <div class="intro-slots" id="battleIntroSlots">
+        <div class="intro-slot" id="slotBox0"></div>
+        <div class="intro-slot" id="slotBox1"></div>
+        <div class="intro-slot" id="slotBox2"></div>
+      </div>
+    </div>
+    <div id="SpellListPopup">
+      <div class="spell-list-panel">
+        <div class="skill-enhance-head"><span>스펠 목록</span><button onclick="closeSpellListPopup()">×</button></div>
+        <div class="spell-list-totals" id="spellListTotals"></div>
+        <div class="spell-list-body" id="spellListBody">
+          <div class="spell-list-grid" id="spellListGrid"></div>
+        </div>
+      </div>
+    </div>
+    <div id="SpellDetailPopup" onclick="closeSpellDetail()">
+      <div class="spell-detail-panel" id="spellDetailBody"></div>
+    </div>
+    <div id="EquipPopup">
+      <div class="equip-popup-panel">
+        <div class="skill-enhance-head"><span id="equipPopupHeader">-</span><button onclick="closeEquipPopup()">×</button></div>
+        <div class="equip-target-list" id="equipTargetList"></div>
+      </div>
+    </div>
+    <div id="PausePopup">
+      <div class="pause-popup-panel">
+        <div class="pause-popup-title" id="pauseStageName">-</div>
+        <div class="pause-popup-goals" id="pauseGoals"></div>
+        <div class="pause-popup-buttons">
+          <button class="btn red" onclick="exitBattleAsDefeat()">나가기</button>
+          <button class="btn" onclick="restartBattleFromPause()">다시하기</button>
+          <button class="btn green" onclick="closePausePopup()">계속하기</button>
+        </div>
+      </div>
+    </div>
+    <div id="ResultOverlay">
+      <div id="ResultTitleStage">
+        <div class="rt-star-row" id="rtStarRow"></div>
+        <div class="rt-title-text victory" id="rtTitleText">VICTORY</div>
+      </div>
+      <div id="ResultDetailStage">
+        <div id="rdVictoryPanel">
+          <div class="rd-left victory-bg"><div class="rd-hero" id="rdHeroPortrait"></div>
+            <div class="rd-stars" id="rdStars">★★★</div>
+            <div class="rd-title victory">VICTORY</div>
+            <div class="rd-stage" id="rdStageLabel">1-1</div>
+          </div>
+          <div class="rd-right">
+            <div class="rd-user-row"><span id="rdUserLevel">Lv.1</span><div class="rd-exp-bar"><div class="rd-exp-fill" id="rdUserExpBar" style="width:0%"></div></div><span id="rdUserExp">0 / 1,000</span></div>
+            <div class="rd-reward-title">보상 획득</div>
+            <div class="rd-rewards" id="rdRewards"></div>
+          </div>
+          <div class="rd-buttons-v"><button class="btn gray" onclick="goStageFromResult()">나가기</button><button class="btn" id="nextStageBtnV" onclick="goNextStage()">다음 스테이지로</button></div>
+        </div>
+        <div id="rdDefeatPanel">
+          <div class="rd-left defeat-bg"><div class="rd-hero" id="rdDefeatHero"></div>
+            <div class="rd-title defeat">DEFEAT</div>
+            <div class="rd-stage" id="rdDefeatStage">1-1</div>
+            <div class="rd-tip" id="rdDefeatTip">-</div>
+          </div>
+          <div class="rd-defeat-right">
+            <button class="rd-grow-btn rg-top" onclick="goGrowFromDefeat('levelup')"><span class="rg-ic">⬆</span>레벨업</button>
+            <button class="rd-grow-btn rg-left" onclick="goGrowFromDefeat('skill')"><span class="rg-ic">✦</span>스킬</button>
+            <button class="rd-grow-btn rg-right" onclick="goGrowFromDefeat('promo')"><span class="rg-ic">★</span>승급</button>
+          </div>
+          <div class="rd-buttons-d"><button class="btn gray" onclick="goStageFromResult()">나가기</button><button class="btn" onclick="goPartyFromResult()">다시하기</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="Gacha" class="screen bg-gacha">
+    <div class="title-row"><button class="round" onclick="showLoading({type:'scene',message:'로비로 돌아갑니다.',target:'Lobby'})">‹</button><div><div class="title-text">사도 모집</div><div class="subtitle">배너 1종만 동작 (단일 확률표, 24장 기준)</div></div></div><div class="top-currency" id="GachaCurrencies"></div>
+    <div class="side-tabs"><button class="active">사도 모집</button></div>
+    <div class="gacha-splash" id="gachaSplash"></div>
+    <div class="gacha-info"><h3>사도 모집</h3><p>순수한 마음으로 사도를 만나보자. 10회 모집 시 2성 이상 사도 1명 확정!</p><div class="gacha-rates" id="gachaRates"></div></div>
+    <div class="gacha-side-actions"><button class="btn small gray" onclick="showRates()">확률 정보</button><button class="btn small gray" onclick="future('모집 기록')">기록</button></div>
+    <div class="gacha-actions">
+      <button class="btn blue" id="freeGachaBtn" onclick="doGacha(1,true)">1일 1회 무료<br><small id="freeGachaState">사용 가능</small></button>
+      <button class="btn" onclick="doGacha(1,false)">1회 모집<br><small>엘리프 150 / 티켓 1</small></button>
+      <button class="btn green" onclick="doGacha(10,false)">10회 모집<br><small>엘리프 1,500 / 티켓 10</small></button>
+    </div>
+    <div id="GachaRevealOverlay">
+      <div class="gacha-reveal-card" id="gachaRevealCard" onclick="onGachaRevealCardClick()">
+        <button class="gacha-reveal-skip" onclick="skipGachaReveal(event)">Skip</button>
+        <div class="gacha-reveal-personality">
+          <div class="gr-p-icon" id="gachaRevealPersonalityIcon"></div>
+          <div class="gr-p-label" id="gachaRevealPersonalityLabel"></div>
+        </div>
+        <div class="gacha-reveal-left">
+          <div class="gr-new-badge" id="gachaRevealNewBadge">NEW</div>
+          <div class="gr-stars" id="gachaRevealStars"></div>
+          <div class="gr-name" id="gachaRevealName"></div>
+        </div>
+        <div class="gacha-reveal-portrait" id="gachaRevealPortrait"></div>
+        <div class="gr-dup-badge" id="gachaRevealDupBadge">
+          <div class="gr-dup-text">중복 사도 전환!</div>
+          <div class="gr-dup-icon">🎫</div>
+        </div>
+      </div>
+    </div>
+    <div id="GachaResultOverlay">
+      <div class="gacha-result-panel">
+        <div class="gacha-result-grid" id="gachaResultGrid"></div>
+        <div class="gacha-result-buttons"><button class="btn" onclick="closeGachaResult()">확인</button></div>
+      </div>
+    </div>
+  </section>
+  <section id="Roster" class="screen bg-roster">
+    <div class="title-row"><button class="round" onclick="showLoading({type:'scene',message:'로비로 돌아갑니다.',target:'Lobby'})">‹</button><div><div class="title-text">사도</div></div></div><div class="top-currency" id="RosterCurrencies"></div>
+    <div class="roster-toolbar"><button class="active" onclick="setRosterSort('level',event)">레벨순</button><button onclick="setRosterSort('star',event)">성급순</button><button onclick="setRosterSort('name',event)">이름순</button></div>
+    <div class="roster-page"><div class="roster-list" id="rosterGrid"></div></div>
+  </section>
+  <section id="CharacterDetail" class="screen bg-detail">
+    <div class="title-row"><button class="round" onclick="showLoading({type:'scene',message:'사도 목록으로 돌아갑니다.',target:'Roster'})">‹</button><div><div class="title-text" id="detailName">-</div><div class="subtitle" id="detailRole">-</div></div></div><div class="top-currency" id="DetailCurrencies"></div>
+    <div class="side-tabs" id="detailSideTabs">
+      <button class="active" onclick="switchDetailTab('info')">정보</button>
+      <button onclick="switchDetailTab('levelup')">레벨업</button>
+      <button onclick="switchDetailTab('skill')">스킬</button>
+      <button onclick="switchDetailTab('promo')">승급</button>
+    </div>
+    <button class="round detail-nav prev" onclick="cycleDetail(-1)">‹</button><button class="round detail-nav next" onclick="cycleDetail(1)">›</button>
+    <div class="detail-portrait" id="detailPortrait"></div>
+    <div class="detail-panel" id="detailInfoPanel"><div class="power-box" id="detailLvStar">Lv.1 ★1</div><div class="power-box power-box-cp" id="detailPower">전투력 -</div><div class="stat-header">스테이터스</div><div id="detailStats"></div></div>
+    <div class="levelup-box" id="detailLevelupPanel"><div id="levelupPreview"></div><div class="cost-row"><span id="levelupCost">-</span></div><button class="btn green" style="width:100%" onclick="levelUpCharacter()">레벨업</button></div>
+    <div class="detail-tags" id="detailTags"></div>
+    <div class="skill-panel" id="detailSkillPanel">
+      <div class="skill-preview" id="skillPreviewBox"></div>
+      <div class="skill-subtabs" id="skillSubtabs"></div>
+      <div class="skill-info" id="skillInfoBox"></div>
+    </div>
+    <div id="SkillEnhancePopup">
+      <div class="skill-enhance-panel">
+        <div class="skill-enhance-head"><span>스킬 강화</span><button onclick="closeSkillEnhance()">×</button></div>
+        <div class="skill-enhance-body" id="skillEnhanceBody"></div>
+      </div>
+    </div>
+    <div class="detail-panel promo-panel" id="detailPromoPanel">
+      <div class="promo-stars" id="promoStars">★☆☆☆☆ » ★★☆☆☆</div>
+      <div class="promo-mat" id="promoMat"></div>
+      <div id="promoGoldRow" class="promo-gold-row"></div>
+      <button class="btn" style="width:100%" id="promoBtn" onclick="openPromotePopup()">승급</button>
+    </div>
+    <div id="PromotePopup">
+      <div class="promo-popup-panel">
+        <div class="skill-enhance-head"><span>상세 정보</span><button onclick="closePromotePopup()">×</button></div>
+        <div class="promo-popup-body">
+          <div class="promo-popup-left">
+            <div class="promo-stars" id="popStars">★☆☆☆☆ » ★★☆☆☆</div>
+            <div class="promo-mat" id="popMat"></div>
+            <div id="popGoldRow" class="promo-gold-row"></div>
+          </div>
+          <div class="promo-popup-right">
+            <div class="power-box-cp popup-power" id="popPower">전투력 -</div>
+            <div class="stat-header">사도 성장 능력치</div>
+            <div id="popStats"></div>
+          </div>
+        </div>
+        <div class="promo-popup-actions"><button class="btn gray" onclick="closePromotePopup()">취소</button><button class="btn green" id="popConfirmBtn" onclick="confirmPromote()">승급</button></div>
+      </div>
+    </div>
+  </section>
+  <section id="Backpack" class="screen bg-roster">
+    <div class="title-row"><button class="round" onclick="showLoading({type:'scene',message:'로비로 돌아갑니다.',target:'Lobby'})">‹</button><div><div class="title-text">배낭</div><div class="subtitle">성장 재료 (티켓 · 조각)</div></div></div><div class="top-currency" id="BackpackCurrencies"></div>
+    <div class="backpack-toolbar">성장</div>
+    <div class="backpack-body"><div class="backpack-grid" id="backpackGrid"></div></div>
+    <div class="backpack-detail" id="backpackDetail"><h3>항목을 선택해주세요</h3></div>
+  </section>
+</div>
+<details class="design-doc"><summary>기획서 / DB 설계 / 레벨디자인 요약 보기</summary><div class="design-doc-body">
+<h2>요약</h2>
+<p>1인 개발 포트폴리오용 트릭컬 리바이브풍 모작 프로토타입. 아이디/비밀번호 로그인(계정별 세션 유지) → 로비에서 모험/모집/사도 진입. 전투는 5웨이브 고정, 준비(40초, 배속 무관) → 전투(80초, 배속 적용) 순으로 진행하며, 사도는 사거리 밖이면 이동하고 사거리 안에서만 공격속도에 맞춰 자동 공격한다. 4학년 이상 액티브 스킬은 하단 아이콘 클릭 시 10초 쿨타임 연출을 갖는다(실제 발동 로직은 후속 세션 범위). AUTO 모드는 준비단계 자동 카드구매/장착과 전투단계 액티브스킬 자동 사용까지 담당한다. 사도는 스타터 6명 + 모집 전용 6명, 총 12명이며 모집은 카드 공개 애니메이션과 결과 그리드 연출을 거친다.</p>
+<p>자세한 내용은 아래 문서를 참고한다.</p>
+<ul>
+  <li><code>docs/전체_기획서.md</code> — 계정·화면흐름·전투·모집·사도·경제 전체 기능 요약</li>
+  <li><code>docs/DB_설계서.md</code> — 계정/사도/전투/경제 데이터 스키마 상세</li>
+  <li><code>docs/레벨디자인_설계서.md</code> — 레벨 성장·난이도·보상 수식 상세</li>
+</ul>
+</div></details>
+<script>
+'use strict';
+const ACCOUNTS_KEY = "trickcal_portfolio_accounts_v1";
+const SESSION_KEY = "trickcal_portfolio_session_v1";
+const PERSONALITY = {madness:{label:'광기',color:'#c9527a'},purity:{label:'순수',color:'#4fb8e0'},cold:{label:'냉정',color:'#4a7fd6'},gloom:{label:'우울',color:'#7a6ac6'},lively:{label:'활발',color:'#e0a23a'}};
+const ROLE = {dealer:{label:'딜러',icon:'⚔',color:'#d8503f'},tank:{label:'탱커',icon:'🛡',color:'#3f7ad8'},supporter:{label:'서포터',icon:'✚',color:'#3fa85a'},other:{label:'기타',icon:'✦',color:'#9a7ad8'}};
+// Roster 카드 배경색: 냉정=파랑, 활발=노랑, 우울=보라, 순수=초록, 광기=빨강
+const PERSONALITY_CARD_BG = {cold:'#4a80d6',lively:'#dba831',gloom:'#8a63cf',purity:'#4bb06a',madness:'#dd4f47'};
+const POSITION_ROLE_STYLE = {'전열':{color:'#e5433d',big:2},'중열':{color:'#3fa64a',big:1},'후열':{color:'#3f7ad8',big:0},'모든열':{color:'#e2e2e2',big:-1}};
+// position_role: 파티 편성 시 배치 가능한 x좌표를 제한하는 값. 전열=x3만, 중열=x2만, 후열=x1만, 모든열=제한없음.
+// 실제 배치 강제 검증은 PartySetup 화면 수정 세션에서 적용 예정. 이번 세션은 character_master 필드 추가와 Roster 카드 표시까지만.
+const CHARACTER_MASTER = [
+  {id:'alice',name:'앨리스',personality:'lively',role:'dealer',positionRole:'전열',initialStar:2,baseHp:100,baseAtk:22,baseDef:9,maxSp:100,interval:1.1,range:1.4,skillId:'skill_alice',starter:true},
+  {id:'ran',name:'란',personality:'cold',role:'dealer',positionRole:'중열',initialStar:3,baseHp:95,baseAtk:24,baseDef:8,maxSp:100,interval:1.0,range:1.3,skillId:'skill_ran',starter:true},
+  {id:'joanne',name:'조안',personality:'purity',role:'dealer',positionRole:'후열',initialStar:2,baseHp:85,baseAtk:26,baseDef:7,maxSp:100,interval:1.25,range:2.6,skillId:'skill_joanne',starter:true},
+  {id:'uros',name:'우로스',personality:'madness',role:'tank',positionRole:'전열',initialStar:1,baseHp:170,baseAtk:13,baseDef:20,maxSp:100,interval:1.35,range:1.2,skillId:'skill_uros',starter:true},
+  {id:'miro',name:'미로',personality:'gloom',role:'supporter',positionRole:'후열',initialStar:1,baseHp:90,baseAtk:15,baseDef:9,maxSp:100,interval:1.05,range:2.2,skillId:'skill_miro',starter:true},
+  {id:'amelia',name:'아멜리아',personality:'purity',role:'supporter',positionRole:'모든열',initialStar:3,baseHp:88,baseAtk:14,baseDef:8,maxSp:100,interval:1.2,range:2.0,skillId:'skill_amelia',starter:true},
+  {id:'roi',name:'로이',personality:'madness',role:'dealer',positionRole:'중열',initialStar:2,baseHp:90,baseAtk:23,baseDef:6,maxSp:100,interval:1.15,range:1.5,skillId:'skill_roi'},
+  {id:'nell',name:'넬',personality:'cold',role:'tank',positionRole:'전열',initialStar:1,baseHp:165,baseAtk:12,baseDef:19,maxSp:100,interval:1.4,range:1.2,skillId:'skill_nell'},
+  {id:'pio',name:'피오',personality:'lively',role:'supporter',positionRole:'후열',initialStar:2,baseHp:86,baseAtk:13,baseDef:7,maxSp:100,interval:1.1,range:2.1,skillId:'skill_pio'},
+  {id:'dahlia',name:'달리아',personality:'gloom',role:'other',positionRole:'모든열',initialStar:3,baseHp:95,baseAtk:19,baseDef:10,maxSp:100,interval:1.2,range:1.9,skillId:'skill_dahlia'},
+  {id:'yuki',name:'유키',personality:'purity',role:'dealer',positionRole:'전열',initialStar:1,baseHp:98,baseAtk:20,baseDef:9,maxSp:100,interval:1.05,range:1.3,skillId:'skill_yuki'},
+  {id:'kobi',name:'코비',personality:'gloom',role:'dealer',positionRole:'후열',initialStar:2,baseHp:92,baseAtk:21,baseDef:6,maxSp:100,interval:1.22,range:1.6,skillId:'skill_kobi'}
+];
+const ENEMY_MASTER = [
+  {id:'blanketghost',name:'담요 유령',baseHp:60,baseAtk:12,baseDef:4,interval:1.5,range:1.3,lore:'포근한 담요를 뒤집어쓰고 밤마다 돌아다니는 유령. 낯을 가려서 사람 앞에서는 이불 밖으로 잘 나오지 않는다.'},
+  {id:'meow',name:'MEOW',baseHp:55,baseAtk:13,baseDef:3,interval:1.25,range:1.3,lore:'울음소리가 온통 "MEOW"뿐인 수수께끼의 생물. 정체를 아는 사도는 아직 없다.'},
+  {id:'crayonarcher',name:'크레용 궁수',baseHp:48,baseAtk:15,baseDef:2,interval:1.2,range:2.5,lore:'부러진 크레용으로 활을 깎아 만든 궁수. 색이 닳을 때까지 과녁을 벗어난 적이 없다고 한다.'},
+  {id:'crayonknightcool',name:'크레용 기사',baseHp:80,baseAtk:11,baseDef:7,interval:1.45,range:1.3,lore:'냉정한 눈빛으로 대열을 지키는 기사. 크레용으로 그려졌지만 방어 태세만큼은 진지하다.'},
+  {id:'nururingwarrior',name:'누루링 전사',baseHp:75,baseAtk:13,baseDef:5,interval:1.38,range:1.3,lore:'끈적한 몸으로 무기를 휘두르는 전사. 몸이 미끄러워 공격을 잘 흘려낸다.'},
+  {id:'golem',name:'골렘',baseHp:130,baseAtk:16,baseDef:9,interval:1.8,range:1.3,lore:'오래된 유적을 지키던 거대한 수호자. 한번 화가 나면 좀처럼 가라앉지 않는다.'}
+];
+const SKILL_MASTER = [
+  {id:'skill_alice',name:'별빛 참격',owner:'alice',cost:55,targetType:'singleEnemy',multiplier:2.3,effect:'damage'},
+  {id:'skill_ran',name:'집중 사격',owner:'ran',cost:55,targetType:'rowEnemy',multiplier:1.7,effect:'damage'},
+  {id:'skill_joanne',name:'마력 폭발',owner:'joanne',cost:65,targetType:'allEnemy',multiplier:1.28,effect:'damage'},
+  {id:'skill_uros',name:'수호 태세',owner:'uros',cost:45,targetType:'self',multiplier:0,effect:'shield'},
+  {id:'skill_miro',name:'거울 투척',owner:'miro',cost:50,targetType:'singleEnemy',multiplier:2.0,effect:'damage'},
+  {id:'skill_amelia',name:'응급 회복',owner:'amelia',cost:45,targetType:'lowHpAlly',multiplier:1.8,effect:'heal'},
+  {id:'skill_roi',name:'그림자 베기',owner:'roi',cost:55,targetType:'singleEnemy',multiplier:2.1,effect:'damage'},
+  {id:'skill_nell',name:'얼음 방벽',owner:'nell',cost:45,targetType:'self',multiplier:0,effect:'shield'},
+  {id:'skill_pio',name:'생기의 노래',owner:'pio',cost:50,targetType:'lowHpAlly',multiplier:1.6,effect:'heal'},
+  {id:'skill_dahlia',name:'어둠의 파동',owner:'dahlia',cost:65,targetType:'allEnemy',multiplier:1.3,effect:'damage'},
+  {id:'skill_yuki',name:'눈꽃 관통',owner:'yuki',cost:55,targetType:'rowEnemy',multiplier:1.75,effect:'damage'},
+  {id:'skill_kobi',name:'급습',owner:'kobi',cost:50,targetType:'singleEnemy',multiplier:2.0,effect:'damage'}
+];
+// 사도 상세 > 스킬 탭 전용 임시 데이터. 저학년 스킬은 SKILL_MASTER를 재사용하고, 일반공격/고학년 스킬은 화면 검증용 최소 텍스트만 작성(밸런싱 대상 아님).
+// 전투 로직 연동은 이번 세션 범위 밖 — 전투 시스템 개선 세션에서 진행.
+const SKILL_TAB_ORDER=['sp','active','normal'];
+const SKILL_TAB_LABEL={sp:'저학년 스킬',active:'고학년 스킬',normal:'일반 공격'};
+const CHARACTER_SKILLS = {
+  alice:{normal:{name:'기본 베기',icon:'⚔',desc:'가장 가까운 적을 검으로 베어 물리 피해를 입힌다.'},active:{name:'유성 강타',icon:'☄',desc:'4학년 이상부터 사용 가능. 전방 범위의 적에게 강한 물리 피해를 입힌다.'}},
+  ran:{normal:{name:'속사',icon:'🏹',desc:'가장 가까운 적에게 화살을 발사해 물리 피해를 입힌다.'},active:{name:'집중 포화',icon:'💥',desc:'4학년 이상부터 사용 가능. 한 줄에 있는 모든 적에게 물리 피해를 입힌다.'}},
+  joanne:{normal:{name:'마력탄',icon:'🔮',desc:'가장 가까운 적에게 마력탄을 날려 마법 피해를 입힌다.'},active:{name:'전격 폭발',icon:'⚡',desc:'4학년 이상부터 사용 가능. 모든 적에게 범위 마법 피해를 입힌다.'}},
+  uros:{normal:{name:'방패 타격',icon:'🛡',desc:'가장 가까운 적을 방패로 밀쳐 물리 피해를 입힌다.'},active:{name:'철벽 태세',icon:'🧱',desc:'4학년 이상부터 사용 가능. 자신의 방어력을 크게 올리고 적의 시선을 끈다.'}},
+  miro:{normal:{name:'거울 반사',icon:'🪞',desc:'가장 가까운 적에게 거울 조각을 던져 물리 피해를 입힌다.'},active:{name:'수호의 거울',icon:'🔷',desc:'4학년 이상부터 사용 가능. 아군 1명에게 피해를 흡수하는 보호막을 건다.'}},
+  amelia:{normal:{name:'치유의 손길',icon:'✚',desc:'HP 비율이 가장 낮은 아군을 소량 회복시킨다.'},active:{name:'축복의 빛',icon:'🌟',desc:'4학년 이상부터 사용 가능. 아군 전체를 회복시킨다.'}},
+  roi:{normal:{name:'단검 연타',icon:'🗡',desc:'가장 가까운 적을 단검으로 빠르게 베어 물리 피해를 입힌다.'},active:{name:'그림자 습격',icon:'🌑',desc:'4학년 이상부터 사용 가능. 대상에게 순간 접근해 강한 물리 피해를 입힌다.'}},
+  nell:{normal:{name:'얼음 장창',icon:'❄',desc:'가장 가까운 적을 얼음 창으로 찔러 물리 피해를 입힌다.'},active:{name:'빙결 방패',icon:'🧊',desc:'4학년 이상부터 사용 가능. 자신의 방어력을 크게 올리고 적의 시선을 끈다.'}},
+  pio:{normal:{name:'꽃잎 흩날리기',icon:'🌸',desc:'HP 비율이 가장 낮은 아군을 소량 회복시킨다.'},active:{name:'만개의 축복',icon:'🌺',desc:'4학년 이상부터 사용 가능. 아군 전체를 회복시킨다.'}},
+  dahlia:{normal:{name:'저주 화살',icon:'🏹',desc:'가장 가까운 적에게 저주받은 화살을 쏘아 마법 피해를 입힌다.'},active:{name:'심연의 저주',icon:'🌀',desc:'4학년 이상부터 사용 가능. 모든 적에게 범위 마법 피해를 입힌다.'}},
+  yuki:{normal:{name:'설화 베기',icon:'⚔',desc:'가장 가까운 적을 검으로 베어 물리 피해를 입힌다.'},active:{name:'눈보라 참격',icon:'🌨',desc:'4학년 이상부터 사용 가능. 한 줄에 있는 모든 적에게 물리 피해를 입힌다.'}},
+  kobi:{normal:{name:'기습 발톱',icon:'🐾',desc:'가장 가까운 적을 발톱으로 할퀴어 물리 피해를 입힌다.'},active:{name:'맹수의 도약',icon:'💢',desc:'4학년 이상부터 사용 가능. 전방 범위의 적에게 강한 물리 피해를 입힌다.'}}
+};
+function getCharacterSkill(characterId,tab){ const c=getCharacter(characterId); if(tab==='sp'){ const s=getSkill(c.skillId); return {name:s.name,icon:'💫',desc:(s.effect==='heal'?'SP가 가득 차면 자동 사용. HP가 가장 낮은 아군을 회복시킨다.':s.effect==='shield'?'SP가 가득 차면 자동 사용. 자신의 방어력을 올린다.':'SP가 가득 차면 자동 사용. 적에게 마법 계열 피해를 입힌다.')}; } return CHARACTER_SKILLS[characterId][tab]; }
+function skillEnhanceCost(level){ return {macaron:level*80,gold:level*500}; }
+// 승급(성급업) 비용. 하극상 레벨은 이 프로젝트 범위 밖이라 다루지 않는다.
+function promotionCost(nextStar){ return {shard:nextStar*10,gold:nextStar*50000}; }
+// 레벨디자인_설계서.md §2/§3/§4/§5/§6 공식을 그대로 코드화
+const GROWTH_RATE = 0.03;
+// 성급(star) 스탯 배율. 레벨 성장과 별개 축으로 곱연산 적용 (HP/공격력/방어력만, SP는 미적용)
+const STAR_MULTIPLIER = {1:1.1,2:1.3,3:1.5,4:1.7,5:1.9};
+// 전투 학년 배율(16.3장). 6학년 역할 특화(16.4장): 딜러 공격력/탱커 최대HP만 1.65 대신 2.00
+const GRADE_MULTIPLIER = {1:1.00,2:1.06,3:1.17,4:1.31,5:1.47,6:1.65};
+const GRADE_SPECIAL_MULTIPLIER = 2.00;
+// 사도 카드 비용: 미소환→1학년 5, 1→2학년 10 ... 5→6학년 30
+const GRADE_COST_TABLE = [5,10,15,20,25,30];
+// 전체 보조 카드(17장): 모두 5코인, 등급 차이 없음
+const SPELL_CARD_DEFS = [
+  {id:'spell_atk',name:'공격력 증가',icon:'⚔',statKey:'atkPct',value:5},
+  {id:'spell_def',name:'방어력 증가',icon:'🛡',statKey:'defPct',value:5},
+  {id:'spell_hp',name:'체력 증가',icon:'❤',statKey:'hpPct',value:5},
+  {id:'spell_spd',name:'공격속도 증가',icon:'💨',statKey:'spdPct',value:5},
+  {id:'spell_heal',name:'체력 회복',icon:'✚',instant:true,effect:'healLowest'},
+  {id:'spell_sp',name:'SP 회복',icon:'🔷',instant:true,effect:'spLowest'}
+];
+// 사도 장착 카드(18장): 모두 5코인, 사도당 최대 3개, 교체·해제 불가
+const EQUIP_CARD_DEFS = [
+  {id:'equip_atk',name:'공격력 증가',icon:'⚔',statKey:'atkPct',value:10},
+  {id:'equip_def',name:'방어력 증가',icon:'🛡',statKey:'defPct',value:10},
+  {id:'equip_hp',name:'체력 증가',icon:'❤',statKey:'hpPct',value:10},
+  {id:'equip_spd',name:'공격속도 증가',icon:'💨',statKey:'spdPct',value:10}
+];
+function statLabel(k){ return {atkPct:'공격력',defPct:'방어력',hpPct:'체력',spdPct:'공격속도'}[k]||k; }
+const WAVE_PATTERN = [2,3,3,4,4];
+const CHAPTER_STAGE_COUNT = 10;
+function statByLevel(base,level){ return Math.round(base*(1+GROWTH_RATE*(level-1))); }
+function recommendedLevel(chapterNo,stageNo){ return Math.min(99,(chapterNo-1)*10+stageNo); }
+function staminaCostOf(){ return 6; }
+function goldRewardOf(level){ return 100*level; }
+function expRewardOf(level){ return 50*level; }
+function macaronRewardOf(level){ return 20*level; }
+function elleafRewardOf(level){ return 1*level; }
+function growthCost(level){ return {macaron:level*20}; }
+function maxStaminaOf(playerLevel){ return 20+playerLevel; }
+// 스테이지별 고정 몬스터 성격: 1스테이지~10스테이지 순서대로 순수,냉정,광기,활발,우울 반복
+const STAGE_PERSONALITY_CYCLE=['purity','cold','madness','lively','gloom'];
+// 광기→순수→냉정→광기 순환(공격측이 150%) + 활발↔우울 상호. counterPersonality(X) = X를 상대로 유리한(150%) 성격
+const PERSONALITY_COUNTER={purity:'madness',cold:'purity',madness:'cold',lively:'gloom',gloom:'lively'};
+function counterPersonality(key){ return PERSONALITY_COUNTER[key]||key; }
+// 권장 전투력 기준값: 레벨1·1성 캐릭터 6명 파티의 합산 전투력
+const BASELINE_PARTY_POWER=CHARACTER_MASTER.reduce((sum,c)=>sum+combatPower(characterFinalStats(c,1,1)),0);
+function recommendedPowerOf(level){ return Math.round(BASELINE_PARTY_POWER*(1+0.05*(level-1))); }
+function buildChapter(chapterNo){
+  const stages=[]; const waves={};
+  for(let no=1;no<=CHAPTER_STAGE_COUNT;no++){
+    const id='stage_0'+chapterNo+'_'+String(no).padStart(2,'0');
+    const level=recommendedLevel(chapterNo,no);
+    const monsterPersonality=STAGE_PERSONALITY_CYCLE[(no-1)%STAGE_PERSONALITY_CYCLE.length];
+    const isBoss=no===CHAPTER_STAGE_COUNT;
+    const waveIds=[];
+    for(let w=0;w<WAVE_PATTERN.length;w++){
+      const wid=id+'_w'+(w+1); waveIds.push(wid);
+      const count=WAVE_PATTERN[w];
+      const enemies=[];
+      for(let i=0;i<count;i++){
+        const useBoss=isBoss&&w===WAVE_PATTERN.length-1&&i===count-1;
+        const base=ENEMY_MASTER[(no+w+i)%ENEMY_MASTER.length];
+        const mult=useBoss?1.5:1.0;
+        enemies.push({enemyId:base.id,level,grade:useBoss?'boss':'normal',mult,pos:{side:'enemy',x:1+(i%3),y:1+(i%3)}});
+      }
+      waves[wid]={enemies};
+    }
+    stages.push({id,chapter:chapterNo,no,name:'침략 '+chapterNo+'-'+no,recommendedLevel:level,recommendedPower:recommendedPowerOf(level),monsterPersonality,staminaCost:staminaCostOf(),waveIds,rewardGroupId:'reward_'+id,nextStageId:no<CHAPTER_STAGE_COUNT?'stage_0'+chapterNo+'_'+String(no+1).padStart(2,'0'):''});
+  }
+  return {stages,waves};
+}
+const CHAPTER1 = buildChapter(1);
+const STAGE_MASTER = CHAPTER1.stages;
+const WAVE_MASTER = CHAPTER1.waves;
+const REWARD_MASTER = {};
+STAGE_MASTER.forEach(s=>{ REWARD_MASTER[s.rewardGroupId] = {
+  firstClear:[{itemId:'coin',count:goldRewardOf(s.recommendedLevel)*5,type:'currency'},{itemId:'exp',count:expRewardOf(s.recommendedLevel)*5,type:'currency'},{itemId:'macaron',count:macaronRewardOf(s.recommendedLevel)*5,type:'currency'},{itemId:'leaf',count:elleafRewardOf(s.recommendedLevel)*5,type:'currency'}],
+  repeat:[{itemId:'coin',count:goldRewardOf(s.recommendedLevel),type:'currency'},{itemId:'exp',count:expRewardOf(s.recommendedLevel),type:'currency'},{itemId:'macaron',count:macaronRewardOf(s.recommendedLevel),type:'currency'},{itemId:'leaf',count:elleafRewardOf(s.recommendedLevel),type:'currency'}],
+  random:[{itemId:'shard',count:1,type:'item',rate:.3}]
+};});
+// 원본 기획서 24장: 1성 60% / 2성 30% / 3성 10%, 24.2 1회 150엘리프·10회 1500엘리프, 24.3 1일 1회 무료, 24.4 티켓
+const GACHA_BANNER = {id:'banner_apostle',title:'사도 모집',singleCost:150,multiCost:1500,rates:{1:.6,2:.3,3:.1},pool:CHARACTER_MASTER};
+let PLAYER_SAVE = null;
+let BATTLE_START_REQUEST = null;
+let BATTLE_CONTEXT = null;
+let BATTLE_RESULT = null;
+const appState = {currentScreen:'Login',previousScreen:'Login',selectedStageId:'stage_01_01',loading:null,battle:null,battleTimer:null,rosterSort:'level',detailIndex:0,detailTab:'info',pendingSignup:null};
+function $(id){ return document.getElementById(id); }
+function fmt(n){ return Number(n||0).toLocaleString('ko-KR'); }
+function uid(prefix){ return prefix + '_' + Date.now() + '_' + Math.floor(Math.random()*10000); }
+function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+function toast(msg){ const el=$('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(el._timer); el._timer=setTimeout(()=>el.classList.remove('show'),1500); }
+function future(name){ toast(name + ' 기능은 이후 구현 범위입니다.'); }
+function todayKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+
+function stopBattleLoop(){ if(appState && appState.battleTimer){ clearInterval(appState.battleTimer); appState.battleTimer=null; } }
+function activateScreen(screenId){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); const target=$(screenId); if(target) target.classList.add('active'); appState.previousScreen=appState.currentScreen; appState.currentScreen=screenId; }
+function go(screenId){ closeStagePopup(); closeResultOverlayOnly(); if(screenId!=='Battle') stopBattleLoop(); activateScreen(screenId); renderAll(); }
+function showLoading(options){ const opt=Object.assign({type:'scene',message:'데이터를 준비합니다.',target:'Lobby',duration:500},options||{}); stopBattleLoop(); appState.loading=opt; appState.previousScreen=appState.currentScreen; $('loadingType').textContent=opt.type||'scene'; $('loadingMessage').textContent=opt.message||'데이터를 준비합니다.'; $('loadingPanel').classList.remove('error'); activateScreen('Loading'); setTimeout(completeLoading,opt.duration||500); }
+function completeLoading(){ const opt=appState.loading||{}; try{ if(opt.type==='battle'){ BATTLE_CONTEXT=buildBattleContext(BATTLE_START_REQUEST); activateScreen('Battle'); initBattle(); return; } activateScreen(opt.target||'Lobby'); renderAll(); }catch(err){ console.error(err); $('loadingPanel').classList.add('error'); $('loadingMessage').textContent='로딩 중 오류: '+(err.message||err); } }
+function loadingBack(){ activateScreen(appState.previousScreen||'Lobby'); renderAll(); }
+
+function createDefaultSave(nickname){
+  const owned=CHARACTER_MASTER.filter(c=>c.starter).map((c,i)=>({playerCharacterId:'pc_'+c.id+'_001',characterId:c.id,level:5,star:c.initialStar,order:i,skillLevels:{sp:1,active:1}}));
+  return {accountId:uid('guest'),nickname:nickname||'게스트',level:1,exp:0,currency:{stamina:64,maxStamina:maxStaminaOf(1),coin:2000,leaf:2000,macaron:1000},inventory:{ticket:5,shard:{_common:20,alice:10}},ownedCharacters:owned,partySlots:defaultPartySlots(owned),
+    stageProgress:{stage_01_01:{stageId:'stage_01_01',unlocked:true,cleared:false,bestStar:0,bestTimeSec:0,clearCount:0,firstRewardClaimed:false}},
+    chapterMilestoneClaimed:{1:{10:false,20:false,30:false}},
+    lastSelectedStageId:'stage_01_01',battleOptions:{autoBattle:true,speed:1,skillAuto:true},freeGachaDate:'',battleResults:[]};
+}
+function defaultPartySlots(owned){ const positions=[{x:3,y:2},{x:3,y:1},{x:3,y:3},{x:2,y:2},{x:1,y:2},{x:2,y:1}]; return owned.slice(0,6).map((pc,i)=>({partyId:'party_main',slot:i+1,playerCharacterId:pc.playerCharacterId,characterId:pc.characterId,position:{side:'player',x:positions[i].x,y:positions[i].y}})); }
+function ensureSaveShape(){ const fresh=createDefaultSave(PLAYER_SAVE?.nickname||'게스트'); PLAYER_SAVE=Object.assign(fresh,PLAYER_SAVE||{}); PLAYER_SAVE.currency=Object.assign(fresh.currency,PLAYER_SAVE.currency||{}); PLAYER_SAVE.inventory=Object.assign(fresh.inventory,PLAYER_SAVE.inventory||{}); PLAYER_SAVE.inventory.shard=PLAYER_SAVE.inventory.shard||{}; PLAYER_SAVE.stageProgress=Object.assign(fresh.stageProgress,PLAYER_SAVE.stageProgress||{}); PLAYER_SAVE.chapterMilestoneClaimed=PLAYER_SAVE.chapterMilestoneClaimed||fresh.chapterMilestoneClaimed; PLAYER_SAVE.battleResults=PLAYER_SAVE.battleResults||[]; PLAYER_SAVE.battleOptions=Object.assign(fresh.battleOptions,PLAYER_SAVE.battleOptions||{}); if(!PLAYER_SAVE.ownedCharacters?.length) PLAYER_SAVE.ownedCharacters=fresh.ownedCharacters; PLAYER_SAVE.ownedCharacters.forEach(pc=>{ pc.skillLevels=pc.skillLevels||{normal:1,sp:1,active:1}; }); if(!Array.isArray(PLAYER_SAVE.partySlots)) PLAYER_SAVE.partySlots=fresh.partySlots; }
+// ---- 계정(아이디/비밀번호) 저장소: 하나의 로컬스토리지 맵에 계정별 세이브를 담는다 ----
+function loadAccounts(){ try{ return JSON.parse(localStorage.getItem(ACCOUNTS_KEY))||{}; }catch(e){ console.warn(e); return {}; } }
+function saveAccounts(accounts){ localStorage.setItem(ACCOUNTS_KEY,JSON.stringify(accounts)); }
+function getSessionId(){ return localStorage.getItem(SESSION_KEY)||''; }
+function setSessionId(id){ localStorage.setItem(SESSION_KEY,id); }
+function clearSessionId(){ localStorage.removeItem(SESSION_KEY); }
+function loadSave(){ const id=getSessionId(); if(!id) return null; const accounts=loadAccounts(); const acc=accounts[id]; if(!acc||!acc.save) return null; PLAYER_SAVE=acc.save; ensureSaveShape(); return PLAYER_SAVE; }
+function saveGame(){ if(!PLAYER_SAVE) return false; const id=getSessionId(); if(!id) return false; PLAYER_SAVE.updatedAt=new Date().toISOString(); const accounts=loadAccounts(); if(!accounts[id]) return false; accounts[id].save=PLAYER_SAVE; saveAccounts(accounts); return true; }
+function clearActiveSessionState(){ PLAYER_SAVE=null; BATTLE_START_REQUEST=null; BATTLE_CONTEXT=null; BATTLE_RESULT=null; clearSessionId(); }
+function attemptLogin(){
+  const id=($('loginIdInput').value||'').trim(); const password=$('loginPwInput').value||'';
+  if(!id||!password){ toast('아이디와 비밀번호를 입력해주세요.'); return; }
+  const accounts=loadAccounts(); const acc=accounts[id];
+  if(!acc){ openSignupNickname(id,password); return; }
+  if(acc.password!==password){ toast('아이디 또는 비밀번호가 일치하지 않습니다.'); $('loginPwInput').value=''; return; }
+  PLAYER_SAVE=acc.save; ensureSaveShape(); setSessionId(id); saveGame();
+  appState.selectedStageId=PLAYER_SAVE.lastSelectedStageId||'stage_01_01';
+  showLoading({type:'save',message:'저장 데이터를 불러옵니다.',target:'Lobby'});
+}
+function openSignupNickname(id,password){ appState.pendingSignup={id,password}; $('signupNicknameInput').value=''; $('SignupNicknamePopup').classList.add('show'); }
+function confirmSignupNickname(){ const pending=appState.pendingSignup; if(!pending) return; const nickname=$('signupNicknameInput').value.trim(); if(!nickname){ toast('닉네임을 입력해주세요.'); return; }
+  const accounts=loadAccounts(); accounts[pending.id]={id:pending.id,password:pending.password,save:null}; saveAccounts(accounts);
+  PLAYER_SAVE=createDefaultSave(nickname); PLAYER_SAVE.accountId=pending.id; appState.selectedStageId='stage_01_01';
+  setSessionId(pending.id); saveGame(); appState.pendingSignup=null;
+  $('SignupNicknamePopup').classList.remove('show');
+  showLoading({type:'save',message:'계정을 생성하고 로비로 이동합니다.',target:'Lobby'});
+}
+function logout(){ closeSettingsPopup(); clearActiveSessionState(); $('loginIdInput').value=''; $('loginPwInput').value=''; toast('로그아웃했습니다.'); go('Login'); }
+function confirmAccountReset(){ if(!confirm('계정을 삭제하시겠습니까? 아이디, 비밀번호, 저장 데이터가 모두 사라지며 되돌릴 수 없습니다.')) return;
+  const id=getSessionId(); if(id){ const accounts=loadAccounts(); delete accounts[id]; saveAccounts(accounts); }
+  closeSettingsPopup(); clearActiveSessionState(); $('loginIdInput').value=''; $('loginPwInput').value='';
+  toast('계정을 삭제했습니다.'); go('Login');
+}
+function openSettingsPopup(){ $('SettingsPopup').classList.add('show'); }
+function closeSettingsPopup(){ $('SettingsPopup').classList.remove('show'); }
+function getStage(id){ return STAGE_MASTER.find(s=>s.id===(id||appState.selectedStageId))||STAGE_MASTER[0]; }
+function getStageProgress(id){ return PLAYER_SAVE?.stageProgress?.[id]||{stageId:id,unlocked:false,cleared:false,bestStar:0,bestTimeSec:0,clearCount:0,firstRewardClaimed:false}; }
+function getCharacter(id){ return CHARACTER_MASTER.find(c=>c.id===id); }
+function getEnemy(id){ return ENEMY_MASTER.find(e=>e.id===id); }
+function getSkill(id){ return SKILL_MASTER.find(s=>s.id===id); }
+function getOwned(pcId){ return PLAYER_SAVE.ownedCharacters.find(p=>p.playerCharacterId===pcId); }
+function iconSpan(type,label){ return '<span class="icon i-'+type+'">'+label+'</span>'; }
+function rewardIcon(itemId){ return {coin:'🪙',leaf:'🍃',macaron:'🥯',shard:'💠',exp:'EXP',ticket:'🎫'}[itemId]||'🎁'; }
+function unitShape(kind,id,label,silhouette){ const enemy=kind==='enemy'; return '<div class="css-unit"><div class="unit-shape '+(silhouette?'silhouette ':'')+(enemy?'enemy enemy-':'hero-')+id+'"><div class="unit-ear left"></div><div class="unit-ear right"></div><div class="unit-head"></div><div class="unit-body"></div><div class="unit-face"></div><div class="unit-name-tag">'+(label||'')+'</div></div></div>'; }
+function renderAll(){ if(!PLAYER_SAVE) PLAYER_SAVE=loadSave(); renderLoginPreview(); if(!PLAYER_SAVE) return; renderCurrencies(); renderLobby(); renderStageSelect(); renderPartySetup(); renderGacha(); renderRosterGrid(); renderDetail(); renderBackpack(); }
+// 화면/탭별로 노출할 재화 종류를 구성 가능하게 관리 (마카롱/스태미나/골드/엘리프/티켓 중 선택)
+const CURRENCY_PILL = {
+  stamina:c=>'<div class="currency hud-pill">'+iconSpan('stamina','●')+'<span>'+c.stamina+'/'+c.maxStamina+'</span></div>',
+  coin:c=>'<div class="currency hud-pill">'+iconSpan('coin','G')+'<span>'+fmt(c.coin)+'</span></div>',
+  leaf:c=>'<div class="currency hud-pill">'+iconSpan('leaf','◆')+'<span>'+fmt(c.leaf)+'</span></div>',
+  macaron:c=>'<div class="currency hud-pill">'+iconSpan('macaron','M')+'<span>'+fmt(c.macaron)+'</span></div>',
+  ticket:(c,save)=>'<div class="currency hud-pill">'+iconSpan('ticket','T')+'<span>'+fmt(save.inventory.ticket)+'</span></div>'
+};
+const CURRENCY_LAYOUT = {
+  LobbyCurrencies:['stamina','coin','leaf'],
+  StageCurrencies:['stamina','coin','leaf'],
+  GachaCurrencies:['stamina','coin','leaf'],
+  RosterCurrencies:['stamina','coin','leaf'],
+  BackpackCurrencies:['stamina','coin','leaf'],
+  DetailCurrencies:['coin','leaf'],
+  DetailCurrencies_levelup:['macaron','coin','leaf'],
+  DetailCurrencies_skill:['macaron','coin','leaf']
+};
+function renderCurrencyBar(id,keys){ const el=$(id); if(!el||!PLAYER_SAVE) return; const c=PLAYER_SAVE.currency; const pills=keys.map(k=>CURRENCY_PILL[k](c,PLAYER_SAVE)).join(''); const trailBtn=id==='LobbyCurrencies'?'<button class="round menu-btn-round" onclick="openLobbyMenu()">☰</button>':'<button class="round" onclick="showLoading({type:\'scene\',message:\'로비로 이동합니다.\',target:\'Lobby\'})">⌂</button>'; el.innerHTML=pills+trailBtn; }
+function renderCurrencies(){ ['LobbyCurrencies','StageCurrencies','GachaCurrencies','RosterCurrencies','BackpackCurrencies'].forEach(id=>renderCurrencyBar(id,CURRENCY_LAYOUT[id]));
+  const detailKeys=CURRENCY_LAYOUT['DetailCurrencies_'+appState.detailTab]||CURRENCY_LAYOUT.DetailCurrencies;
+  renderCurrencyBar('DetailCurrencies',detailKeys);
+}
+function openLobbyMenu(){ $('LobbyMenuPopup').classList.add('show'); }
+function closeLobbyMenu(){ $('LobbyMenuPopup').classList.remove('show'); }
+
+// ---- Backpack (성장 탭만 구현: 티켓 · 공통 조각 · 사도별 전용 조각) ----
+function backpackEntries(){ const entries=[]; entries.push({key:'ticket',label:'모집 티켓',icon:'🎫',count:PLAYER_SAVE.inventory.ticket||0,desc:'모집 1회 비용을 대체하는 티켓이다. 10회 모집 시 부족분은 엘리프로 대체 결제된다.'}); entries.push({key:'common_shard',label:'공통 조각',icon:'💠',count:(PLAYER_SAVE.inventory.shard&&PLAYER_SAVE.inventory.shard._common)||0,desc:'상점에서 특정 사도의 전용 조각으로 교환할 수 있는 공용 재화다.'}); CHARACTER_MASTER.forEach(c=>{ const n=(PLAYER_SAVE.inventory.shard&&PLAYER_SAVE.inventory.shard[c.id])||0; if(n>0) entries.push({key:c.id,label:c.name+' 전용 조각',icon:null,charId:c.id,count:n,desc:c.name+'의 성급 성장에 사용하는 전용 조각이다.'}); }); return entries; }
+function renderBackpack(){ const grid=$('backpackGrid'); if(!grid||!PLAYER_SAVE) return; const entries=backpackEntries(); grid.innerHTML=entries.map(e=>'<button class="backpack-card '+(appState.selectedBackpackKey===e.key?'selected':'')+'" onclick="selectBackpackItem(\''+e.key+'\')">'+(e.charId?'<div class="bp-face">'+unitShape('hero',e.charId,'')+'</div>':'<div class="bp-icon">'+e.icon+'</div>')+'<div class="bp-count">'+fmt(e.count)+'</div></button>').join('') || '<div style="grid-column:1/6;text-align:center;color:#4a5a3c;font-weight:900;padding:30px;">보유 중인 성장 재료가 없습니다.</div>';
+  const panel=$('backpackDetail'); if(!panel) return; const sel=entries.find(e=>e.key===appState.selectedBackpackKey); if(!sel){ panel.innerHTML='<h3>항목을 선택해주세요</h3>'; return; } panel.innerHTML='<h3>'+sel.label+'</h3><div class="bp-qty"><span>보유량</span><span>'+fmt(sel.count)+'</span></div><p>'+sel.desc+'</p><button class="btn small gray" style="width:100%" onclick="future(\'판매\')">판매</button>'; }
+function selectBackpackItem(key){ appState.selectedBackpackKey=key; renderBackpack(); }
+function renderLoginPreview(){ const el=$('loginPreview'); if(el) el.innerHTML=unitShape('hero','alice','앨리스')+unitShape('hero','ran','란'); }
+function renderLobby(){ if(!$('profileName')) return; $('profileName').textContent=PLAYER_SAVE.nickname; $('profileLevel').textContent='Lv.'+PLAYER_SAVE.level+' / EXP '+fmt(PLAYER_SAVE.exp); const next=STAGE_MASTER.find(s=>getStageProgress(s.id).unlocked&&!getStageProgress(s.id).cleared)||STAGE_MASTER[0]; $('lobbyQuestText').textContent=next.chapter+'-'+next.no+' 진행 가능'; $('lobbyCharacters').innerHTML=['alice','ran','joanne','amelia'].map(id=>unitShape('hero',id,getCharacter(id).name)).join(''); }
+
+// ---- StageSelect ----
+function chapterTotalStars(chapterNo){ let sum=0; STAGE_MASTER.filter(s=>s.chapter===chapterNo).forEach(s=>{ sum+=getStageProgress(s.id).bestStar||0; }); return sum; }
+function renderStageSelect(){ const wrap=$('stageNodes'); if(!wrap) return; const chapterNo=1; const maxStars=CHAPTER_STAGE_COUNT*3;
+  wrap.innerHTML=STAGE_MASTER.filter(s=>s.chapter===chapterNo).map((stage,i)=>{ const p=getStageProgress(stage.id); const locked=!p.unlocked; const stars='★'.repeat(p.bestStar||0)+'☆'.repeat(3-(p.bestStar||0));
+    const zig=i%2===0?'zig-up':'zig-down';
+    const face=locked?'<span class="lock-ic">🔒</span>':(p.cleared?'<span class="clear-check">✓</span>':'');
+    const badge='<div class="node-badge"><span class="nb-stars">'+stars+'</span><span class="nb-no">'+stage.chapter+'-'+stage.no+'</span></div>';
+    return '<div class="stage-node-wrap '+zig+'"><button class="stage-node '+(locked?'locked':'')+' '+(appState.selectedStageId===stage.id?'selected':'')+'" onclick="openStagePopup(\''+stage.id+'\')"><div class="stage-node-face">'+face+'</div></button>'+badge+'</div>'; }).join('');
+  const stage=getStage(appState.selectedStageId); $('stageTipLevel').textContent='권장 전투력: '+fmt(stage.recommendedPower); $('stageTipName').textContent=stage.chapter+'-'+stage.no+'. '+stage.name;
+  const total=chapterTotalStars(chapterNo); const pct=Math.min(100,total/maxStars*100); $('milestoneFill').style.width=pct+'%';
+  const claimed=PLAYER_SAVE.chapterMilestoneClaimed[chapterNo]||{10:false,20:false,30:false};
+  const dotsHtml=[10,20,30].map(m=>'<div class="milestone-dot '+(total>=m?'done':'')+'" style="left:'+(m/maxStars*100)+'%" title="'+m+'개 달성 보상">'+m+'</div>').join('');
+  $('milestoneRow').querySelectorAll('.milestone-dot').forEach(d=>d.remove()); $('milestoneRow').insertAdjacentHTML('beforeend',dotsHtml);
+  $('milestoneLabel').textContent='챕터 누적 별 '+total+' / '+maxStars+' (10/20/30 단계 보상)';
+  [10,20,30].forEach(m=>{ if(total>=m && !claimed[m]){ claimed[m]='ready'; } });
+  PLAYER_SAVE.chapterMilestoneClaimed[chapterNo]=claimed;
+}
+function selectStage(id){ const p=getStageProgress(id); if(!p.unlocked){ toast('이전 스테이지를 먼저 클리어해야 합니다.'); return false; } appState.selectedStageId=id; PLAYER_SAVE.lastSelectedStageId=id; saveGame(); renderStageSelect(); return true; }
+function buildStageInfo(id){ const stage=getStage(id); const waves=stage.waveIds.map(wid=>WAVE_MASTER[wid]).filter(Boolean); const enemyIds=[...new Set(waves.flatMap(w=>w.enemies.map(e=>e.enemyId)))]; const bossId=(waves[waves.length-1].enemies.find(e=>e.grade==='boss')||{}).enemyId||null; return {stage,progress:getStageProgress(stage.id),enemyIds,bossId,rewards:REWARD_MASTER[stage.rewardGroupId]}; }
+function personalityIconHTML(key,size){ const p=PERSONALITY[key]; return '<div style="width:100%;height:100%;border-radius:14px;background:'+p.color+';display:flex;align-items:center;justify-content:center;color:#fff;font-weight:1000;font-size:'+(size||22)+'px;">'+p.label[0]+'</div>'; }
+function renderStagePopupContent(id){ const info=buildStageInfo(id); const p=info.progress;
+  $('popupStars').textContent='★'.repeat(p.bestStar||0)+'☆'.repeat(3-(p.bestStar||0));
+  $('popupStageName').textContent=info.stage.chapter+'-'+info.stage.no+' '+info.stage.name;
+  $('popupLevel').textContent=fmt(info.stage.recommendedPower);
+  $('popupRecommendIcon').innerHTML=personalityIconHTML(counterPersonality(info.stage.monsterPersonality));
+  $('popupMonsterIcon').innerHTML=personalityIconHTML(info.stage.monsterPersonality);
+  const rewards=[...(p.firstRewardClaimed?[]:info.rewards.firstClear),...info.rewards.repeat,...info.rewards.random.map(r=>Object.assign({note:'확률'},r))];
+  $('popupRewards').innerHTML=rewards.filter(r=>r.count>0||r.note).map(r=>'<div class="reward-item">'+rewardIcon(r.itemId)+'<span>'+(r.note||'x'+fmt(r.count))+'</span></div>').join('');
+  const exemptOk=(p.bestStar||0)>=3;
+  $('popupExemptBtn').disabled=!exemptOk; $('popupExemptBtn').className=exemptOk?'btn':'btn gray';
+  $('popupDeckBtn').innerHTML=iconSpan('stamina','●')+'<span>'+info.stage.staminaCost+'</span><span>덱 선택</span>';
+}
+function openStagePopup(id){ if(!selectStage(id)) return; $('stagePopupPanel').classList.remove('compact'); renderStagePopupContent(id); $('StageInfoPopup').classList.add('show'); }
+// PartySetup의 "스테이지 정보" 버튼: 면제·덱선택 버튼 없이 읽기 전용으로 표시
+function openStageInfoReadonly(){ $('stagePopupPanel').classList.add('compact'); renderStagePopupContent(appState.selectedStageId); $('StageInfoPopup').classList.add('show'); }
+function closeStagePopup(){ const el=$('StageInfoPopup'); if(el) el.classList.remove('show'); }
+function enterPartySetup(){ closeStagePopup(); showLoading({type:'scene',message:'전투 준비 화면을 구성합니다.',target:'PartySetup'}); }
+function exemptStage(){ const stage=getStage(appState.selectedStageId); const p=getStageProgress(stage.id); if((p.bestStar||0)<3){ toast('별 3개로 클리어해야 면제할 수 있습니다.'); return; } if(PLAYER_SAVE.currency.stamina<stage.staminaCost){ toast('행동력이 부족합니다.'); return; }
+  PLAYER_SAVE.currency.stamina-=stage.staminaCost;
+  const master=REWARD_MASTER[stage.rewardGroupId]; const rewards=[...master.repeat]; master.random.forEach(r=>{ if(Math.random()<=r.rate) rewards.push(r); });
+  grantRewards(rewards,{}); p.clearCount=(p.clearCount||0)+1; saveGame(); closeStagePopup(); renderAll();
+  toast('면제 완료! '+rewards.map(r=>rewardIcon(r.itemId)+'x'+fmt(r.count)).join(' '));
+}
+// ---- 성격 상성 가이드 팝업 ----
+function openPersonalityGuide(){ renderPersonalityDiagram(); $('PersonalityGuidePopup').classList.add('show'); }
+function closePersonalityGuide(){ $('PersonalityGuidePopup').classList.remove('show'); }
+function pgNode(key,x,y){ const p=PERSONALITY[key]; return '<div class="pg-node" style="left:'+x+'%;top:'+y+'%;background:'+p.color+';">'+p.label[0]+'<br>'+p.label+'</div>'; }
+function renderPersonalityDiagram(){
+  let html='';
+  html+=pgNode('purity',30,12)+pgNode('madness',10,75)+pgNode('cold',50,75);
+  html+='<div class="pg-arrow" style="left:40%;top:40%;transform:rotate(52deg);">➜</div>';
+  html+='<div class="pg-arrow" style="left:28%;top:70%;transform:rotate(180deg);">➜</div>';
+  html+='<div class="pg-arrow" style="left:16%;top:40%;transform:rotate(-56deg);">➜</div>';
+  html+=pgNode('lively',80,12)+pgNode('gloom',80,75);
+  html+='<div class="pg-arrow" style="left:78%;top:38%;">⇅</div>';
+  $('pgDiagram').innerHTML=html;
+}
+// ---- 출현 몬스터 상세 팝업 ----
+function openMonsterDetail(){ const info=buildStageInfo(appState.selectedStageId); appState.mdList=info.enemyIds; appState.mdBossId=info.bossId; selectMonsterDetail(info.bossId||info.enemyIds[0]); $('MonsterDetailPopup').classList.add('show'); }
+function closeMonsterDetail(){ $('MonsterDetailPopup').classList.remove('show'); }
+function selectMonsterDetail(enemyId){ const stage=getStage(appState.selectedStageId); const m=getEnemy(enemyId); const isBoss=enemyId===appState.mdBossId;
+  $('mdPreview').className='md-preview'+(isBoss?' boss':'');
+  $('mdPreview').innerHTML='<div class="md-attr-icon" style="background:'+PERSONALITY[stage.monsterPersonality].color+';">'+PERSONALITY[stage.monsterPersonality].label[0]+'</div>'+(isBoss?'<div class="md-boss-mark">👹</div>':'')+unitShape('enemy',m.id,'');
+  $('mdName').textContent=m.name+' - '+PERSONALITY[stage.monsterPersonality].label;
+  $('mdLore').textContent=m.lore||'아직 알려진 정보가 없는 몬스터다.';
+  const ordered=[...appState.mdList].sort((a,b)=>(a===appState.mdBossId?-1:0)-(b===appState.mdBossId?-1:0));
+  $('mdList').innerHTML=ordered.map(id=>{ const em=getEnemy(id); const b=id===appState.mdBossId; return '<div class="md-list-item '+(id===enemyId?'selected':'')+'" style="background:'+PERSONALITY[stage.monsterPersonality].color+'55;" onclick="selectMonsterDetail(\''+id+'\')">'+unitShape('enemy',em.id,'')+(b?'<span class="md-mini-boss">👹</span>':'')+'</div>'; }).join('');
+}
+
+// ---- PartySetup ----
+function partySlotStyle(pos){ const left={1:14,2:42,3:70}[pos.x]; const top={1:16,2:42,3:68}[pos.y]; return 'left:'+left+'%;top:'+top+'%;'; }
+// 전투 코인(15장 전투 카드 상점) 시스템은 아직 전투 로직에 구현되지 않아 표시 전용 값으로만 사용한다.
+const STAGE_START_COIN=100;
+function partyCombatPower(){ const slots=PLAYER_SAVE.partySlots; return slots.reduce((s,slot)=>{ const pc=getOwned(slot.playerCharacterId); if(!pc) return s; const c=getCharacter(slot.characterId); return s+combatPower(characterFinalStats(c,pc.level,pc.star)); },0); }
+function renderPartySetup(){ const stage=getStage(appState.selectedStageId); if(!$('partyTitle')) return; $('partyTitle').textContent=stage.chapter+'-'+stage.no+'. '+stage.name; $('partyRecommended').textContent=fmt(stage.recommendedPower); $('partyStartCoin').textContent=fmt(STAGE_START_COIN); $('partyPower').textContent=fmt(partyCombatPower()); renderFormation(); renderRoster(); }
+function renderFormation(){ const ground=$('formationGround'); if(!ground) return; let html=''; for(let x=1;x<=3;x++){ for(let y=1;y<=3;y++){ const slot=PLAYER_SAVE.partySlots.find(s=>s.position.x===x&&s.position.y===y); const label=x===3?'전열':x===2?'중열':'후열'; html+='<div class="party-slot '+(slot?'filled':'')+'" data-x="'+x+'" data-y="'+y+'" style="'+partySlotStyle({x,y})+'" onmousedown="startSlotDrag(event,'+x+','+y+')" ontouchstart="startSlotDrag(event,'+x+','+y+')">'; if(slot){ const c=getCharacter(slot.characterId); const pc=getOwned(slot.playerCharacterId); html+=unitShape('hero',c.id,'')+'<div class="slot-label">Lv.'+(pc?pc.level:1)+'<br>'+starsHTML(pc?pc.star:1,5)+'</div>'; } else html+='<span>'+label+'<br>x='+x+' / y='+y+'</span>'; html+='</div>'; }} ground.innerHTML=html; }
+// ---- 배치 규칙: 클릭 시 자동 배치(x 우선순위→y=2,1,3), 배치 후에는 드래그로 재배치 ----
+function positionRoleAllowsX(positionRole,x){ if(positionRole==='전열') return x===3; if(positionRole==='중열') return x===2; if(positionRole==='후열') return x===1; return true; }
+function autoPlacementSlot(positionRole){ const xOrder=positionRole==='전열'?[3]:positionRole==='중열'?[2]:positionRole==='후열'?[1]:[3,2,1]; const yOrder=[2,1,3];
+  for(const x of xOrder){ for(const y of yOrder){ if(!PLAYER_SAVE.partySlots.some(s=>s.position.x===x&&s.position.y===y)) return {x,y}; } }
+  return null;
+}
+function renderRoster(){ const el=$('rosterList'); if(!el) return; el.innerHTML=PLAYER_SAVE.ownedCharacters.map(pc=>{ const c=getCharacter(pc.characterId); const assigned=PLAYER_SAVE.partySlots.some(s=>s.playerCharacterId===pc.playerCharacterId); const power=combatPower(characterFinalStats(c,pc.level,pc.star));
+  return '<div class="ros-card '+(assigned?'assigned':'')+'" style="background:'+PERSONALITY_CARD_BG[c.personality]+'" onclick="selectRosterCharacter(\''+pc.playerCharacterId+'\')">'
+    +'<button class="ros-mag-btn" onclick="event.stopPropagation();openPartyCharDetail(\''+pc.playerCharacterId+'\')">🔍</button>'
+    +'<div class="ros-top">'+unitShape('hero',c.id,'')+'<div class="ros-center-level">Lv.'+pc.level+'</div><div class="ros-center-stars">'+starsHTML(pc.star,5)+'</div></div>'
+    +'<div class="ros-footer">'+fmt(power)+'</div>'
+  +'</div>'; }).join(''); }
+// ---- 파티 편성 화면 캐릭터 상세 팝업 ----
+function openPartyCharDetail(pcId){ appState.pcdCharacterId=pcId; appState.pcdSkillTab='sp'; renderPartyCharDetail(); $('PartyCharDetailPopup').classList.add('show'); }
+function closePartyCharDetail(){ $('PartyCharDetailPopup').classList.remove('show'); }
+function switchPcdSkillTab(tab){ appState.pcdSkillTab=tab; renderPartyCharDetail(); }
+function renderPartyCharDetail(){ const pc=getOwned(appState.pcdCharacterId); if(!pc) return; const c=getCharacter(pc.characterId); const stats=characterFinalStats(c,pc.level,pc.star); const power=combatPower(stats);
+  $('pcdName').textContent=c.name;
+  $('pcdIcon').style.background=PERSONALITY_CARD_BG[c.personality];
+  $('pcdIcon').innerHTML=unitShape('hero',c.id,'')+'<div class="pcd-lv">Lv.'+pc.level+'</div><div class="pcd-stars">'+starsHTML(pc.star,5)+'</div>';
+  $('pcdPower').textContent='전투력 '+fmt(power);
+  const attr=(bg,ic,label)=>'<div class="pcd-attr-chip"><div class="ac-icon" style="background:'+bg+';">'+ic+'</div><span>'+label+'</span></div>';
+  $('pcdAttrs').innerHTML=attr(PERSONALITY[c.personality].color,PERSONALITY[c.personality].label[0],PERSONALITY[c.personality].label)
+    +attr(ROLE[c.role].color,ROLE[c.role].icon,ROLE[c.role].label)
+    +attr((POSITION_ROLE_STYLE[c.positionRole]||POSITION_ROLE_STYLE['모든열']).color,'›',c.positionRole);
+  const tab=appState.pcdSkillTab;
+  $('pcdSkillTabs').innerHTML=SKILL_TAB_ORDER.map(k=>{ const ic=k==='sp'?'💫':k==='active'?(CHARACTER_SKILLS[c.id][k]?CHARACTER_SKILLS[c.id][k].icon:'⚔'):CHARACTER_SKILLS[c.id][k].icon; return '<button class="'+(k===tab?'active':'')+'" onclick="switchPcdSkillTab(\''+k+'\')">'+ic+'</button>'; }).join('');
+  const skill=getCharacterSkill(c.id,tab);
+  $('pcdSkillInfo').innerHTML='<div class="si-name2">'+SKILL_TAB_LABEL[tab]+' · '+skill.name+'</div><div class="si-desc2">'+skill.desc+'</div>';
+}
+function selectRosterCharacter(id){ if(PLAYER_SAVE.partySlots.some(s=>s.playerCharacterId===id)){ toast('이미 배치된 캐릭터입니다.'); return; } if(PLAYER_SAVE.partySlots.length>=6){ toast('아군은 최대 6명까지 배치할 수 있습니다.'); return; }
+  const pc=PLAYER_SAVE.ownedCharacters.find(p=>p.playerCharacterId===id); if(!pc) return; const c=getCharacter(pc.characterId);
+  const slot=autoPlacementSlot(c.positionRole); if(!slot){ toast(c.positionRole+' 자리가 가득 찼습니다.'); return; }
+  PLAYER_SAVE.partySlots.push({partyId:'party_main',slot:PLAYER_SAVE.partySlots.length+1,playerCharacterId:pc.playerCharacterId,characterId:pc.characterId,position:{side:'player',x:slot.x,y:slot.y}});
+  saveGame(); renderPartySetup();
+}
+// ---- 배치된 사도 드래그 재배치 (포인터 이벤트 기반, 마우스+터치 공용) ----
+let slotDragState=null;
+function startSlotDrag(e,x,y){ if(e.target.closest('button')) return; const slot=PLAYER_SAVE.partySlots.find(s=>s.position.x===x&&s.position.y===y); if(!slot) return; e.preventDefault();
+  const point=e.touches?e.touches[0]:e;
+  slotDragState={fromX:x,fromY:y,startX:point.clientX,startY:point.clientY,moved:false};
+  document.addEventListener('mousemove',onSlotDragMove); document.addEventListener('mouseup',onSlotDragEnd);
+  document.addEventListener('touchmove',onSlotDragMove,{passive:false}); document.addEventListener('touchend',onSlotDragEnd);
+}
+function draggedUnitEl(){ const slotEl=document.querySelector('.party-slot[data-x="'+slotDragState.fromX+'"][data-y="'+slotDragState.fromY+'"]'); return slotEl?slotEl.querySelector('.css-unit'):null; }
+function onSlotDragMove(e){ if(!slotDragState) return; e.preventDefault(); const point=e.touches?e.touches[0]:e;
+  if(Math.abs(point.clientX-slotDragState.startX)>4||Math.abs(point.clientY-slotDragState.startY)>4) slotDragState.moved=true;
+  const el=draggedUnitEl(); if(el && slotDragState.moved){ el.style.position='fixed'; el.style.left=(point.clientX-48)+'px'; el.style.top=(point.clientY-60)+'px'; el.style.zIndex='999'; el.style.pointerEvents='none'; el.style.width='96px'; }
+}
+function onSlotDragEnd(e){ if(!slotDragState) return; const point=e.changedTouches?e.changedTouches[0]:e;
+  document.removeEventListener('mousemove',onSlotDragMove); document.removeEventListener('mouseup',onSlotDragEnd);
+  document.removeEventListener('touchmove',onSlotDragMove); document.removeEventListener('touchend',onSlotDragEnd);
+  const el=draggedUnitEl(); if(el){ el.style.position=''; el.style.left=''; el.style.top=''; el.style.zIndex=''; el.style.pointerEvents=''; el.style.width=''; }
+  if(slotDragState.moved){ const target=document.elementFromPoint(point.clientX,point.clientY); const slotEl=target&&target.closest?target.closest('.party-slot'):null;
+    if(slotEl) trySwapSlots(slotDragState.fromX,slotDragState.fromY,parseInt(slotEl.dataset.x),parseInt(slotEl.dataset.y));
+  } else {
+    // 드래그 없이 단순 클릭한 경우: × 버튼과 동일하게 해당 사도를 배치에서 해제
+    const clickedSlot=PLAYER_SAVE.partySlots.find(s=>s.position.x===slotDragState.fromX&&s.position.y===slotDragState.fromY);
+    if(clickedSlot) removePartySlot(clickedSlot.playerCharacterId);
+  }
+  slotDragState=null;
+}
+function trySwapSlots(fromX,fromY,toX,toY){ if(fromX===toX&&fromY===toY) return;
+  const fromSlot=PLAYER_SAVE.partySlots.find(s=>s.position.x===fromX&&s.position.y===fromY); if(!fromSlot) return;
+  const toSlot=PLAYER_SAVE.partySlots.find(s=>s.position.x===toX&&s.position.y===toY);
+  const fromChar=getCharacter(fromSlot.characterId);
+  if(!positionRoleAllowsX(fromChar.positionRole,toX)){ toast('이 위치에는 배치할 수 없습니다.'); renderPartySetup(); return; }
+  if(toSlot){ const toChar=getCharacter(toSlot.characterId); if(!positionRoleAllowsX(toChar.positionRole,fromX)){ toast('이 위치에는 배치할 수 없습니다.'); renderPartySetup(); return; } toSlot.position.x=fromX; toSlot.position.y=fromY; }
+  fromSlot.position.x=toX; fromSlot.position.y=toY;
+  saveGame(); renderPartySetup();
+}
+function removePartySlot(id){ PLAYER_SAVE.partySlots=PLAYER_SAVE.partySlots.filter(s=>s.playerCharacterId!==id); PLAYER_SAVE.partySlots.forEach((s,i)=>s.slot=i+1); saveGame(); renderPartySetup(); }
+function autoBuildParty(){ PLAYER_SAVE.partySlots=defaultPartySlots(PLAYER_SAVE.ownedCharacters); saveGame(); renderPartySetup(); toast('자동 편성했습니다.'); }
+function resetParty(){ PLAYER_SAVE.partySlots=[]; saveGame(); renderPartySetup(); toast('파티 배치를 초기화했습니다.'); }
+function validateParty(){ const slots=PLAYER_SAVE.partySlots||[]; if(!slots.length) return {ok:false,message:'파티에 최소 1명을 배치해야 합니다.'}; if(slots.length>6) return {ok:false,message:'아군은 최대 6명까지 배치할 수 있습니다.'}; const pcSet=new Set(), posSet=new Set(); for(const s of slots){ if(pcSet.has(s.playerCharacterId)) return {ok:false,message:'같은 캐릭터는 중복 배치할 수 없습니다.'}; pcSet.add(s.playerCharacterId); const key=s.position.x+'_'+s.position.y; if(posSet.has(key)) return {ok:false,message:'한 좌표에는 1명만 배치할 수 있습니다.'}; posSet.add(key); if(s.position.side!=='player'||s.position.x<1||s.position.x>3||s.position.y<1||s.position.y>3) return {ok:false,message:'배치 좌표가 올바르지 않습니다.'}; } return {ok:true,message:'OK'}; }
+function buildBattleStartRequest(){ const valid=validateParty(); if(!valid.ok) throw new Error(valid.message); const stage=getStage(appState.selectedStageId); if(PLAYER_SAVE.currency.stamina<stage.staminaCost) throw new Error('행동력이 부족합니다.'); return {requestId:uid('bsr'),stageId:stage.id,selectedPartyId:'party_main',sourceScene:'PartySetup',partyMembers:PLAYER_SAVE.partySlots.map(clone),battleOptions:clone(PLAYER_SAVE.battleOptions),createdAt:new Date().toISOString()}; }
+function prepareBattleStart(){ try{ BATTLE_START_REQUEST=buildBattleStartRequest(); showLoading({type:'battle',message:'전투 데이터를 구성합니다.',duration:700}); }catch(e){ toast(e.message||String(e)); } }
+function buildBattleContext(request){ if(!request) throw new Error('BattleStartRequest가 없습니다.'); const stage=getStage(request.stageId); const waves=stage.waveIds.map(id=>WAVE_MASTER[id]); if(waves.some(w=>!w)) throw new Error('웨이브 데이터가 없습니다.'); const reward=REWARD_MASTER[stage.rewardGroupId]; if(!reward) throw new Error('보상 데이터가 없습니다.'); return {contextId:uid('ctx'),request:clone(request),stage:clone(stage),waves:clone(waves),reward:clone(reward),party:clone(request.partyMembers),createdAt:new Date().toISOString()}; }
+
+// ---- Battle ----
+// 캐릭터별 계정 스탯(레벨·성급 반영)에 전투 학년 배율과 카드 버프를 곱해 전투 스탯을 계산한다(19.1장 계산식).
+function gradeMultiplierFor(unit,statKind){ const g=unit.grade||1; if(g>=6){ if(statKind==='atk'&&unit.role==='dealer') return GRADE_SPECIAL_MULTIPLIER; if(statKind==='hp'&&unit.role==='tank') return GRADE_SPECIAL_MULTIPLIER; } return GRADE_MULTIPLIER[g]||1; }
+function equipBonusPct(unit,statKey){ return (unit.equipment||[]).reduce((s,eid)=>{ const d=EQUIP_CARD_DEFS.find(x=>x.id===eid); return s+((d&&d.statKey===statKey)?d.value:0); },0); }
+function spellBonusPct(b,statKey){ return (b.ownedSpellCards||[]).reduce((s,item)=>{ const d=SPELL_CARD_DEFS.find(x=>x.id===item.defId); return s+((d&&!d.instant&&d.statKey===statKey)?d.value*item.count:0); },0); }
+function recomputeUnitStats(unit,b){
+  const oldMax=unit.maxHp||0, oldHp=unit.hp||0, ratio=oldMax>0?oldHp/oldMax:1;
+  const hpPct=1+(spellBonusPct(b,'hpPct')+equipBonusPct(unit,'hpPct'))/100;
+  const atkPct=1+(spellBonusPct(b,'atkPct')+equipBonusPct(unit,'atkPct'))/100;
+  const defPct=1+(spellBonusPct(b,'defPct')+equipBonusPct(unit,'defPct'))/100;
+  unit.maxHp=Math.round(unit.baseHp*gradeMultiplierFor(unit,'hp')*hpPct);
+  unit.attack=Math.round(unit.baseAtk*gradeMultiplierFor(unit,'atk')*atkPct);
+  unit.defense=Math.round(unit.baseDef*gradeMultiplierFor(unit,'def')*defPct);
+  unit.hp=oldMax>0?Math.max(1,Math.floor(unit.maxHp*ratio)):unit.maxHp;
+}
+function effectiveInterval(unit,b){ const pct=spellBonusPct(b,'spdPct')+equipBonusPct(unit,'spdPct'); return unit.interval/(1+pct/100); }
+function initBattle(){ stopBattleLoop(); closeResultOverlayOnly(); if(!BATTLE_CONTEXT) return; const ctx=BATTLE_CONTEXT; PLAYER_SAVE.currency.stamina=Math.max(0,PLAYER_SAVE.currency.stamina-ctx.stage.staminaCost); saveGame();
+  const units=[];
+  ctx.party.forEach((slot,i)=>{ const c=getCharacter(slot.characterId); const pc=getOwned(slot.playerCharacterId); const lv=pc?pc.level:1; const star=pc?pc.star:1; const stats=characterFinalStats(c,lv,star);
+    units.push({runtimeId:'p_'+i+'_'+c.id,team:'player',playerCharacterId:slot.playerCharacterId,masterId:c.id,name:c.name,role:c.role,personality:c.personality,
+      baseHp:stats.hp,baseAtk:stats.atk,baseDef:stats.def,maxSp:stats.sp,interval:c.interval,skillId:c.skillId,
+      position:clone(slot.position),grade:0,summoned:false,equipment:[],alive:true,hp:0,maxHp:0,sp:0,cooldown:0,totalDamage:0,totalHeal:0});
+  });
+  appState.battle={battleId:uid('battle'),state:'Fighting',stage:ctx.stage,waves:ctx.waves,currentWaveIndex:0,phase:'intro',phaseTimer:0,
+    units,coin:STAGE_START_COIN,refreshCount:0,cardSlots:[null,null,null],cardsLocked:false,ownedSpellCards:[],
+    speed:ctx.request.battleOptions.speed||1,autoBattle:!!ctx.request.battleOptions.autoBattle,
+    totalDamage:0,totalHeal:0,usedSkillCount:0,waveClearCount:0,resultProcessed:false,startedAt:new Date().toISOString(),lastReason:''};
+  renderBattle();
+  runSlotMachineIntro();
+}
+// ---- 슬롯머신 진입 연출 (전투당 1회) ----
+function rollSlotOutcome(){ const r=Math.random()*100; if(r<25) return {kind:'coin',value:5}; if(r<40) return {kind:'coin',value:10}; if(r<50) return {kind:'coin',value:15}; if(r<75) return {kind:'char',grade:1}; if(r<90) return {kind:'char',grade:2}; return {kind:'char',grade:3}; }
+function pickSlotResults(){ const b=appState.battle; const candidates=b.units.filter(u=>u.team==='player');
+  let results=[0,1,2].map(rollSlotOutcome);
+  if(results.every(r=>r.kind==='coin')){ results=[0,1,2].map(rollSlotOutcome); if(results.every(r=>r.kind==='coin')){ results[0]={kind:'char',grade:1}; } }
+  return results.map(r=>r.kind==='coin'?r:Object.assign({},r,{unit:candidates[Math.floor(Math.random()*candidates.length)]}));
+}
+function slotResultHTML(r){ if(r.kind==='coin') return '<div class="is-icon">🪙</div><div class="is-label">코인 '+r.value+'</div>'; return unitShape('hero',r.unit.masterId,'')+'<div class="is-label">'+r.unit.name+' '+r.grade+'학년</div>'; }
+function randomSpinIcon(){ const icons=['🪙','⭐','💫','🎲']; return icons[Math.floor(Math.random()*icons.length)]; }
+function runSlotMachineIntro(){ const b=appState.battle; $('battleIntroTitle').textContent=b.stage.chapter+'-'+b.stage.no+'. '+b.stage.name; $('battleIntroTitle').style.display='flex'; $('battleIntroSlots').style.display='none'; $('BattleIntroOverlay').classList.add('show');
+  setTimeout(()=>{ $('battleIntroTitle').style.display='none'; $('battleIntroSlots').style.display='flex'; spinSlotMachine(); },1100);
+}
+function spinSlotMachine(){ const results=pickSlotResults(); const els=[0,1,2].map(i=>$('slotBox'+i)); let maxTicks=0;
+  els.forEach((el,i)=>{ const ticks=9+i*4; maxTicks=Math.max(maxTicks,ticks); let n=0; const iv=setInterval(()=>{ el.innerHTML='<div class="is-icon">'+randomSpinIcon()+'</div>'; n++; if(n>=ticks){ clearInterval(iv); el.innerHTML=slotResultHTML(results[i]); } },80); });
+  setTimeout(()=>{ applySlotResults(results); },80*maxTicks+900);
+}
+function applySlotResults(results){ const b=appState.battle; results.forEach(r=>{ if(r.kind==='coin'){ b.coin+=r.value; } else { const u=r.unit; u.grade=Math.max(u.grade||0,r.grade); u.summoned=true; recomputeUnitStats(u,b); if(u.hp<=0){ u.hp=u.maxHp; u.sp=0; u.cooldown=.3; } } });
+  $('BattleIntroOverlay').classList.remove('show');
+  startPreparation(0);
+  appState.battleTimer=setInterval(tickBattle,TICK_MS);
+}
+// ---- 준비 / 전투 단계 전환 (12.2장: 준비 40초, 전투 80초) ----
+const TICK_MS=100; // 이동 애니메이션 부드럽게: tick 주기를 짧게 해 위치 갱신 빈도를 올림
+const TICK_S=TICK_MS/1000;
+function startPreparation(waveIndex){ const b=appState.battle; b.currentWaveIndex=waveIndex; b.phase='preparation'; b.phaseTimer=40; if(waveIndex>0) b.coin+=30; if(!b.cardsLocked) generateCardSlots(); renderBattle(); if(b.autoBattle) scheduleAutoPrepStep(); }
+function advanceToBattlePhase(){ const b=appState.battle; b.phase='battle'; b.phaseTimer=80; spawnWave(b.currentWaveIndex); renderBattle(); }
+function reviveDeadUnits(b){ b.units.filter(u=>u.team==='player'&&u.summoned&&!u.alive).forEach(u=>{ u.alive=true; u.hp=Math.max(1,Math.round(u.maxHp*0.2)); u.sp=0; }); }
+function spawnWave(index){ const b=appState.battle; const wave=b.waves[index]; if(!wave) return; b.units=b.units.filter(u=>u.team!=='enemy'); wave.enemies.forEach((e,i)=>{ const m=getEnemy(e.enemyId); const mult=e.mult||1; const unit={runtimeId:'e_'+index+'_'+i+'_'+m.id,team:'enemy',masterId:m.id,name:m.name+(e.grade==='boss'?' (보스)':''),role:e.grade,maxHp:Math.round(statByLevel(m.baseHp,e.level)*mult),hp:Math.round(statByLevel(m.baseHp,e.level)*mult),sp:0,attack:Math.round(statByLevel(m.baseAtk,e.level)*mult),defense:Math.round(statByLevel(m.baseDef,e.level)*mult),interval:m.interval,range:m.range||1.3,cooldown:.75+i*.18,skillId:null,position:clone(e.pos),alive:true,level:e.level,totalDamage:0,totalHeal:0}; ensureVisualPos(unit); b.units.push(unit); }); logBattle('전투 '+(index+1)+' 시작'); }
+// ---- 이동+사거리 기반 자동전투 (23.1장: 사거리 밖이면 이동, 닿으면 공격) ----
+const RANGE_PCT_PER_UNIT=10; // range 1.0 = 화면폭 10%
+const MOVE_PCT_PER_SEC=18;
+const ACTIVE_SKILL_CD=10; // 액티브 스킬 쿨타임(초). 클릭 시 표시용, 실제 발동 로직은 범위 밖
+function unitHomePct(unit){ return unitScreenPosition(unit); }
+function ensureVisualPos(unit){ if(unit.curLeft===undefined){ const p=unitHomePct(unit); unit.curLeft=p.left; unit.curTop=p.top; } }
+function rangePct(unit){ return (unit.range||1.5)*RANGE_PCT_PER_UNIT; }
+function resetUnitsToHome(b){ b.units.filter(u=>u.team==='player'&&u.summoned).forEach(u=>{ const p=unitHomePct(u); u.curLeft=p.left; u.curTop=p.top; }); }
+function moveToward(unit,tx,ty,delta){ const dx=tx-unit.curLeft, dy=ty-unit.curTop; const dist=Math.sqrt(dx*dx+dy*dy); const step=MOVE_PCT_PER_SEC*delta;
+  if(dist<=step||dist===0){ unit.curLeft=tx; unit.curTop=ty; return; } unit.curLeft+=dx/dist*step; unit.curTop+=dy/dist*step;
+}
+function tickUnitCombat(unit,delta,b){ ensureVisualPos(unit);
+  const target=selectTarget(unit,'normal');
+  if(target){ ensureVisualPos(target);
+    const dist=Math.sqrt(Math.pow(target.curLeft-unit.curLeft,2)+Math.pow(target.curTop-unit.curTop,2));
+    if(dist>rangePct(unit)){ moveToward(unit,target.curLeft,target.curTop,delta); unit.moving=true; }
+    else { unit.moving=false; unit.cooldown-=delta; if(unit.cooldown<=0){ performNormalAttack(unit); unit.cooldown=unit.team==='player'?effectiveInterval(unit,b):unit.interval; } }
+  } else { const home=unitHomePct(unit); const dist=Math.sqrt(Math.pow(home.left-unit.curLeft,2)+Math.pow(home.top-unit.curTop,2));
+    if(dist>0.5){ moveToward(unit,home.left,home.top,delta); unit.moving=true; } else { unit.moving=false; }
+  }
+}
+function tickBattle(){ const b=appState.battle; if(!b||b.resultProcessed||b.state==='Pause'||appState.popupPaused) return;
+  if(b.phase==='preparation'){ b.phaseTimer-=TICK_S; if(b.phaseTimer<=0){ b.phaseTimer=0; advanceToBattlePhase(); } renderBattle(); return; }
+  if(b.phase!=='battle') return;
+  const delta=TICK_S*b.speed; b.phaseTimer-=delta;
+  if(b.phaseTimer<=0){ finishBattle('Defeat','TimeOver'); return; }
+  const actors=b.units.filter(u=>(u.team==='enemy'||u.summoned)&&u.alive&&u.hp>0);
+  actors.forEach(unit=>tickUnitCombat(unit,delta,b));
+  b.units.filter(u=>u.team==='player'&&u.summoned&&u.activeSkillCd>0).forEach(u=>{ u.activeSkillCd=Math.max(0,u.activeSkillCd-delta); });
+  if(b.autoBattle){ tickSpSkills(b); autoCastActiveSkills(b); }
+  checkBattleEnd(); renderBattle();
+}
+function performNormalAttack(unit){ const target=selectTarget(unit,'normal'); if(!target) return; const damage=calculateDamage(unit,target,null); applyDamage(unit,target,damage); unit.sp=Math.min(unit.maxSp,unit.sp+18); animateUnit(unit.runtimeId,'attack'); animateUnit(target.runtimeId,'hit'); showFloat(target.runtimeId,damage,false); logBattle(unit.name+' → '+target.name+' '+damage); }
+function selectTarget(attacker,targetType){ const b=appState.battle; if(!b) return null; if(targetType==='lowHpAlly'){ return b.units.filter(u=>u.team===attacker.team&&u.summoned&&u.alive&&u.hp>0).sort((a,b)=>(a.hp/a.maxHp)-(b.hp/b.maxHp))[0]||null; } const enemyTeam=attacker.team==='player'?'enemy':'player'; const targets=b.units.filter(u=>u.team===enemyTeam&&(enemyTeam==='player'?u.summoned:true)&&u.alive&&u.hp>0); if(!targets.length) return null; const yOrder={2:0,1:1,3:2}; return targets.sort((a,b)=>{ const ax=enemyTeam==='enemy'?a.position.x:-a.position.x; const bx=enemyTeam==='enemy'?b.position.x:-b.position.x; if(ax!==bx) return ax-bx; return (yOrder[a.position.y]??9)-(yOrder[b.position.y]??9); })[0]; }
+function calculateDamage(attacker,defender,skill){ return Math.max(1,Math.round(attacker.attack*(skill?skill.multiplier||1:1)-defender.defense)); }
+function applyDamage(attacker,target,damage){ target.hp=Math.max(0,target.hp-damage); attacker.totalDamage+=damage; if(attacker.team==='player') appState.battle.totalDamage+=damage; if(target.hp<=0){ target.hp=0; target.alive=false; } }
+function applyHeal(caster,target,amount){ target.hp=Math.min(target.maxHp,target.hp+amount); caster.totalHeal+=amount; appState.battle.totalHeal+=amount; showFloat(target.runtimeId,amount,true); }
+// ---- SP 스킬 자동 발동 (20.3장: SP가 가득 차면 자동 사용, 전투 로직 단순화 유지) ----
+function tickSpSkills(b){ b.units.filter(u=>u.team==='player'&&u.summoned&&u.alive&&u.hp>0).forEach(unit=>{ const skill=getSkill(unit.skillId); if(skill&&unit.sp>=skill.cost) fireSpSkill(unit,skill,b); }); }
+function fireSpSkill(caster,skill,b){ caster.sp=0; b.usedSkillCount++; animateUnit(caster.runtimeId,'attack');
+  if(skill.effect==='heal'){ const target=selectTarget(caster,'lowHpAlly'); if(target){ const heal=Math.max(1,Math.round(caster.attack*skill.multiplier)); applyHeal(caster,target,heal); logBattle(caster.name+' 회복 '+heal); } }
+  else if(skill.effect==='shield'){ caster.defense+=8; logBattle(caster.name+' 방어 강화'); }
+  else { getSkillTargets(caster,skill).forEach(t=>{ const damage=calculateDamage(caster,t,skill); applyDamage(caster,t,damage); animateUnit(t.runtimeId,'hit'); showFloat(t.runtimeId,damage,false); }); logBattle(caster.name+' 스킬: '+skill.name); }
+}
+function getSkillTargets(caster,skill){ const b=appState.battle; const enemies=b.units.filter(u=>u.team!=='player'&&u.alive&&u.hp>0); if(!enemies.length) return []; if(skill.targetType==='allEnemy') return enemies; if(skill.targetType==='rowEnemy'){ const first=selectTarget(caster,'normal'); return first?enemies.filter(u=>u.position.x===first.position.x):[]; } const one=selectTarget(caster,'normal'); return one?[one]:[]; }
+function checkBattleEnd(){ const b=appState.battle; if(!b||b.resultProcessed) return; const alivePlayers=b.units.some(u=>u.team==='player'&&u.summoned&&u.alive&&u.hp>0); const aliveEnemies=b.units.some(u=>u.team==='enemy'&&u.alive&&u.hp>0); if(!alivePlayers){ finishBattle('Defeat','AllPlayersDead'); return; } if(!aliveEnemies){ b.waveClearCount++; resetUnitsToHome(b); if(b.currentWaveIndex>=b.waves.length-1){ finishBattle('Victory','AllWavesCleared'); } else { reviveDeadUnits(b); startPreparation(b.currentWaveIndex+1); } } }
+// ---- 준비 단계 카드 상점 ----
+function eligibleApostleCandidates(b){ return b.units.filter(u=>u.team==='player'&&(u.grade||0)<6); }
+function eligibleEquipTargets(b){ return b.units.filter(u=>u.team==='player'&&u.summoned&&u.alive); }
+function cardTypeWeights(b){ const types=[]; if(eligibleApostleCandidates(b).length) types.push('apostle'); types.push('spell'); if(eligibleEquipTargets(b).some(u=>(u.equipment||[]).length<3)) types.push('equipment'); return types; }
+function rollOneCard(b){ const types=cardTypeWeights(b); const type=types[Math.floor(Math.random()*types.length)];
+  if(type==='apostle'){ const pool=eligibleApostleCandidates(b); const unit=pool[Math.floor(Math.random()*pool.length)]; const grade=unit.grade||0; return {type:'apostle',unitRuntimeId:unit.runtimeId,nextGrade:grade+1,cost:GRADE_COST_TABLE[grade]}; }
+  if(type==='equipment'){ const def=EQUIP_CARD_DEFS[Math.floor(Math.random()*EQUIP_CARD_DEFS.length)]; return {type:'equipment',defId:def.id,cost:5}; }
+  const def=SPELL_CARD_DEFS[Math.floor(Math.random()*SPELL_CARD_DEFS.length)]; return {type:'spell',defId:def.id,cost:5};
+}
+function generateCardSlots(){ const b=appState.battle; b.cardSlots=[rollOneCard(b),rollOneCard(b),rollOneCard(b)]; }
+function toggleCardLock(){ const b=appState.battle; if(!b||b.phase!=='preparation') return; b.cardsLocked=!b.cardsLocked; renderBattle(); }
+function refreshCardSlots(){ const b=appState.battle; if(!b||b.phase!=='preparation') return; const cost=(b.refreshCount+1)*4; if(b.coin<cost){ toast('코인이 부족합니다.'); return; } b.coin-=cost; b.refreshCount++; b.cardsLocked=false; generateCardSlots(); renderBattle(); }
+function applyCardPurchase(card,b){ if(card.type==='apostle'){ const unit=b.units.find(u=>u.runtimeId===card.unitRuntimeId); if(unit){ unit.grade=(unit.grade||0)+1; const firstSummon=!unit.summoned; unit.summoned=true; recomputeUnitStats(unit,b); if(firstSummon){ unit.hp=unit.maxHp; unit.sp=0; unit.cooldown=.3; } } }
+  else if(card.type==='spell'){ const existing=b.ownedSpellCards.find(x=>x.defId===card.defId); if(existing) existing.count++; else b.ownedSpellCards.push({defId:card.defId,count:1}); const def=SPELL_CARD_DEFS.find(x=>x.id===card.defId); if(def&&def.instant) applyInstantSpellEffect(def,b); b.units.filter(u=>u.team==='player'&&u.summoned).forEach(u=>recomputeUnitStats(u,b)); }
+}
+function purchaseCard(index){ const b=appState.battle; if(!b||b.phase!=='preparation') return; if(b.autoBattle){ toast('자동 진행 중입니다.'); return; } const card=b.cardSlots[index]; if(!card) return; if(b.coin<card.cost){ toast('코인이 부족합니다.'); return; }
+  b.coin-=card.cost;
+  if(card.type==='equipment'){ openEquipPopup(card.defId); } else { applyCardPurchase(card,b); }
+  b.cardsLocked=false; generateCardSlots(); renderBattle();
+}
+// ---- AUTO 진행: 준비단계 자동 카드구매/장착, 전투단계 자동 액티브스킬 ----
+function scheduleAutoPrepStep(){ const b=appState.battle; if(!b||!b.autoBattle||b.phase!=='preparation') return; setTimeout(autoPrepStep,2000); }
+function autoPrepStep(){ const b=appState.battle; if(!b||!b.autoBattle||b.phase!=='preparation') return;
+  const affordable=[0,1,2].filter(i=>b.cardSlots[i]&&b.coin>=b.cardSlots[i].cost);
+  if(!affordable.length){ skipToNextBattle(); return; }
+  const index=affordable[Math.floor(Math.random()*affordable.length)];
+  const card=b.cardSlots[index];
+  b.coin-=card.cost;
+  if(card.type!=='equipment'){ applyCardPurchase(card,b); b.cardsLocked=false; generateCardSlots(); renderBattle(); scheduleAutoPrepStep(); return; }
+  b.cardsLocked=false; generateCardSlots(); renderBattle();
+  setTimeout(()=>{ const b1=appState.battle; if(!b1||!b1.autoBattle||b1.phase!=='preparation') return;
+    openEquipPopup(card.defId);
+    setTimeout(()=>{ const b2=appState.battle; if(!b2||!b2.autoBattle) return;
+      const targets=eligibleEquipTargets(b2).filter(u=>(u.equipment||[]).length<3);
+      if(!targets.length){ closeEquipPopup(); scheduleAutoPrepStep(); return; }
+      const pick=targets[Math.floor(Math.random()*targets.length)];
+      confirmEquip(pick.runtimeId);
+      setTimeout(scheduleAutoPrepStep,EQUIP_CONFIRM_FLASH_MS+2000);
+    },1000);
+  },1000);
+}
+function autoCastActiveSkills(b){ b.units.filter(u=>u.team==='player'&&u.summoned&&u.alive&&(u.grade||0)>=4&&!(u.activeSkillCd>0)).forEach(u=>{ u.activeSkillCd=ACTIVE_SKILL_CD; }); }
+function applyInstantSpellEffect(def,b){ if(def.effect==='healLowest'){ const t=b.units.filter(u=>u.team==='player'&&u.summoned&&u.alive).sort((a,c)=>(a.hp/a.maxHp)-(c.hp/c.maxHp))[0]; if(t) t.hp=t.maxHp; } else if(def.effect==='spLowest'){ const t=b.units.filter(u=>u.team==='player'&&u.summoned&&u.alive).sort((a,c)=>(a.sp/a.maxSp)-(c.sp/c.maxSp))[0]; if(t) t.sp=t.maxSp; } }
+function cardHTML(card,index){ if(!card) return '<div class="prep-card empty"></div>';
+  if(card.type==='apostle'){ const unit=appState.battle.units.find(u=>u.runtimeId===card.unitRuntimeId); if(!unit) return '<div class="prep-card empty"></div>';
+    return '<button class="prep-card apostle-card" style="background:'+PERSONALITY_CARD_BG[unit.personality]+'" onclick="purchaseCard('+index+')"><div class="pc-cost">'+card.cost+'</div><span class="ros-badge personality" style="background:'+PERSONALITY[unit.personality].color+'">'+PERSONALITY[unit.personality].label[0]+'</span><span class="ros-badge role" style="background:'+ROLE[unit.role].color+'">'+ROLE[unit.role].icon+'</span><div class="pc-grade-stars">'+'★'.repeat(card.nextGrade)+'</div>'+unitShape('hero',unit.masterId,'')+'<div class="ros-footer">'+unit.name+'</div></button>';
+  }
+  if(card.type==='equipment'){ const def=EQUIP_CARD_DEFS.find(x=>x.id===card.defId); return '<button class="prep-card equip-card" onclick="purchaseCard('+index+')"><div class="pc-cost">'+card.cost+'</div><div class="pc-icon">'+def.icon+'</div><div class="pc-name">'+def.name+'</div></button>'; }
+  const def=SPELL_CARD_DEFS.find(x=>x.id===card.defId); return '<button class="prep-card spell-card" onclick="purchaseCard('+index+')"><div class="pc-cost">'+card.cost+'</div><div class="pc-icon">'+def.icon+'</div><div class="pc-name">'+def.name+'</div></button>';
+}
+// ---- 스펠 목록 팝업 ----
+function openSpellListPopup(){ const b=appState.battle; if(!b) return;
+  if(!b.ownedSpellCards.length){ $('spellListTotals').innerHTML=''; $('spellListGrid').innerHTML='<div class="spell-empty">🌿<br>이런! 아직 스펠을 구매하지 않았어요</div>'; }
+  else { const totals={}; b.ownedSpellCards.forEach(item=>{ const def=SPELL_CARD_DEFS.find(x=>x.id===item.defId); if(def&&!def.instant){ totals[def.statKey]=(totals[def.statKey]||0)+def.value*item.count; } });
+    $('spellListTotals').innerHTML=Object.keys(totals).length?Object.keys(totals).map(k=>'<div>'+statLabel(k)+' +'+totals[k].toFixed(1)+'%</div>').join(''):'<div>추가 능력치 없음</div>';
+    $('spellListGrid').innerHTML=b.ownedSpellCards.map(item=>{ const def=SPELL_CARD_DEFS.find(x=>x.id===item.defId); return '<button class="spell-card-mini" onclick="openSpellDetail(\''+item.defId+'\')">'+(item.count>1?'<span class="sc-count">x'+item.count+'</span>':'')+'<div class="sc-icon">'+def.icon+'</div><div class="sc-name">'+def.name+'</div></button>'; }).join('');
+  }
+  $('SpellListPopup').classList.add('show');
+  appState.popupPaused=true;
+}
+function closeSpellListPopup(){ $('SpellListPopup').classList.remove('show'); appState.popupPaused=false; }
+function openSpellDetail(defId){ const def=SPELL_CARD_DEFS.find(x=>x.id===defId); $('spellDetailBody').innerHTML='<div class="sd-icon">'+def.icon+'</div><div class="sd-name">'+def.name+'</div><div class="sd-desc">'+(def.instant?'구매 즉시 적용되는 효과입니다.':statLabel(def.statKey)+' +'+def.value+'%')+'</div>'; $('SpellDetailPopup').classList.add('show'); }
+function closeSpellDetail(){ $('SpellDetailPopup').classList.remove('show'); }
+// ---- 장착 카드 팝업 ----
+// 후열(x=1) 좌측 -> 중열(x=2) 중간 -> 전열(x=3) 우측 순서로 이어진 배경 밴드에 배치. 열 내부는 y좌표 오름차순.
+const EQUIP_POSITION_GROUPS=[{key:'pos-back',x:1},{key:'pos-mid',x:2},{key:'pos-front',x:3}];
+// 열 내부 배치 순서: 우측부터 y=2,1,3 즉 좌측부터 y=3,1,2. 장착 팝업과 전투 하단 스킬바가 동일한 순서를 공유.
+const POSITION_Y_ORDER=[3,1,2];
+function sortByPositionYOrder(list){ return list.slice().sort((a,c)=>POSITION_Y_ORDER.indexOf(a.position.y)-POSITION_Y_ORDER.indexOf(c.position.y)); }
+function equipSlotsHTML(u){ const eq=u.equipment||[]; let html='<div class="equip-slots">'; for(let i=0;i<3;i++){ const defId=eq[i]; const d=defId?EQUIP_CARD_DEFS.find(x=>x.id===defId):null; html+='<div class="equip-slot'+(d?' filled':'')+'">'+(d?d.icon:'')+'</div>'; } html+='</div>'; return html; }
+function openEquipPopup(defId){ const b=appState.battle; const def=EQUIP_CARD_DEFS.find(x=>x.id===defId); appState.pendingEquipDefId=defId;
+  $('equipPopupHeader').textContent=def.icon+' '+def.name+' +'+def.value+'%';
+  const targets=eligibleEquipTargets(b);
+  $('equipTargetList').innerHTML=EQUIP_POSITION_GROUPS.map(g=>{
+    const members=sortByPositionYOrder(targets.filter(u=>u.position.x===g.x));
+    if(!members.length) return '';
+    return '<div class="equip-group '+g.key+'">'+members.map(u=>{ const full=(u.equipment||[]).length>=3; return '<div class="equip-target'+(full?' disabled':'')+'" id="equipTarget_'+u.runtimeId+'" '+(full?'':'onclick="confirmEquip(\''+u.runtimeId+'\')"')+'>'+unitShape('hero',u.masterId,'')+'<div class="et-name">'+u.name+'</div>'+equipSlotsHTML(u)+'</div>'; }).join('')+'</div>';
+  }).join('');
+  $('EquipPopup').classList.add('show');
+  appState.popupPaused=true;
+}
+function closeEquipPopup(){ $('EquipPopup').classList.remove('show'); appState.pendingEquipDefId=null; appState.popupPaused=false; }
+const EQUIP_CONFIRM_FLASH_MS=700;
+function confirmEquip(runtimeId){ const b=appState.battle; const unit=b.units.find(u=>u.runtimeId===runtimeId); if(!unit) return; if((unit.equipment||[]).length>=3){ toast('이미 장비를 3개 장착했습니다.'); return; }
+  unit.equipment=unit.equipment||[]; unit.equipment.push(appState.pendingEquipDefId); recomputeUnitStats(unit,b);
+  const el=$('equipTarget_'+runtimeId); if(el) el.classList.add('equip-flash');
+  setTimeout(()=>{ closeEquipPopup(); renderBattle(); },EQUIP_CONFIRM_FLASH_MS);
+}
+function finishBattle(resultType,reason,skipResultOverlay){ const b=appState.battle; if(!b||b.resultProcessed) return; resetUnitsToHome(b); b.resultProcessed=true; b.lastReason=reason||resultType; b.state=resultType; stopBattleLoop(); BATTLE_RESULT=buildBattleResult(resultType); if(resultType==='Victory'){ const rewards=calculateRewards(BATTLE_RESULT); grantRewards(rewards,BATTLE_RESULT); updateStageProgress(BATTLE_RESULT); BATTLE_RESULT.rewardList=rewards; } else BATTLE_RESULT.rewardList=[]; PLAYER_SAVE.battleResults.push({battleId:BATTLE_RESULT.battleId,stageId:BATTLE_RESULT.stageId,resultType:BATTLE_RESULT.resultType,createdAt:BATTLE_RESULT.createdAt}); if(PLAYER_SAVE.battleResults.length>20) PLAYER_SAVE.battleResults.shift(); saveGame(); renderAll(); if(!skipResultOverlay) openResultOverlay(BATTLE_RESULT); }
+function buildBattleResult(resultType){ const b=appState.battle; const alivePlayers=b.units.filter(u=>u.team==='player'&&u.summoned&&u.alive).length; const deadPlayers=b.units.filter(u=>u.team==='player'&&u.summoned&&!u.alive).length; const clearTime=Number(((b.waveClearCount)*40).toFixed(1)); const starConditions=[{id:'clear',achieved:resultType==='Victory'},{id:'time',achieved:resultType==='Victory'&&clearTime<=b.waves.length*40},{id:'survive',achieved:resultType==='Victory'&&deadPlayers===0}]; return {battleId:b.battleId,requestId:BATTLE_CONTEXT.request.requestId,stageId:b.stage.id,resultType,clearReason:b.lastReason,clearTime,totalDamage:b.totalDamage,totalHeal:b.totalHeal,deadUnitCount:deadPlayers,aliveUnitCount:alivePlayers,usedSkillCount:b.usedSkillCount,waveClearCount:b.waveClearCount,maxWave:b.waves.length,firstClear:!getStageProgress(b.stage.id).cleared,starCount:starConditions.filter(s=>s.achieved).length,rewardList:[],nextStageId:b.stage.nextStageId,createdAt:new Date().toISOString()}; }
+function calculateRewards(result){ if(result.resultType!=='Victory') return []; const stage=getStage(result.stageId); const progress=getStageProgress(stage.id); const master=REWARD_MASTER[stage.rewardGroupId]; const rewards=[]; if(!progress.firstRewardClaimed) rewards.push(...master.firstClear.filter(r=>r.count>0).map(r=>Object.assign({rewardType:'firstClear'},r))); rewards.push(...master.repeat.map(r=>Object.assign({rewardType:'repeat'},r))); master.random.forEach(r=>{ if(Math.random()<=r.rate) rewards.push(Object.assign({rewardType:'random'},r)); }); return rewards; }
+function grantRewards(rewards,result){ rewards.forEach(r=>{ if(r.itemId==='coin') PLAYER_SAVE.currency.coin+=r.count; else if(r.itemId==='exp') PLAYER_SAVE.exp+=r.count; else if(r.itemId==='leaf') PLAYER_SAVE.currency.leaf+=r.count; else if(r.itemId==='macaron') PLAYER_SAVE.currency.macaron+=r.count; else if(r.itemId==='shard') PLAYER_SAVE.inventory.shard._common=(PLAYER_SAVE.inventory.shard._common||0)+r.count; }); while(PLAYER_SAVE.exp>=1000){ PLAYER_SAVE.level++; PLAYER_SAVE.exp-=1000; PLAYER_SAVE.currency.maxStamina=maxStaminaOf(PLAYER_SAVE.level); } }
+function updateStageProgress(result){ if(result.resultType!=='Victory') return; const p=getStageProgress(result.stageId); p.unlocked=true; p.cleared=true; p.bestStar=Math.max(p.bestStar||0,result.starCount); p.bestTimeSec=p.bestTimeSec?Math.min(p.bestTimeSec,result.clearTime):result.clearTime; p.clearCount=(p.clearCount||0)+1; p.firstRewardClaimed=true; p.lastClearedAt=new Date().toISOString(); PLAYER_SAVE.stageProgress[result.stageId]=p; const stage=getStage(result.stageId); if(stage.nextStageId){ PLAYER_SAVE.stageProgress[stage.nextStageId]=Object.assign({stageId:stage.nextStageId,unlocked:false,cleared:false,bestStar:0,bestTimeSec:0,clearCount:0,firstRewardClaimed:false},PLAYER_SAVE.stageProgress[stage.nextStageId]||{}); PLAYER_SAVE.stageProgress[stage.nextStageId].unlocked=true; result.nextStageUnlocked=true; } }
+// 기여도: 총피해+총회복 합산으로 판단(20장 전투 로그 필드 재사용)
+function contributionScore(u){ return (u.totalDamage||0)+(u.totalHeal||0); }
+function mvpUnit(){ const b=appState.battle; if(!b) return null; const list=b.units.filter(u=>u.team==='player'&&u.summoned); return list.slice().sort((a,c)=>contributionScore(c)-contributionScore(a))[0]||null; }
+function leastContribUnit(){ const b=appState.battle; if(!b) return null; const list=b.units.filter(u=>u.team==='player'&&u.summoned); return list.slice().sort((a,c)=>contributionScore(a)-contributionScore(c))[0]||null; }
+const DEFEAT_TIPS=[
+  '같은 성격 사도를 편성하면 상성 배율로 더 강해집니다.',
+  '전열에는 근접형 딜러나 탱커를 배치하는 것이 안전합니다.',
+  '스펠 카드는 파티 전체에 적용되니 겹쳐서 구매하면 좋습니다.',
+  '장착 카드는 한 번 장착하면 교체할 수 없으니 신중하게 고르세요.',
+  '사도 카드를 구매하면 학년이 올라 스탯이 크게 강해집니다.'
+];
+function openResultOverlay(result){ $('ResultOverlay').classList.add('show'); const victory=result.resultType==='Victory';
+  $('ResultTitleStage').style.display='flex'; $('ResultDetailStage').style.display='none';
+  $('rtTitleText').textContent=victory?'VICTORY':'DEFEAT'; $('rtTitleText').className='rt-title-text '+(victory?'victory':'defeat');
+  if(victory){
+    $('rtStarRow').style.display='flex';
+    $('rtStarRow').innerHTML=[1,2,3].map(i=>'<span class="rt-star" id="rtStar'+i+'">☆</span>').join('');
+    let i=0; const iv=setInterval(()=>{ i++; const el=$('rtStar'+i); if(el){ el.textContent=i<=result.starCount?'★':'☆'; el.classList.add('rt-pop'); } if(i>=3){ clearInterval(iv); setTimeout(()=>showResultDetail(result),1500); } },500);
+  } else {
+    $('rtStarRow').style.display='none';
+    setTimeout(()=>showResultDetail(result),3000);
+  }
+}
+function showResultDetail(result){ const stage=getStage(result.stageId); const victory=result.resultType==='Victory';
+  $('ResultTitleStage').style.display='none'; $('ResultDetailStage').style.display='block';
+  $('rdVictoryPanel').style.display=victory?'block':'none';
+  $('rdDefeatPanel').style.display=victory?'none':'block';
+  if(victory){
+    const hero=mvpUnit();
+    $('rdHeroPortrait').innerHTML=hero?unitShape('hero',hero.masterId,''):'';
+    $('rdStars').textContent='★'.repeat(result.starCount)+'☆'.repeat(3-result.starCount);
+    $('rdStageLabel').textContent=stage.chapter+'-'+stage.no+' '+stage.name;
+    $('rdUserLevel').textContent='Lv.'+PLAYER_SAVE.level;
+    $('rdUserExp').textContent=fmt(PLAYER_SAVE.exp)+' / 1,000';
+    $('rdUserExpBar').style.width=Math.min(100,PLAYER_SAVE.exp/1000*100)+'%';
+    const rewards=result.rewardList||[];
+    $('rdRewards').innerHTML=rewards.length?rewards.map(r=>'<div class="result-reward">'+rewardIcon(r.itemId)+'<span>x'+fmt(r.count)+'</span></div>').join(''):'<div class="rd-noreward">획득 보상 없음</div>';
+    $('nextStageBtnV').disabled=!stage.nextStageId||!getStageProgress(stage.nextStageId).unlocked;
+  } else {
+    const worst=leastContribUnit(); appState.resultWorstUnit=worst;
+    $('rdDefeatHero').innerHTML=worst?unitShape('hero',worst.masterId,''):'';
+    $('rdDefeatStage').textContent=stage.chapter+'-'+stage.no+' '+stage.name;
+    $('rdDefeatTip').textContent=DEFEAT_TIPS[Math.floor(Math.random()*DEFEAT_TIPS.length)];
+  }
+}
+function goGrowFromDefeat(tab){ const worst=appState.resultWorstUnit; closeResultOverlayOnly();
+  if(worst){ const idx=sortedOwned().findIndex(p=>p.playerCharacterId===worst.playerCharacterId); appState.detailIndex=idx>=0?idx:0; }
+  appState.detailTab=tab;
+  showLoading({type:'scene',message:'사도 상세 화면으로 이동합니다.',target:'CharacterDetail'});
+}
+function closeResultOverlayOnly(){ const el=$('ResultOverlay'); if(el) el.classList.remove('show'); }
+function goNextStage(){ const stage=getStage(BATTLE_RESULT?.stageId); if(!stage.nextStageId){ toast('다음 스테이지가 없습니다.'); return; } if(!getStageProgress(stage.nextStageId).unlocked){ toast('다음 스테이지가 아직 잠겨 있습니다.'); return; } appState.selectedStageId=stage.nextStageId; PLAYER_SAVE.lastSelectedStageId=stage.nextStageId; saveGame(); closeResultOverlayOnly(); showLoading({type:'scene',message:'다음 스테이지로 이동합니다.',target:'StageSelect'}); }
+function goPartyFromResult(){ closeResultOverlayOnly(); showLoading({type:'scene',message:'파티 편성으로 이동합니다.',target:'PartySetup'}); }
+function goStageFromResult(){ closeResultOverlayOnly(); showLoading({type:'scene',message:'스테이지 선택으로 이동합니다.',target:'StageSelect'}); }
+function goLobbyFromResult(){ closeResultOverlayOnly(); showLoading({type:'scene',message:'로비로 이동합니다.',target:'Lobby'}); }
+function unitScreenPosition(unit){ const yMap={1:17,2:33,3:49}; if(unit.team==='player'){ const xMap={1:12,2:24,3:36}; return {left:xMap[unit.position.x],top:yMap[unit.position.y]}; } const xMap={1:62,2:74,3:86}; return {left:xMap[unit.position.x],top:yMap[unit.position.y]}; }
+function renderBattle(){ const b=appState.battle; if(!b) return;
+  const phaseLabel=b.phase==='preparation'?'준비':'전투';
+  $('battleTimer').textContent=String(Math.floor(Math.max(0,b.phaseTimer)/60)).padStart(2,'0')+':'+String(Math.floor(Math.max(0,b.phaseTimer)%60)).padStart(2,'0');
+  $('battleWaveText').textContent=phaseLabel+' '+(b.currentWaveIndex+1)+'/5';
+  $('battleAutoBtn').style.outline=b.autoBattle?'4px solid #fff36d':'0';
+  $('battleSpeedBtn').textContent='x'+b.speed;
+  $('battleUnitLayer').innerHTML=b.units.filter(u=>(u.team==='enemy'||u.summoned)&&u.alive).map(unit=>{ ensureVisualPos(unit); const hp=unit.maxHp?Math.max(0,Math.round(unit.hp/unit.maxHp*100)):0; const sp=unit.maxSp?Math.max(0,Math.round(unit.sp/unit.maxSp*100)):0; const gradeStars=unit.team==='player'?'<div class="unit-grade">'+'★'.repeat(unit.grade||0)+'</div>':''; const zIndex=50+(unit.position.y||1); return '<div id="unit_'+unit.runtimeId+'" class="battle-unit" style="left:'+unit.curLeft+'%;top:'+unit.curTop+'%;z-index:'+zIndex+';">'+gradeStars+unitShape(unit.team==='player'?'hero':'enemy',unit.masterId,unit.name)+'<div class="unit-name">'+unit.name+'</div><div class="bar hpbar"><span style="width:'+hp+'%"></span></div><div class="bar spbar"><span style="width:'+sp+'%"></span></div></div>'; }).join('');
+  $('prepShopPanel').style.display=b.phase==='preparation'?'grid':'none';
+  $('prepStartBtn').style.display=b.phase==='preparation'?'flex':'none';
+  $('battleSpellListBtn').style.display=b.phase==='battle'?'flex':'none';
+  $('activeSkillBar').style.display=b.phase==='battle'?'flex':'none';
+  if(b.phase==='preparation'){ $('prepCoinDisplay').textContent=fmt(b.coin); $('prepCardSlots').innerHTML=b.cardSlots.map((c,i)=>cardHTML(c,i)).join(''); $('prepLockBtn').classList.toggle('active',b.cardsLocked); $('prepRefreshCost').textContent=fmt((b.refreshCount+1)*4); }
+  if(b.phase==='battle') renderActiveSkillBar();
+}
+// ---- 하단 액티브 스킬 바 (4학년 미만은 반쯤 가려짐, 클릭시 발동 로직은 범위 밖) ----
+function renderActiveSkillBar(){ const b=appState.battle; if(!b) return;
+  const groups=EQUIP_POSITION_GROUPS.map(g=>sortByPositionYOrder(b.units.filter(u=>u.team==='player'&&u.summoned&&u.alive&&u.position.x===g.x)));
+  const ordered=[].concat(groups[0],groups[1],groups[2]);
+  $('activeSkillBar').innerHTML=ordered.map(u=>{ const canUse=(u.grade||0)>=4; const skill=getCharacterSkill(u.masterId,'active');
+    const hp=u.maxHp?Math.max(0,Math.round(u.hp/u.maxHp*100)):0; const sp=u.maxSp?Math.max(0,Math.round(u.sp/u.maxSp*100)):0;
+    const cd=u.activeSkillCd||0; const cdPct=cd/ACTIVE_SKILL_CD*100;
+    const cdHTML=cd>0?'<div class="as-cd-mask" style="background:conic-gradient(rgba(60,60,60,.82) '+cdPct+'%,transparent '+cdPct+'%)"></div><div class="as-cd-num">'+Math.ceil(cd)+'</div>':'';
+    return '<button class="as-slot'+(canUse?' as-active':' as-locked')+'" onclick="onActiveSkillClick(\''+u.runtimeId+'\')"><div class="as-icon-wrap"><div class="as-icon">'+skill.icon+'</div></div>'+cdHTML+'<div class="bar as-hp"><span style="width:'+hp+'%"></span></div><div class="bar as-sp"><span style="width:'+sp+'%"></span></div></button>';
+  }).join('');
+}
+function onActiveSkillClick(runtimeId){ const b=appState.battle; const unit=b&&b.units.find(u=>u.runtimeId===runtimeId); if(!unit) return; if(b.autoBattle){ toast('자동 진행 중입니다.'); return; } if((unit.grade||0)<4){ toast(unit.name+'은(는) 아직 액티브 스킬을 사용할 수 없습니다 (4학년 필요).'); return; } if((unit.activeSkillCd||0)>0) return; unit.activeSkillCd=ACTIVE_SKILL_CD; renderActiveSkillBar(); toast('액티브 스킬 발동은 다음 세션(전투 시스템 개선)에서 구현됩니다.'); }
+function animateUnit(id,cls){ const el=$('unit_'+id); if(!el) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls),260); }
+function showFloat(){ /* 대미지/회복 플로팅 텍스트 표시 비활성화 */ }
+function logBattle(text){ const el=$('battleLog'); if(el) el.textContent=text; }
+function toggleAutoBattle(){ const b=appState.battle; if(!b) return; b.autoBattle=!b.autoBattle; PLAYER_SAVE.battleOptions.autoBattle=b.autoBattle; saveGame(); renderBattle(); toast('자동 진행 '+(b.autoBattle?'ON':'OFF')); if(b.autoBattle&&b.phase==='preparation') scheduleAutoPrepStep(); }
+function toggleSpeed(){ const b=appState.battle; if(!b) return; b.speed=b.speed===1?2:b.speed===2?3:1; PLAYER_SAVE.battleOptions.speed=b.speed; saveGame(); renderBattle(); toast('배속 x'+b.speed); }
+function skipToNextBattle(){ const b=appState.battle; if(!b||b.phase!=='preparation') return; advanceToBattlePhase(); }
+// ---- 일시정지 팝업 (11장 별 조건을 그대로 목표 문구로 표시) ----
+function openPausePopup(){ const b=appState.battle; if(!b||b.resultProcessed) return; b.state='Pause';
+  $('pauseStageName').textContent=b.stage.chapter+'-'+b.stage.no+'. '+b.stage.name;
+  const deadSoFar=b.units.filter(u=>u.team==='player'&&u.summoned&&!u.alive).length;
+  const goals=[
+    {text:'모든 웨이브 클리어하기',achieved:false},
+    {text:'전투 시간 목표 내 클리어하기 (합산 '+(b.waves.length*40)+'초 이내)',achieved:(b.waveClearCount*40)<=b.waves.length*40},
+    {text:'사도 전원 생존하고 승리하기',achieved:deadSoFar===0}
+  ];
+  $('pauseGoals').innerHTML=goals.map(g=>'<div class="pause-goal">'+(g.achieved?'★':'☆')+' '+g.text+'</div>').join('');
+  $('PausePopup').classList.add('show');
+}
+function closePausePopup(){ const b=appState.battle; if(!b) return; b.state='Fighting'; $('PausePopup').classList.remove('show'); renderBattle(); }
+// 나가기: 로비로 바로 나가지 않고 패배 처리(DEFEAT 연출→결과화면) 흐름을 그대로 탄다.
+function exitBattleAsDefeat(){ $('PausePopup').classList.remove('show'); finishBattle('Defeat','Abort'); }
+function restartBattleFromPause(){ $('PausePopup').classList.remove('show'); showLoading({type:'battle',message:'스테이지를 처음부터 다시 시작합니다.',duration:700}); }
+
+// ---- Gacha (원본 기획서 24장: 단일 배너, 1성60/2성30/3성10, 10회 2성 이상 확정) ----
+function renderGacha(){ const el=$('gachaSplash'); if(!el) return; el.innerHTML=CHARACTER_MASTER.slice(0,3).map(c=>unitShape('hero',c.id,c.name)).join('');
+  $('gachaRates').innerHTML=[3,2,1].map(star=>'<div>'+'★'.repeat(star)+' 확률: '+Math.round(GACHA_BANNER.rates[star]*100)+'%</div>').join('');
+  const today=todayKey(); const used=PLAYER_SAVE.freeGachaDate===today; $('freeGachaBtn').disabled=used; $('freeGachaState').textContent=used?'오늘 사용 완료':'사용 가능';
+}
+function showRates(){ toast('1성 60% / 2성 30% / 3성 10% (10회 시 2성 이상 1개 확정)'); }
+function rollStar(){ const r=Math.random(); if(r<GACHA_BANNER.rates[3]) return 3; if(r<GACHA_BANNER.rates[3]+GACHA_BANNER.rates[2]) return 2; return 1; }
+function grantCharacterByStar(star){ const pool=CHARACTER_MASTER.filter(c=>c.initialStar===star); const pick=(pool.length?pool:CHARACTER_MASTER)[Math.floor(Math.random()*(pool.length?pool.length:CHARACTER_MASTER.length))]; const owned=getOwnedByCharacterId(pick.id); if(owned){ PLAYER_SAVE.inventory.shard[pick.id]=(PLAYER_SAVE.inventory.shard[pick.id]||0)+10; return {characterId:pick.id,name:pick.name,star,dup:true}; } PLAYER_SAVE.ownedCharacters.push({playerCharacterId:'pc_'+pick.id+'_'+uid('x'),characterId:pick.id,level:1,star,order:PLAYER_SAVE.ownedCharacters.length,skillLevels:{sp:1,active:1}}); return {characterId:pick.id,name:pick.name,star,dup:false}; }
+function getOwnedByCharacterId(characterId){ return PLAYER_SAVE.ownedCharacters.find(p=>p.characterId===characterId); }
+function doGacha(count,isFree){
+  if(isFree){ const today=todayKey(); if(PLAYER_SAVE.freeGachaDate===today){ toast('오늘의 무료 모집을 이미 사용했습니다.'); return; } }
+  else { const cost=count===10?GACHA_BANNER.multiCost:GACHA_BANNER.singleCost; const ticketNeed=count; if(PLAYER_SAVE.inventory.ticket>=ticketNeed){ PLAYER_SAVE.inventory.ticket-=ticketNeed; } else { const remain=ticketNeed-PLAYER_SAVE.inventory.ticket; const elleafNeed=Math.round(cost*(remain/count)); if(PLAYER_SAVE.currency.leaf<elleafNeed){ toast('엘리프 또는 티켓이 부족합니다.'); return; } PLAYER_SAVE.currency.leaf-=elleafNeed; PLAYER_SAVE.inventory.ticket=0; } }
+  const results=[]; for(let i=0;i<count;i++) results.push(rollStar());
+  if(count===10 && !results.some(s=>s>=2)){ results[0]=2; } // 10회 2성 이상 1개 확정
+  const granted=results.map(grantCharacterByStar);
+  if(isFree) PLAYER_SAVE.freeGachaDate=todayKey();
+  saveGame();
+  startGachaReveal(granted);
+}
+// ---- 모집 뽑기 애니메이션: 카드 공개 시퀀스 -> 결과 그리드 ----
+let gachaRevealQueue=[]; let gachaRevealIndex=0; let gachaRevealResults=[]; let gachaResultCycleTimer=null;
+function startGachaReveal(granted){ gachaRevealQueue=granted; gachaRevealIndex=0; gachaRevealResults=granted;
+  $('GachaRevealOverlay').classList.add('show'); renderGachaRevealCard();
+}
+function renderGachaRevealCard(){ const g=gachaRevealQueue[gachaRevealIndex]; const c=getCharacter(g.characterId); const color=PERSONALITY[c.personality].color;
+  $('gachaRevealCard').style.background='linear-gradient(135deg,'+color+' 0%,'+color+' 42%,#fff 42%,#fffcf3 100%)';
+  $('gachaRevealPortrait').innerHTML=unitShape('hero',c.id,'');
+  $('gachaRevealStars').innerHTML=starsHTML(g.star,g.star);
+  $('gachaRevealName').textContent=c.name;
+  $('gachaRevealPersonalityIcon').textContent=PERSONALITY[c.personality].label[0];
+  $('gachaRevealPersonalityIcon').style.background=color;
+  $('gachaRevealPersonalityLabel').textContent=PERSONALITY[c.personality].label;
+  $('gachaRevealNewBadge').style.display=g.dup?'none':'block';
+  if(!g.dup) $('gachaRevealNewBadge').style.background=color;
+  $('gachaRevealDupBadge').style.display=g.dup?'flex':'none';
+}
+function onGachaRevealCardClick(){ gachaRevealIndex++; if(gachaRevealIndex>=gachaRevealQueue.length){ finishGachaReveal(); } else { renderGachaRevealCard(); } }
+function skipGachaReveal(ev){ if(ev) ev.stopPropagation(); finishGachaReveal(); }
+function finishGachaReveal(){ $('GachaRevealOverlay').classList.remove('show'); showGachaResult(gachaRevealResults); }
+function showGachaResult(results){
+  $('gachaResultGrid').innerHTML=results.map(g=>{ const c=getCharacter(g.characterId); const color=PERSONALITY[c.personality].color;
+    const newBadge=!g.dup?'<div class="gr-cell-new">NEW</div>':'';
+    return '<div class="gr-cell'+(g.dup?' gr-cell-cycle':'')+'">'+
+      '<div class="gr-cell-front" style="background:'+color+'">'+newBadge+unitShape('hero',c.id,'')+'<div class="gr-cell-stars">'+starsHTML(g.star,g.star)+'</div></div>'+
+      (g.dup?'<div class="gr-cell-back" style="background:'+color+'"><div class="gr-cell-shard">🎫</div></div>':'')+
+    '</div>';
+  }).join('');
+  $('GachaResultOverlay').classList.add('show');
+  clearInterval(gachaResultCycleTimer);
+  gachaResultCycleTimer=setInterval(()=>{ document.querySelectorAll('.gr-cell-cycle').forEach(el=>el.classList.toggle('flipped')); },2000);
+}
+function closeGachaResult(){ clearInterval(gachaResultCycleTimer); $('GachaResultOverlay').classList.remove('show'); renderAll(); }
+
+// ---- Roster / CharacterDetail ----
+function setRosterSort(key,ev){ appState.rosterSort=key; document.querySelectorAll('.roster-toolbar button').forEach(b=>b.classList.remove('active')); if(ev&&ev.target) ev.target.classList.add('active'); renderRosterGrid(); }
+function sortedOwned(){ const list=PLAYER_SAVE.ownedCharacters.slice(); const key=appState.rosterSort; return list.sort((a,b)=>{ if(key==='level') return b.level-a.level; if(key==='star') return b.star-a.star; const ca=getCharacter(a.characterId),cb=getCharacter(b.characterId); return ca.name.localeCompare(cb.name,'ko'); }); }
+function starsHTML(star,max){ max=max||5; let out=''; for(let i=1;i<=max;i++){ out+= i<=star?'★':'<span class="ros-star-empty">★</span>'; } return out; }
+function chevronHTML(positionRole){ const st=POSITION_ROLE_STYLE[positionRole]||POSITION_ROLE_STYLE['모든열']; let out='<div class="ros-chevron" style="color:'+st.color+'">'; for(let i=0;i<3;i++){ out+='<span style="font-size:'+(i===st.big?'19px':'11px')+'">&gt;</span>'; } out+='</div>'; return out; }
+function rosCardHTML(c,star,owned){
+  const clickAttr=owned?('openDetail(\''+c.id+'\')'):('toast(\'미보유 사도입니다. 모집으로 획득하세요.\')');
+  return '<button class="ros-card'+(owned?'':' unowned')+'" style="background:'+PERSONALITY_CARD_BG[c.personality]+'" onclick="'+clickAttr+'">'
+    +'<span class="ros-badge personality" style="background:'+PERSONALITY[c.personality].color+'">'+PERSONALITY[c.personality].label[0]+'</span>'
+    +'<span class="ros-badge role" style="background:'+ROLE[c.role].color+'">'+ROLE[c.role].icon+'</span>'
+    +chevronHTML(c.positionRole)
+    +'<div class="ros-top">'+unitShape('hero',c.id,'',!owned)+'<div class="ros-stars">'+starsHTML(star,5)+'</div></div>'
+    +'<div class="ros-footer">'+c.name+'</div>'
+  +'</button>';
+}
+function renderRosterGrid(){ const el=$('rosterGrid'); if(!el||!PLAYER_SAVE) return;
+  const owned=sortedOwned();
+  const ownedIds=new Set(PLAYER_SAVE.ownedCharacters.map(p=>p.characterId));
+  const unowned=CHARACTER_MASTER.filter(c=>!ownedIds.has(c.id)).sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+  let html=owned.map(pc=>rosCardHTML(getCharacter(pc.characterId),pc.star,true)).join('');
+  if(unowned.length){ html+='<div class="ros-section">미보유</div>'; html+=unowned.map(c=>rosCardHTML(c,c.initialStar,false)).join(''); }
+  el.innerHTML=html;
+  if(owned.length && appState.detailIndex===undefined) appState.detailIndex=0;
+}
+function openDetail(characterId){ const idx=sortedOwned().findIndex(p=>p.characterId===characterId); appState.detailIndex=idx>=0?idx:0; appState.detailTab='info'; showLoading({type:'scene',message:'사도 상세 화면을 불러옵니다.',target:'CharacterDetail'}); }
+function cycleDetail(dir){ const list=sortedOwned(); if(!list.length) return; appState.detailIndex=(appState.detailIndex+dir+list.length)%list.length; renderDetail(); }
+function switchDetailTab(tab){ appState.detailTab=tab; renderDetail(); renderCurrencies(); }
+function characterFinalStats(c,level,star){ const mult=STAR_MULTIPLIER[star]||1; return {
+  hp:Math.round(statByLevel(c.baseHp,level)*mult),
+  atk:Math.round(statByLevel(c.baseAtk,level)*mult),
+  def:Math.round(statByLevel(c.baseDef,level)*mult),
+  sp:c.maxSp
+}; }
+// 전투력: DB에 저장하지 않고 화면 표시용으로만 그때그때 계산 (DB_설계서.md §3.2 원칙)
+function combatPower(stats){ return Math.round(stats.hp*0.1+stats.atk*2+stats.def); }
+function renderDetail(){ const el=$('detailPortrait'); if(!el||!PLAYER_SAVE) return; const list=sortedOwned(); if(!list.length){ return; } const pc=list[appState.detailIndex]||list[0]; const c=getCharacter(pc.characterId);
+  const tab=appState.detailTab||'info';
+  $('detailInfoPanel').style.display=tab==='info'?'block':'none';
+  $('detailLevelupPanel').style.display=tab==='levelup'?'flex':'none';
+  $('detailTags').style.display=tab==='info'?'flex':'none';
+  $('detailPortrait').style.display=tab==='skill'?'none':'flex';
+  $('detailSkillPanel').style.display=tab==='skill'?'block':'none';
+  $('detailPromoPanel').style.display=tab==='promo'?'flex':'none';
+  const tabOrder=['info','levelup','skill','promo']; const tabBtns=document.querySelectorAll('#detailSideTabs button'); tabBtns.forEach((b,i)=>b.classList.toggle('active',tabOrder[i]===tab));
+  $('detailName').textContent=c.name; $('detailRole').textContent=PERSONALITY[c.personality].label+' · '+ROLE[c.role].label;
+  el.innerHTML=unitShape('hero',c.id,'');
+  $('detailLvStar').textContent='Lv.'+pc.level+' '+'★'.repeat(pc.star)+'☆'.repeat(5-pc.star);
+  const stats=characterFinalStats(c,pc.level,pc.star);
+  $('detailPower').textContent='전투력 '+fmt(combatPower(stats));
+  $('detailStats').innerHTML=['HP,'+fmt(stats.hp),'SP,'+fmt(stats.sp),'공격력,'+fmt(stats.atk),'방어력,'+fmt(stats.def)].map(row=>{ const[label,val]=row.split(','); return '<div class="detail-stat-line"><span>'+label+'</span><span>'+val+'</span></div>'; }).join('');
+  const chip=(bg,ic,label)=>'<div class="dt-chip"><span class="dt-ic" style="background:'+bg+'">'+ic+'</span><span>'+label+'</span></div>';
+  $('detailTags').innerHTML='<div class="dt-name">'+c.name+'</div><div class="dt-chips">'
+    +chip(PERSONALITY[c.personality].color,PERSONALITY[c.personality].label[0],PERSONALITY[c.personality].label)
+    +chip(ROLE[c.role].color,ROLE[c.role].icon,ROLE[c.role].label)
+    +chip((POSITION_ROLE_STYLE[c.positionRole]||POSITION_ROLE_STYLE['모든열']).color,'›',c.positionRole)
+    +'</div>';
+
+  if(tab==='levelup'){
+    const atMax=pc.level>=100; const nextLevel=Math.min(100,pc.level+1);
+    const nextStats=characterFinalStats(c,nextLevel,pc.star);
+    const curPower=combatPower(stats), nextPower=combatPower(nextStats);
+    const statRow=(label,cur,next)=>'<div class="stat-change"><span>'+label+'</span><span>'+fmt(cur)+' <span class="delta">(+'+fmt(next-cur)+')</span></span></div>';
+    $('levelupPreview').innerHTML='<div class="lv-change">Lv.'+pc.level+' » Lv.'+nextLevel+'</div>'
+      +'<div class="power-change"><span>전투력</span><span>'+fmt(curPower)+' » '+fmt(nextPower)+'</span></div>'
+      +statRow('HP',stats.hp,nextStats.hp)+statRow('SP',stats.sp,nextStats.sp)+statRow('공격력',stats.atk,nextStats.atk)+statRow('방어력',stats.def,nextStats.def);
+    const cost=growthCost(pc.level);
+    $('levelupCost').textContent=atMax?'최대 레벨 도달':'필요 마카롱: '+fmt(cost.macaron);
+    $('levelupCost').closest('.cost-row').nextElementSibling.disabled=atMax;
+  }
+  if(tab==='skill') renderSkillPanel(c,pc);
+  if(tab==='promo') renderPromoPanel(c,pc);
+}
+function levelUpCharacter(){ const list=sortedOwned(); if(!list.length) return; const pc=list[appState.detailIndex]||list[0]; if(pc.level>=100){ toast('이미 최대 레벨입니다.'); return; } const cost=growthCost(pc.level); if(PLAYER_SAVE.currency.macaron<cost.macaron){ toast('마카롱이 부족합니다.'); return; } PLAYER_SAVE.currency.macaron-=cost.macaron; pc.level=Math.min(100,pc.level+1); saveGame(); renderAll(); toast('레벨업! Lv.'+pc.level); }
+
+// ---- 사도 상세 > 스킬 탭 (일반공격/저학년/고학년, 전투 로직 연동은 범위 밖) ----
+function switchSkillSubtab(sub){ appState.skillSubtab=sub; renderDetail(); }
+function renderSkillPanel(c,pc){
+  const sub=appState.skillSubtab||'sp';
+  $('skillSubtabs').innerHTML=SKILL_TAB_ORDER.map(k=>'<button class="'+(k===sub?'active':'')+'" onclick="switchSkillSubtab(\''+k+'\')">'+SKILL_TAB_LABEL[k]+'</button>').join('');
+  const skill=getCharacterSkill(c.id,sub);
+  const hasLevel=sub!=='normal'; const level=hasLevel?pc.skillLevels[sub]:null;
+  $('skillPreviewBox').innerHTML=unitShape('hero',c.id,'')+'<div class="sp-caption">'+SKILL_TAB_LABEL[sub]+' 연출 자리 — 리소스 연결 전까지 CSS 자리표시자로 대체</div>';
+  $('skillPreviewBox').querySelector('.css-unit').classList.add('idle-attack');
+  const atMax=hasLevel&&level>=10;
+  $('skillInfoBox').innerHTML='<div class="si-head"><div class="si-icon">'+skill.icon+'</div><div><div class="si-name">'+skill.name+'</div>'+(hasLevel?'<div class="si-level">Lv.'+level+' / 10</div>':'')+'</div></div>'
+    +'<div class="si-desc">'+skill.desc+'</div>'
+    +(!hasLevel?'':atMax?'<div class="se-master" style="padding:10px 0;">해당 스킬은 마스터 되었습니다.</div>':'<button class="btn green" style="width:100%" onclick="openSkillEnhance()">스킬 강화</button>');
+}
+function openSkillEnhance(){ const list=sortedOwned(); const pc=list[appState.detailIndex]; const c=getCharacter(pc.characterId); const sub=appState.skillSubtab||'sp'; if(sub==='normal') return; const level=pc.skillLevels[sub]; if(level>=10){ toast('이미 마스터한 스킬입니다.'); return; }
+  const skill=getCharacterSkill(c.id,sub); const cost=skillEnhanceCost(level);
+  const haveMacaron=PLAYER_SAVE.currency.macaron, haveGold=PLAYER_SAVE.currency.coin;
+  const enough=haveMacaron>=cost.macaron&&haveGold>=cost.gold;
+  $('skillEnhanceBody').innerHTML='<div class="se-head"><div class="se-icon">'+skill.icon+'</div><div><div class="se-lv">Lv.'+level+' » Lv.'+(level+1)+'</div><div class="se-name">'+skill.name+'</div></div></div>'
+    +'<div class="se-desc">'+skill.desc+'</div>'
+    +'<div class="se-cost-row"><span>마카롱</span><span class="'+(haveMacaron<cost.macaron?'short':'')+'">'+fmt(haveMacaron)+' / '+fmt(cost.macaron)+'</span></div>'
+    +'<div class="se-cost-row"><span>골드</span><span class="'+(haveGold<cost.gold?'short':'')+'">'+fmt(haveGold)+' / '+fmt(cost.gold)+'</span></div>'
+    +'<button class="btn green" style="width:100%;margin-top:16px;" '+(enough?'':'disabled')+' onclick="confirmSkillEnhance()">스킬 강화</button>';
+  $('SkillEnhancePopup').classList.add('show');
+}
+function closeSkillEnhance(){ $('SkillEnhancePopup').classList.remove('show'); }
+function confirmSkillEnhance(){ const list=sortedOwned(); const pc=list[appState.detailIndex]; const sub=appState.skillSubtab||'sp'; if(sub==='normal') return; const level=pc.skillLevels[sub]; if(level>=10) return; const cost=skillEnhanceCost(level); if(PLAYER_SAVE.currency.macaron<cost.macaron||PLAYER_SAVE.currency.coin<cost.gold){ toast('재료가 부족합니다.'); return; } PLAYER_SAVE.currency.macaron-=cost.macaron; PLAYER_SAVE.currency.coin-=cost.gold; pc.skillLevels[sub]=level+1; saveGame(); closeSkillEnhance(); renderAll(); toast('스킬 강화 완료! Lv.'+pc.skillLevels[sub]); }
+
+// ---- 사도 상세 > 승급 탭 (성급업, 하극상 레벨은 이 프로젝트에 없음) ----
+function shardName(c){ return c.name+'의 사도 증명서'; }
+function ownedShardCount(characterId){ return (PLAYER_SAVE.inventory.shard&&PLAYER_SAVE.inventory.shard[characterId])||0; }
+function matHTML(c,cost,ownedShard){ const pct=Math.min(100,ownedShard/cost.shard*100); return '<div class="promo-mat"><div class="pm-icon">💠</div><div class="pm-name">'+shardName(c)+'</div><div class="pm-bar"><div class="pm-fill" style="width:'+pct+'%"></div></div><div class="pm-count">'+fmt(ownedShard)+' / '+fmt(cost.shard)+'</div></div>'; }
+function renderPromoPanel(c,pc){
+  const atMax=pc.star>=5;
+  $('promoStars').innerHTML=starsHTML(pc.star,5)+' » '+(atMax?starsHTML(5,5):starsHTML(pc.star+1,5));
+  if(atMax){ $('promoMat').innerHTML=''; $('promoGoldRow').innerHTML='<strong>최고 등급입니다</strong>'; $('promoBtn').disabled=true; return; }
+  const cost=promotionCost(pc.star+1); const owned=ownedShardCount(c.id);
+  $('promoMat').innerHTML=matHTML(c,cost,owned);
+  $('promoGoldRow').innerHTML=iconSpan('coin','G')+'<span>'+fmt(PLAYER_SAVE.currency.coin)+' / '+fmt(cost.gold)+'</span>';
+  $('promoBtn').disabled=false;
+}
+function openPromotePopup(){ const list=sortedOwned(); const pc=list[appState.detailIndex]; const c=getCharacter(pc.characterId); if(pc.star>=5) return;
+  const nextStar=pc.star+1; const cost=promotionCost(nextStar); const owned=ownedShardCount(c.id);
+  const curStats=characterFinalStats(c,pc.level,pc.star); const nextStats=characterFinalStats(c,pc.level,nextStar);
+  const curPower=combatPower(curStats), nextPower=combatPower(nextStats);
+  $('popStars').innerHTML=starsHTML(pc.star,5)+' » '+starsHTML(nextStar,5);
+  $('popMat').innerHTML=matHTML(c,cost,owned);
+  $('popGoldRow').innerHTML=iconSpan('coin','G')+'<span>'+fmt(PLAYER_SAVE.currency.coin)+' / '+fmt(cost.gold)+'</span>';
+  $('popPower').textContent='전투력 '+fmt(curPower)+' » '+fmt(nextPower);
+  const statRow=(label,cur,next)=>'<div class="detail-stat-line"><span>'+label+'</span><span>'+fmt(cur)+' <span style="color:#2f8f3a">(+'+fmt(next-cur)+')</span></span></div>';
+  $('popStats').innerHTML=statRow('HP',curStats.hp,nextStats.hp)+statRow('SP',curStats.sp,nextStats.sp)+statRow('공격력',curStats.atk,nextStats.atk)+statRow('방어력',curStats.def,nextStats.def);
+  const enough=owned>=cost.shard&&PLAYER_SAVE.currency.coin>=cost.gold;
+  $('popConfirmBtn').disabled=!enough;
+  $('PromotePopup').classList.add('show');
+}
+function closePromotePopup(){ $('PromotePopup').classList.remove('show'); }
+function confirmPromote(){ const list=sortedOwned(); const pc=list[appState.detailIndex]; const c=getCharacter(pc.characterId); if(pc.star>=5) return; const nextStar=pc.star+1; const cost=promotionCost(nextStar); const owned=ownedShardCount(c.id);
+  if(owned<cost.shard||PLAYER_SAVE.currency.coin<cost.gold){ toast('재료가 부족합니다.'); return; }
+  PLAYER_SAVE.inventory.shard[c.id]=owned-cost.shard; PLAYER_SAVE.currency.coin-=cost.gold; pc.star=nextStar;
+  saveGame(); closePromotePopup(); renderAll(); toast('승급 완료! ★'+pc.star);
+}
+
+function boot(){ const saved=loadSave(); if(saved){ appState.selectedStageId=saved.lastSelectedStageId||'stage_01_01'; activateScreen('Lobby'); renderAll(); return; } renderLoginPreview(); }
+window.addEventListener('DOMContentLoaded',boot);
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "scope": "issue2-character-resources",
+  "status": "approved",
+  "pilotKeys": [
+    "amelia",
+    "kyarot"
+  ],
+  "sourcePolicy": {
+    "primary": "Trickcal_Reference/03_extracted_resources/02_raw_data",
+    "legacyProjectRole": "selection-and-validation-reference-only",
+    "include": [
+      "base portrait",
+      "roster icon",
+      "admission skill icon",
+      "graduate skill icon",
+      "base InGame Spine",
+      "base Standing Spine for apostles",
+      "Korean battle voice",
+      "battle SFX"
+    ],
+    "exclude": [
+      "skins",
+      "aside resources",
+      "Japanese voice",
+      "story and lobby voice",
+      "unconfirmed or synthetic replacements",
+      "production scenes and gameplay logic"
+    ]
+  },
+  "audioSelection": {
+    "apostleBattleVoiceNameRegex": "(BasicAttack|Defeat|Die|Hit|PowerAttack|Shout|Spawn|SPSkill|Ultimate|Victory|SkillCast|SkillHit)",
+    "excludedNameRegex": "(Aside|Skin)",
+    "apostleSfx": "all .ogg files in the selected base hero directory except names containing Aside or Skin",
+    "monsterAudio": "all .ogg files in the selected base monster SFX and Korean voice directories",
+    "ordering": "ordinal file-name order"
+  },
+  "apostles": [
+    { "key": "maison", "baseName": "Maison" },
+    { "key": "yumimi", "baseName": "Yumimi" },
+    { "key": "maestromk2", "baseName": "MaestroMK2" },
+    { "key": "diana", "baseName": "Diana" },
+    { "key": "chloe", "baseName": "Chloe" },
+    { "key": "arnet", "baseName": "Arnet" },
+    { "key": "lazy", "baseName": "Lazy" },
+    { "key": "patula", "baseName": "Patula" },
+    { "key": "ricota", "baseName": "Ricota" },
+    { "key": "lethe", "baseName": "Lethe" },
+    { "key": "amelia", "baseName": "Amelia" },
+    { "key": "kommyswim", "baseName": "KommySwim" },
+    { "key": "allet", "baseName": "Allet" },
+    { "key": "sari", "baseName": "Sari" },
+    { "key": "bigwood", "baseName": "BigWood" },
+    { "key": "gabia", "baseName": "Gabia" },
+    { "key": "kyarot", "baseName": "Kyarot", "standingSkin": "Normal" },
+    { "key": "ran", "baseName": "Ran" },
+    { "key": "chopi", "baseName": "Chopi" },
+    { "key": "veroo", "baseName": "Veroo" },
+    { "key": "barie", "baseName": "Barie" },
+    { "key": "festa", "baseName": "Festa" },
+    { "key": "kommy", "baseName": "Kommy" },
+    { "key": "lion", "baseName": "Lion" },
+    { "key": "carren", "baseName": "Carren" },
+    { "key": "mynx", "baseName": "Mynx" },
+    { "key": "bana", "baseName": "Bana" },
+    { "key": "jubee", "baseName": "Jubee" },
+    { "key": "rude", "baseName": "Rude" },
+    { "key": "selline", "baseName": "Selline" }
+  ],
+  "monsters": [
+    { "key": "gluttonbear", "baseName": "GluttonBear" },
+    { "key": "lupalu", "baseName": "Lupalu" },
+    { "key": "magicfork", "baseName": "MagicFork" },
+    { "key": "pumpkin", "baseName": "Pumpkin" }
+  ],
+  "monsterDisplayVariants": [
+    "Cool",
+    "Gloomy",
+    "Jolly",
+    "Mad",
+    "Naive"
+  ]
+}

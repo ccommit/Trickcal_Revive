@@ -1,0 +1,21 @@
+{
+  "name": "TrickcalRevive.App",
+  "rootNamespace": "TrickcalRevive.App",
+  "references": [
+    "TrickcalRevive.Core",
+    "TrickcalRevive.Data",
+    "TrickcalRevive.Domain",
+    "TrickcalRevive.Infra",
+    "TrickcalRevive.Presentation",
+    "TrickcalRevive.MainUI"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

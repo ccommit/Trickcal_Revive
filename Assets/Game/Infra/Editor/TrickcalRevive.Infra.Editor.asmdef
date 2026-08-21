@@ -1,0 +1,21 @@
+{
+  "name": "TrickcalRevive.Infra.Editor",
+  "rootNamespace": "TrickcalRevive.Infra.Editor",
+  "references": [
+    "TrickcalRevive.Core",
+    "TrickcalRevive.Data",
+    "TrickcalRevive.Domain",
+    "TrickcalRevive.Infra"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
