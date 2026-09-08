@@ -1,0 +1,14 @@
+{
+  "name": "TrickcalRevive.App.PlayModeTests",
+  "rootNamespace": "TrickcalRevive.App.Tests",
+  "references": [
+    "TrickcalRevive.App",
+    "TrickcalRevive.Core",
+    "TrickcalRevive.Presentation"
+  ],
+  "includePlatforms": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false
+}

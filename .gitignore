@@ -57,3 +57,16 @@ sysinfo.txt
 
 # 협업 진입점이며 Unity 프로젝트 산출물이 아니다.
 /AI팀/
+
+# 개발 단계 복구 자료 (issue8-P3)
+# 원본에서 재생성 가능한 파생물이라 저장소에서는 추적하지 않는다. 로컬 파일은 그대로 두어
+# 하네스와 캡처가 계속 돌고, 필요하면 Tools/Recovery/Recover-*.py로 같은 해시로 복원한다.
+# 재현 근거인 Recovery/Manifests/*.json과 복구 스크립트는 저장소에 남는다.
+/Assets/Game/Content/Characters/**/Audio/
+/Assets/Game/Content/Characters/**/Audio.meta
+/Assets/Recovery/
+/Assets/Recovery.meta
+/Assets/Tests/EditMode/Recovery/
+/Assets/Tests/EditMode/Recovery.meta
+/Assets/Tests/PlayMode/Recovery/
+/Assets/Tests/PlayMode/Recovery.meta

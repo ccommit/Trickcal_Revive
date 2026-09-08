@@ -57,10 +57,18 @@ namespace TrickcalRevive.MainUI.Tests
             var lobbyView = Object.FindFirstObjectByType<LobbyScreenView>();
             Assert.That(lobbyView, Is.Not.Null);
             Assert.That(lobbyView.IsReady, Is.True);
-            Assert.That(lobbyView.ProfileName, Is.EqualTo("Recovery QA"));
-            Assert.That(lobbyView.ProfileLevel, Is.EqualTo("Lv.1"));
-            Assert.That(lobbyView.Gold, Is.EqualTo("0"));
-            Assert.That(lobbyView.Stamina, Is.EqualTo("21/21"));
+            var topCurrency = Object.FindFirstObjectByType<TopCurrencyPanelView>();
+            Assert.That(topCurrency, Is.Not.Null);
+            Assert.That(topCurrency.IsReady, Is.True);
+            Assert.That(topCurrency.ProfileName, Is.EqualTo("Recovery QA"));
+            Assert.That(topCurrency.ProfileLevel, Is.EqualTo("Lv.1"));
+            Assert.That(topCurrency.IsProfileVisible, Is.True);
+            Assert.That(topCurrency.Gold, Is.EqualTo("0"));
+            Assert.That(topCurrency.Stamina, Is.EqualTo("21/21"));
+            Assert.That(topCurrency.VisibleCurrencies, Is.EqualTo(TopCurrencyVisibility.All));
+            Assert.That(topCurrency.MenuButton.gameObject.activeSelf, Is.True);
+            Assert.That(topCurrency.HomeButton.gameObject.activeSelf, Is.False);
+            Assert.That(topCurrency.BackButton.gameObject.activeSelf, Is.False);
 
             var feedback = lobbyView.RecruitButton.GetComponent<LobbyButtonPressFeedback>();
             Assert.That(feedback, Is.Not.Null);
@@ -81,7 +89,95 @@ namespace TrickcalRevive.MainUI.Tests
             Assert.That(feedback.CurrentScale.x, Is.EqualTo(1f).Within(0.02f));
             Assert.That(feedback.CurrentScale.y, Is.EqualTo(1f).Within(0.02f));
 
-            Click(lobbyView, "SettingsButton");
+            Click(lobbyView, "AdventureButton");
+            yield return new WaitForSecondsRealtime(0.65f);
+            Assert.That(
+                topCurrency.VisibleCurrencies,
+                Is.EqualTo(
+                    TopCurrencyVisibility.Stamina
+                    | TopCurrencyVisibility.Gold
+                    | TopCurrencyVisibility.Elleaf));
+            Assert.That(topCurrency.transform.Find("MacaroonCurrency").gameObject.activeSelf, Is.False);
+            Assert.That(topCurrency.MenuButton.gameObject.activeSelf, Is.False);
+            Assert.That(topCurrency.HomeButton.gameObject.activeSelf, Is.True);
+            Assert.That(topCurrency.IsProfileVisible, Is.False);
+            Assert.That(topCurrency.BackButton.gameObject.activeSelf, Is.True);
+            Assert.That(topCurrency.PageTitle, Is.EqualTo("스테이지 리스트"));
+
+            var stageSelect = Object.FindFirstObjectByType<StageSelectView>();
+            Assert.That(stageSelect, Is.Not.Null);
+            var mapBackground = stageSelect.transform.Find("MapBackground").GetComponent<Image>();
+            var worldOneBackground = mapBackground.sprite;
+            Click(stageSelect, "NextWorldButton");
+            yield return null;
+            Assert.That(mapBackground.sprite, Is.Not.SameAs(worldOneBackground));
+            Click(stageSelect, "PreviousWorldButton");
+            yield return null;
+            Assert.That(mapBackground.sprite, Is.SameAs(worldOneBackground));
+
+            Click(stageSelect, "Node0");
+            yield return null;
+            var stageInfo = Object.FindFirstObjectByType<StageInfoPopupView>();
+            Assert.That(stageInfo, Is.Not.Null);
+            Click(stageInfo, "DeckButton");
+            yield return null;
+            var partySetup = Object.FindFirstObjectByType<PartySetupView>();
+            Assert.That(partySetup, Is.Not.Null);
+            Assert.That(partySetup.gameObject.activeInHierarchy, Is.True);
+            Assert.That(topCurrency.PageTitle, Is.EqualTo("1-1. 열정의 밭 갈기 시작!"));
+            Assert.That(topCurrency.IsProfileVisible, Is.False);
+
+            Click(partySetup, "Card_maestromk2");
+            Click(partySetup, "Card_chloe");
+            yield return null;
+            var partyController = Object.FindFirstObjectByType<PartySetupController>();
+            Assert.That(partyController.GetSlotPosition("pc_maestromk2"), Is.EqualTo(new Vector2Int(3, 2)));
+            Assert.That(partyController.GetSlotPosition("pc_chloe"), Is.EqualTo(new Vector2Int(3, 1)));
+
+            var dragSource = partySetup.transform.Find("Formation/Cell_3_2/SpineViewport/Spine").gameObject;
+            var dropTarget = partySetup.transform.Find("Formation/Cell_3_1").GetComponent<RectTransform>();
+            var dragPointer = new PointerEventData(EventSystem.current)
+            {
+                position = RectTransformUtility.WorldToScreenPoint(null, dragSource.transform.position),
+            };
+            ExecuteEvents.Execute(dragSource, dragPointer, ExecuteEvents.beginDragHandler);
+            dragPointer.position = RectTransformUtility.WorldToScreenPoint(null, dropTarget.position);
+            ExecuteEvents.Execute(dragSource, dragPointer, ExecuteEvents.dragHandler);
+            ExecuteEvents.Execute(dragSource, dragPointer, ExecuteEvents.endDragHandler);
+            yield return null;
+
+            Assert.That(partyController.GetSlotPosition("pc_maestromk2"), Is.EqualTo(new Vector2Int(3, 1)));
+            Assert.That(partyController.GetSlotPosition("pc_chloe"), Is.EqualTo(new Vector2Int(3, 2)));
+
+            var detailModal = partySetup.transform.Find("CharacterDetailModal");
+            var detailPanel = detailModal.Find("Panel");
+            var search = partySetup.transform.Find("Roster/Viewport/Content/Card_maison/SearchButton")
+                .GetComponent<Button>();
+            search.onClick.Invoke();
+            Assert.That(detailModal.gameObject.activeSelf, Is.True);
+            Assert.That(detailPanel.localScale.x, Is.LessThan(0.8f));
+            yield return new WaitForSecondsRealtime(0.18f);
+            Assert.That(detailPanel.localScale.x, Is.GreaterThan(1f));
+            yield return new WaitForSecondsRealtime(0.16f);
+            Assert.That(detailPanel.localScale.x, Is.EqualTo(1f).Within(0.02f));
+            Click(partySetup, "CloseButton");
+            Assert.That(detailModal.gameObject.activeSelf, Is.False);
+
+            Click(topCurrency, "BackButton");
+            yield return null;
+            Assert.That(stageSelect.gameObject.activeInHierarchy, Is.True);
+            Assert.That(topCurrency.PageTitle, Is.EqualTo("스테이지 리스트"));
+
+            Click(topCurrency, "HomeButton");
+            yield return null;
+            Assert.That(topCurrency.VisibleCurrencies, Is.EqualTo(TopCurrencyVisibility.All));
+            Assert.That(topCurrency.transform.Find("MacaroonCurrency").gameObject.activeSelf, Is.True);
+            Assert.That(topCurrency.MenuButton.gameObject.activeSelf, Is.True);
+            Assert.That(topCurrency.HomeButton.gameObject.activeSelf, Is.False);
+            Assert.That(topCurrency.BackButton.gameObject.activeSelf, Is.False);
+            Assert.That(topCurrency.IsProfileVisible, Is.True);
+
+            Click(topCurrency, "MenuButton");
             Assert.That(lobbyView.IsSettingsOpen, Is.True);
             Click(lobbyView, "LogoutButton");
             yield return null;

@@ -82,10 +82,14 @@ namespace TrickcalRevive.App.Editor
 
         private static void PrepareMain()
         {
-            var view = UnityEngine.Object.FindFirstObjectByType<LobbyScreenView>()
-                       ?? throw new InvalidOperationException("Main has no LobbyScreenView.");
-            view.RenderProfile("Recovery Preview", 1, 0, 0);
-            view.RenderCurrencies(0, 0, 0, 21, 21);
+            var host = UnityEngine.Object.FindFirstObjectByType<ScreenPanelHost>(FindObjectsInactive.Include)
+                       ?? throw new InvalidOperationException("Main has no ScreenPanelHost.");
+            host.ShowScreen("Lobby");
+            var currencies = UnityEngine.Object.FindFirstObjectByType<TopCurrencyPanelView>()
+                             ?? throw new InvalidOperationException("Main has no TopCurrencyPanelView.");
+            currencies.RenderProfile("Recovery Preview", 1, 0, 0);
+            currencies.Render(21, 21, 0, 0, 0);
+            currencies.Show(TopCurrencyVisibility.All, true, string.Empty);
         }
 
         private static void ConfigureCanvases(Camera camera)
