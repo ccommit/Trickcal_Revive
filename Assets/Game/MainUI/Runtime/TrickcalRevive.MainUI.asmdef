@@ -1,0 +1,19 @@
+{
+  "name": "TrickcalRevive.MainUI",
+  "rootNamespace": "TrickcalRevive.MainUI",
+  "references": [
+    "spine-csharp",
+    "spine-unity",
+    "Unity.TextMeshPro",
+    "Unity.UGUI"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

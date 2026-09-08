@@ -1,0 +1,29 @@
+{
+  "name": "TrickcalRevive.App.Editor",
+  "rootNamespace": "TrickcalRevive.App.Editor",
+  "references": [
+    "TrickcalRevive.Core",
+    "TrickcalRevive.Data",
+    "TrickcalRevive.Domain",
+    "TrickcalRevive.Infra",
+    "TrickcalRevive.Presentation",
+    "TrickcalRevive.App",
+    "TrickcalRevive.MainUI",
+    "spine-unity",
+    "Unity.TextMeshPro",
+    "Unity.UGUI",
+    "Unity.InputSystem",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

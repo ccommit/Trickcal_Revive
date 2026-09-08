@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "validatedUtc": "2026-08-04T07:03:15.9272547Z",
+  "status": "ready-for-integration",
+  "scope": "issue2-resource-and-recovery-harness-only",
+  "productionComplete": false,
+  "resources": {
+    "total": 15,
+    "confirmed": 14,
+    "inferred": 1,
+    "unconfirmedIncluded": 0,
+    "excluded": [
+      {
+        "name": "Currency_Elif_Alternate",
+        "reason": "unconfirmed and unused by the approved lobby scope"
+      }
+    ],
+    "manifest": {
+      "relativePath": "Recovery/Manifests/lobby-resources.json",
+      "entries": 30,
+      "sha256": "17fbb823cce1cb2a6dfb947d9aaa97a6f071dd92a93069ab65ac1a0872ae6e7b"
+    }
+  },
+  "unity": {
+    "version": "6000.3.16f1",
+    "compileErrors": 0,
+    "missingScript": 0,
+    "missingTexture": 0,
+    "missingMaterial": 0,
+    "harnessSceneInBuildSettings": false
+  },
+  "tests": [
+    {
+      "platform": "EditMode",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 1.1676702
+    },
+    {
+      "platform": "PlayMode",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "durationSeconds": 0.7658374
+    }
+  ],
+  "captures": [
+    {
+      "name": "16x9",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 2214607,
+      "sha256": "faf81602d67b7bc5c843fa69518e6eb84e4e4172391bb176c4d310475c837b77"
+    },
+    {
+      "name": "19_5x9",
+      "width": 1170,
+      "height": 540,
+      "bytes": 858599,
+      "sha256": "49c5d56a2f54f821cfa41c6b5d27add206ffa16e00997b9998078a9f1978a8db"
+    },
+    {
+      "name": "4x3",
+      "width": 1440,
+      "height": 1080,
+      "bytes": 1826860,
+      "sha256": "b71833ca57fbea2e5567bb1addd119d308f590561eaaf5a37142fbd2b3681ec1"
+    },
+    {
+      "name": "9x16",
+      "width": 1080,
+      "height": 1920,
+      "bytes": 1952192,
+      "sha256": "642a23dc6091e15c50b1121533eada412b420af4bd4d86841c57909e79519980"
+    }
+  ],
+  "visualReview": {
+    "performed": true,
+    "blackOrEmptyFrame": false,
+    "clippedHarnessText": false,
+    "allApprovedResourcesVisible": true
+  },
+  "deferred": [
+    "production Main scene and gameplay flow",
+    "Windows and Android Player builds",
+    "character, voice, SFX and FX recovery"
+  ]
+}

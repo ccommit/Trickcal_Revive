@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "scope": "issue2-character-fx-evidence-boundary",
+  "status": "inferred-only",
+  "decision": "No FX prefab is promoted to a confirmed recovered runtime resource in this commit.",
+  "reason": "The legacy event bindings were inferred from names and neighboring Spine events; original runtime state and timing were not recovered.",
+  "legacyEvidenceSummary": {
+    "entryCount": 17,
+    "evidenceLevels": [
+      "inferred"
+    ],
+    "keys": [
+      "maison",
+      "lazy",
+      "allet",
+      "chopi",
+      "carren",
+      "gluttonbear",
+      "maestromk2",
+      "patula",
+      "lethe",
+      "bigwood",
+      "ran",
+      "festa",
+      "kommy",
+      "mynx",
+      "rude",
+      "selline",
+      "magicfork"
+    ]
+  },
+  "nextEvidenceRequired": [
+    "original serialized event-to-prefab mapping",
+    "runtime trace",
+    "or frame-accurate original video comparison"
+  ]
+}

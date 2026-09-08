@@ -1,0 +1,59 @@
+# Visual Studio / Rider
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.userprefs
+*.sln.docstates
+mono_crash.*
+.vs/
+/.vsconfig
+.idea/
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Generated build and editor output
+*.tmp
+*.tmp_proj
+*.log
+*.pidb
+*.pdb
+.builds/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]serSettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+/[Aa]ssets/AssetStoreTools*/
+/[Aa]ssets/Plugins/Editor/JetBrains*/
+ExportedObj/
+*.unitypackage
+crashlytics-build.properties
+sysinfo.txt
+*.csproj
+*.unityproj
+*.sln
+*.svd
+*.booproj
+*.pdb.meta
+*.mdb.meta
+!*.meta
+
+# Legacy or local-only extracted resource locations.
+# issue2에서 사용하는 실제 Unity 리소스는 Assets/Game/Content 아래에 추적한다.
+/[Aa]ssets/resources/
+/[Aa]ssets/LocalGameContent/
+/[Aa]ssets/.local-tools/
+
+# Reproducible recovery output: summaries/manifests are tracked, raw runs are local.
+/.recovery-cache/
+/[Aa]rtifacts/
+/TestArtifacts/
+
+# 협업 진입점이며 Unity 프로젝트 산출물이 아니다.
+/AI팀/

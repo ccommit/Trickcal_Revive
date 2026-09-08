@@ -1,0 +1,21 @@
+{
+  "name": "TrickcalRevive.Recovery.EditModeTests",
+  "rootNamespace": "TrickcalRevive.Recovery.Tests",
+  "references": [
+    "TrickcalRevive.Recovery.Harness",
+    "TrickcalRevive.Recovery.Editor",
+    "Unity.UGUI",
+    "spine-unity",
+    "spine-csharp"
+  ],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": ["TestAssemblies"]
+}

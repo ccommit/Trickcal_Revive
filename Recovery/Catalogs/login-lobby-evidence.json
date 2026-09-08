@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "scope": "login-main-lobby-first-visible-slice",
+  "referenceResolution": {
+    "width": 2560,
+    "height": 1440,
+    "evidenceStatus": "confirmed",
+    "evidence": [
+      "ExportedProject/Assets/02.resources/01.mainlobby/prefabs/LobbyRoot.prefab",
+      "ExportedProject/Assets/02.resources/01.mainlobby/prefabs/PerspectiveUIMgr.prefab",
+      "ExportedProject/Assets/02.resources/addressableresources/Scenes/MainLobby.unity"
+    ]
+  },
+  "loginTitle": {
+    "baseName": "Title_Background",
+    "skin": "Normal",
+    "animationSequence": ["Start", "Idle"],
+    "evidenceStatus": "confirmed",
+    "notes": "The binary inventory is revalidated after Unity import; sequence is inherited from the previously verified Flow implementation."
+  },
+  "lobby": {
+    "approvedResourceManifest": "Recovery/Manifests/lobby-resources.json",
+    "approvedResourceCount": 15,
+    "standingCharacterIncluded": false,
+    "excludedFeatures": [
+      "recruit navigation",
+      "apostle navigation",
+      "adventure navigation",
+      "account reset",
+      "loading overlay",
+      "standing character selection"
+    ]
+  }
+}

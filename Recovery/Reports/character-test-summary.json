@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "generatedUtc": "2026-08-04T08:27:49.6318990Z",
+  "status": "passed",
+  "unityVersion": "6000.3.16f1",
+  "editMode": {
+    "result": "Passed",
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 3.6328648,
+    "artifactRelativePath": "Artifacts/SpineRecovery/Characters/Full/editmode-results.xml",
+    "artifactSha256": "109bbe21b10cbfe8a008aace242255136fc3320ae51f7474c6d9d8c330b2c40b"
+  },
+  "playMode": {
+    "result": "Passed",
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 1.5133814,
+    "artifactRelativePath": "Artifacts/SpineRecovery/Characters/Full/playmode-results.xml",
+    "artifactSha256": "9281e8f186e6be1459fac0c5f71e82a0560b05286baf8afd0db272758ae87ea7"
+  },
+  "notes": [
+    "Raw Unity XML and logs are ignored build artifacts; only their relative paths, result summary, and SHA-256 are tracked.",
+    "Unity licensing handshake warnings appeared in the EditMode log, but the test runner completed with result Passed."
+  ]
+}

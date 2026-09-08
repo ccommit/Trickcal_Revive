@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.trickcal-revive.invalid/schemas/recovery-manifest.schema.json",
+  "title": "Trickcal Revive recovery manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "generatedUtc", "sourceIdentity", "entries"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedUtc": { "type": "string", "format": "date-time" },
+    "sourceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifestRelativePath", "sha256"],
+      "properties": {
+        "manifestRelativePath": { "type": "string" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "evidenceStatus",
+        "sourceRelativePath",
+        "sourceBytes",
+        "sourceSha256",
+        "outputRelativePath",
+        "outputBytes",
+        "outputSha256",
+        "transformation"
+      ],
+      "properties": {
+        "category": { "type": "string", "minLength": 1 },
+        "purpose": { "type": "string", "minLength": 1 },
+        "evidenceStatus": {
+          "enum": ["confirmed", "inferred", "unconfirmed", "synthetic", "recreated"]
+        },
+        "sourceRelativePath": { "type": "string", "minLength": 1 },
+        "sourceBytes": { "type": "integer", "minimum": 0 },
+        "sourceSha256": { "$ref": "#/$defs/sha256" },
+        "supportingSources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/supportingSource" }
+        },
+        "outputRelativePath": { "type": "string", "minLength": 1 },
+        "outputBytes": { "type": "integer", "minimum": 0 },
+        "outputSha256": { "$ref": "#/$defs/sha256" },
+        "transformation": { "type": "string", "minLength": 1 },
+        "parameters": { "type": "object" },
+        "evidence": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "supportingSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "relativePath", "bytes", "sha256"],
+      "properties": {
+        "role": { "type": "string", "minLength": 1 },
+        "relativePath": { "type": "string", "minLength": 1 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

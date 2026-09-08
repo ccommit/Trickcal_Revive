@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "source": "EsotericSoftware/spine-runtimes",
+  "branch": "4.1",
+  "commit": "77a5db0ec6d16331f5efbaa7662bba9355bd3424",
+  "packages": {
+    "com.esotericsoftware.spine.spine-csharp": "4.1.2",
+    "com.esotericsoftware.spine.spine-unity": "4.1.43"
+  },
+  "policy": "Pinned for issue2 resource recovery; runtime upgrades are out of scope."
+}
