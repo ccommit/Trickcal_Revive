@@ -56,7 +56,8 @@ namespace TrickcalRevive.App
             var playerData = new PlayerDataRepository(files, session, saveManager);
             var accountAuth = new AccountAuthRepository(files);
             var popups = new PopupService();
-            sceneFlowController.Configure(popups);
+            var screens = new ScreenNavigator();
+            sceneFlowController.Configure(popups, screens);
 
             container.Register<ISessionService>(session);
             container.Register<ISaveManager>(saveManager);
@@ -79,6 +80,7 @@ namespace TrickcalRevive.App
 
             container.Register<IPopupService>(popups);
             container.Register<INavigationService>(sceneFlowController);
+            container.Register<IScreenNavigator>(screens);
 
             container.Register(new EventBus());
 

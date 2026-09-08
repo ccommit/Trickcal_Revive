@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TrickcalRevive.Data.Account;
 using TrickcalRevive.Data.Currency;
 using TrickcalRevive.Data.Character;
@@ -26,11 +27,15 @@ namespace TrickcalRevive.Infra
     {
         private readonly ISessionService sessionService;
         private readonly AccountSaveHandler accountHandler;
+        private readonly PartySaveHandler partyHandler;
+        private readonly StageProgressSaveHandler stageProgressHandler;
 
         public PlayerDataRepository(IFileStore fileStore, ISessionService sessionService, SaveManager saveManager)
         {
             this.sessionService = sessionService;
             accountHandler = new AccountSaveHandler(fileStore);
+            partyHandler = new PartySaveHandler(fileStore);
+            stageProgressHandler = new StageProgressSaveHandler(fileStore);
         }
 
         public AccountData GetAccount()
@@ -54,11 +59,26 @@ namespace TrickcalRevive.Infra
             };
         }
 
-        public List<PlayerCharacterData> GetOwnedCharacters() => throw new NotImplementedException();
+        // 가챠/스타터 지급은 아직 없다. UI 복구 검증을 위해 RecoveryFixture(정식 원본
+        // 아님)의 사도 30명을 보유분으로 제공한다.
+        public List<PlayerCharacterData> GetOwnedCharacters()
+        {
+            var accountId = sessionService.GetSession();
+            return accountId == null
+                ? new List<PlayerCharacterData>()
+                : Fixtures.RecoveryFixture.OwnedCharacters(accountId);
+        }
         public void GrantCharacter(string characterId, int star) => throw new NotImplementedException();
         public void AddCharacterShard(string characterId, int count) => throw new NotImplementedException();
 
-        public List<PlayerPartySlotData> GetPartySlots(string partyId) => throw new NotImplementedException();
+        public List<PlayerPartySlotData> GetPartySlots(string partyId)
+        {
+            var accountId = sessionService.GetSession();
+            if (accountId == null)
+                return new List<PlayerPartySlotData>();
+
+            return partyHandler.Load(accountId).Where(slot => slot.PartyId == partyId).ToList();
+        }
 
         public long GetAmount(CurrencyType currencyType) => throw new NotImplementedException();
         public bool TryConsume(CurrencyType currencyType, long amount) => throw new NotImplementedException();
@@ -70,6 +90,31 @@ namespace TrickcalRevive.Infra
         public long GetCharacterShardCount(string characterId) => throw new NotImplementedException();
         public bool TryConsumeCharacterShard(string characterId, int count) => throw new NotImplementedException();
 
-        public PlayerStageProgressData GetStageProgress(string stageId) => throw new NotImplementedException();
+        public PlayerStageProgressData GetStageProgress(string stageId)
+        {
+            var accountId = sessionService.GetSession();
+            if (accountId == null)
+                return null;
+
+            var saved = stageProgressHandler.Load(accountId).FirstOrDefault(progress => progress.StageId == stageId);
+            // 저장분이 없으면 RecoveryFixture의 초기 진행상태로 대체(1-1 클리어/1-2 해금/나머지 잠금).
+            return saved ?? Fixtures.RecoveryFixture.DefaultStageProgress(accountId, stageId);
+        }
+
+        public void SaveStageProgress(PlayerStageProgressData progress)
+        {
+            var accountId = sessionService.GetSession();
+            if (accountId == null)
+                return;
+
+            var all = stageProgressHandler.Load(accountId);
+            var index = all.FindIndex(p => p.StageId == progress.StageId);
+            if (index >= 0)
+                all[index] = progress;
+            else
+                all.Add(progress);
+
+            stageProgressHandler.Save(accountId, all);
+        }
     }
 }
