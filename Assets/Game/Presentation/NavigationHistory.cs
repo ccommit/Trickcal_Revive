@@ -10,12 +10,14 @@ namespace TrickcalRevive.Presentation
     {
         private readonly Stack<string> scenes = new Stack<string>();
         private readonly IPopupService popupService;
+        private readonly IScreenNavigator screenNavigator;
         private bool backLocked;
         private bool isTransitioning;
 
-        public NavigationHistory(IPopupService popupService)
+        public NavigationHistory(IPopupService popupService, IScreenNavigator screenNavigator = null)
         {
             this.popupService = popupService;
+            this.screenNavigator = screenNavigator;
         }
 
         public void LockBack() => backLocked = true;
@@ -33,7 +35,7 @@ namespace TrickcalRevive.Presentation
 
         public void RecordVisit(string sceneId) => scenes.Push(sceneId);
 
-        /// <summary>팝업이 열려있으면 그것부터 닫는다. 아니면 스택을 보고 이전 씬을 판단한다.</summary>
+        /// <summary>팝업 → Main씬 내부 화면 → 씬 방문 스택 순서로 갈 곳을 찾는다.</summary>
         public BackResult ResolveBack()
         {
             if (isTransitioning)
@@ -44,6 +46,9 @@ namespace TrickcalRevive.Presentation
                 popupService.CloseTop();
                 return BackResult.PopupClosed;
             }
+
+            if (!backLocked && screenNavigator != null && screenNavigator.TryPeekPrevious(out var previousScreen))
+                return BackResult.ScreenChanged(previousScreen);
 
             if (backLocked || scenes.Count <= 1)
                 return BackResult.None;

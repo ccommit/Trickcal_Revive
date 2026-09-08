@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recover the 15 approved issue2 lobby resources from read-only reference data."""
+"""Recover the 16 approved lobby resources from read-only reference data."""
 
 from __future__ import annotations
 
@@ -57,6 +57,7 @@ SPECS = (
     SpriteSpec("Currency_Stamina", "02.resources/99.common/sprites/currencyicons/CurrencyIcon_0011.json", "top-currency-stamina"),
     SpriteSpec("TopMenu_ButtonBase", "02.resources/99.common/sprites/commonicons/TopMenu_ButtonBase.json", "top-menu-button-base"),
     SpriteSpec("TopMenu_IconMenu", "02.resources/99.common/sprites/commonicons/TopMenu_IconMenu.json", "top-menu-icon"),
+    SpriteSpec("TopMenu_IconHome", "02.resources/99.common/sprites/commonicons/TopMenu_IconHome.json", "top-home-icon"),
     SpriteSpec("TopMenu_CurrencyBase", "02.resources/99.common/sprites/commonicons/TopMenu_CurrencyBase.json", "top-currency-base"),
     SpriteSpec("TopMenu_Plus", "02.resources/99.common/sprites/commonicons/TopMenu_Plus.json", "top-currency-plus"),
     SpriteSpec("MainLobby_UserInfoBase", "02.resources/01.mainlobby/sprites/mainlobby/MainLobby_UserInfoBase.json", "player-info-base"),
@@ -414,8 +415,8 @@ def main() -> None:
 
     prepared = prepare_sprites(project_root, raw_root)
     prepared.append(prepare_background(project_root, raw_root))
-    if len(prepared) != 15:
-        raise RuntimeError(f"Expected exactly 15 approved lobby resources, got {len(prepared)}")
+    if len(prepared) != 16:
+        raise RuntimeError(f"Expected exactly 16 approved lobby resources, got {len(prepared)}")
     validate_conflicts(prepared)
 
     if args.validate_only:

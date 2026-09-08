@@ -1,0 +1,1901 @@
+{
+  "schemaVersion": 1,
+  "generatedUtc": "2026-08-07T01:14:24.191895+00:00",
+  "scope": "issue10-party-setup-ui",
+  "sourceIdentity": {
+    "manifestRelativePath": "Recovery/Manifests/source-identity.json",
+    "sha256": "d33671f963b2ebaa2b92d47e35296ac3d953af3a10b8b93b0165b91836ee43a8"
+  },
+  "entries": [
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_1",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_1.json",
+          "bytes": 4710,
+          "sha256": "07a30526f5e4e0887a29c3798cd66284f53b173d1025d084d9e0833f972f7182"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1623,
+          "width": 512,
+          "height": 80
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_1.png",
+      "outputBytes": 65987,
+      "outputSha256": "e466dd4ebcbef10d7b6a44fca4b1bd4b7bc92a251cd87592fbbe7ced90b9480c",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_1",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_1.json",
+          "bytes": 4710,
+          "sha256": "07a30526f5e4e0887a29c3798cd66284f53b173d1025d084d9e0833f972f7182"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1623,
+          "width": 512,
+          "height": 80
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_1.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "9218614dd0b0a7cc6f47b9e031021486b142a2e6b049cee0f50d581539d93117",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_2",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_2.json",
+          "bytes": 11490,
+          "sha256": "7fbdcd37323db92cc5124bb9cf6e9f2551491b01cb8c3c9c74f57bec31c1a6dd"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1296,
+          "width": 1024,
+          "height": 183
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_2.png",
+      "outputBytes": 251597,
+      "outputSha256": "ea94f1da356b29fc972332efb663b889477cfdd31f05b03f1c8e39c2484280ae",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_2",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_2.json",
+          "bytes": 11490,
+          "sha256": "7fbdcd37323db92cc5124bb9cf6e9f2551491b01cb8c3c9c74f57bec31c1a6dd"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1296,
+          "width": 1024,
+          "height": 183
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_2.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "4f7cd161add0cf5b2cd6ae9adbdfca6daaa187b5bd7f903732755b659f55c59c",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_3",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_3.json",
+          "bytes": 13483,
+          "sha256": "93ada516b512f8ac4a314fe249a72fb489f935ee942d67567e691afbed61cc6d"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1096,
+          "width": 1024,
+          "height": 196
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_3.png",
+      "outputBytes": 298135,
+      "outputSha256": "a4f4940e7ce15616f49b5ed11b8c7256c88a92596dbe580f9365b5ec0fd3fb35",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_3",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_3.json",
+          "bytes": 13483,
+          "sha256": "93ada516b512f8ac4a314fe249a72fb489f935ee942d67567e691afbed61cc6d"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1096,
+          "width": 1024,
+          "height": 196
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_3.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "de5190cd55f19a888e7229e444c05ed1063bc08a9a228368c8a3a614ebd322a3",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_4",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_4.json",
+          "bytes": 16022,
+          "sha256": "ef69de20212721301ce873c2f920ee44af03e7da9e87031ffe78a0eff61a6031"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 2048,
+          "height": 1092
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_4.png",
+      "outputBytes": 1640410,
+      "outputSha256": "704c2ec8d0ced82608877e57bcd27e43581674052dc542a07b7b9adc618594e2",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_4",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_4.json",
+          "bytes": 16022,
+          "sha256": "ef69de20212721301ce873c2f920ee44af03e7da9e87031ffe78a0eff61a6031"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 2048,
+          "height": 1092
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_4.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "d7b1db5731b494222b854d2679d3f2ad968b43a035b824b9b9502cc7c679ce02",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_5",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_5.json",
+          "bytes": 5691,
+          "sha256": "e132989e2913ea38ac898e8e284e2469bb142b007d81324571d728245b96e85a"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1483,
+          "width": 1024,
+          "height": 136
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_5.png",
+      "outputBytes": 138100,
+      "outputSha256": "7b90495e1eff31c86260fe5137826f9784c7fb4409975f3c0f94b5f9a84956b9",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "BG_Stage1_1_5",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+      "sourceBytes": 3538829,
+      "sourceSha256": "c7d6f42dbf96cbc585db910fefa9234798b0dcc638c9e5dd414fef26792741d2",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/addressableresources/background/stage/bg_stage1_1/BG_Stage1_1_5.json",
+          "bytes": 5691,
+          "sha256": "e132989e2913ea38ac898e8e284e2469bb142b007d81324571d728245b96e85a"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "BG_Stage1_1",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-BG_Stage1_1-d1b38c80.png",
+        "rect": {
+          "x": 0,
+          "y": 1483,
+          "width": 1024,
+          "height": 136
+        },
+        "settingsRaw": 1,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the BG_Stage1_1 atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/BG_Stage1_1_5.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "1c683773f34554eb2375ef3846e5ae51498e89ef42f24274b7a62aee577ad80b",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "CommonBox_6060",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/CommonBox_6060.json",
+          "bytes": 5756,
+          "sha256": "6001e71a14f09d108daf628bcbefb7b3013554f69078c895fc13ebe1b8c01dfd"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1037,
+          "y": 1287,
+          "width": 120,
+          "height": 120
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 60,
+          "m_X": 60,
+          "m_Y": 60,
+          "m_Z": 60
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/CommonBox_6060.png",
+      "outputBytes": 1940,
+      "outputSha256": "79bf67ce2956d9b4e314b1f027d8d33af4733c75d8aae82129c303d9a89a3b83",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "CommonBox_6060",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/CommonBox_6060.json",
+          "bytes": 5756,
+          "sha256": "6001e71a14f09d108daf628bcbefb7b3013554f69078c895fc13ebe1b8c01dfd"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1037,
+          "y": 1287,
+          "width": 120,
+          "height": 120
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 60,
+          "m_X": 60,
+          "m_Y": 60,
+          "m_Z": 60
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/CommonBox_6060.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "de0f509e7cdf7c4a797179702969ab7263b1a158d87d2f95a338fd6a84d57615",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "CommonHalf_Top_4040",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/CommonHalf_Top_4040.json",
+          "bytes": 4842,
+          "sha256": "34d02577e678c240aa30a6d4405484e3035074a5d11109a3aa18defbd668b6dc"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1370,
+          "y": 1488,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 40,
+          "m_X": 40,
+          "m_Y": 40,
+          "m_Z": 40
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/CommonHalf_Top_4040.png",
+      "outputBytes": 738,
+      "outputSha256": "a634c16b1d08478f11cd00cd2314e5f1bd42da7d282e47a9f3c637068feaafb1",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "CommonHalf_Top_4040",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/CommonHalf_Top_4040.json",
+          "bytes": 4842,
+          "sha256": "34d02577e678c240aa30a6d4405484e3035074a5d11109a3aa18defbd668b6dc"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1370,
+          "y": 1488,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 40,
+          "m_X": 40,
+          "m_Y": 40,
+          "m_Z": 40
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/CommonHalf_Top_4040.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "56b96fd1124265502f444eb2e56a49ce330f834c8ae2e774f36342904c3f18f4",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MajorBtn_002",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MajorBtn_002.json",
+          "bytes": 5387,
+          "sha256": "c182414435bfe0a967f94ed5bfd3935ddfd59b01bcade22c8829b004dde17f6d"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1723,
+          "y": 280,
+          "width": 166,
+          "height": 136
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 65,
+          "m_X": 76,
+          "m_Y": 71,
+          "m_Z": 83
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MajorBtn_002.png",
+      "outputBytes": 6423,
+      "outputSha256": "4cded2cd270ef9140d0d0e32329167bf8ee7d2e7ad34e627dec379873c7515ed",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MajorBtn_002",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MajorBtn_002.json",
+          "bytes": 5387,
+          "sha256": "c182414435bfe0a967f94ed5bfd3935ddfd59b01bcade22c8829b004dde17f6d"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1723,
+          "y": 280,
+          "width": 166,
+          "height": 136
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 65,
+          "m_X": 76,
+          "m_Y": 71,
+          "m_Z": 83
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MajorBtn_002.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "07e27e3998850352da496a4058b5c654fb3300e1a07739dea9ff60f1b70520a7",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MajorBtn_010",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MajorBtn_010.json",
+          "bytes": 5142,
+          "sha256": "f39b52880703b4c486727b0c7bd43810bf2f2a0cf3e707d4fd58b7e6630a9a6b"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1396,
+          "y": 913,
+          "width": 124,
+          "height": 124
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 52,
+          "m_X": 52,
+          "m_Y": 56,
+          "m_Z": 56
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MajorBtn_010.png",
+      "outputBytes": 8346,
+      "outputSha256": "b610dd0984a772ee99a2efe3f1f909f40643101602df01aa2bc9bc0203de102f",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MajorBtn_010",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MajorBtn_010.json",
+          "bytes": 5142,
+          "sha256": "f39b52880703b4c486727b0c7bd43810bf2f2a0cf3e707d4fd58b7e6630a9a6b"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1396,
+          "y": 913,
+          "width": 124,
+          "height": 124
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 52,
+          "m_X": 52,
+          "m_Y": 56,
+          "m_Z": 56
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MajorBtn_010.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "d21eff002c51eabfdda4aaa0532fc9b85e71661f39a0844c0f70142b2ae3c3e6",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MajorBtn_014",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MajorBtn_014.json",
+          "bytes": 5239,
+          "sha256": "42660d84c68868a3b99938037cf0086628e1b8f261a9d9f79cc9edc5c8e19fa2"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 637,
+          "y": 1755,
+          "width": 92,
+          "height": 94
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 45,
+          "m_X": 46,
+          "m_Y": 49,
+          "m_Z": 46
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MajorBtn_014.png",
+      "outputBytes": 4718,
+      "outputSha256": "c2bc441588d9bb127ef75e1c7a09543bfdc02b0c1a6231cf80e7aa1612cf8101",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MajorBtn_014",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MajorBtn_014.json",
+          "bytes": 5239,
+          "sha256": "42660d84c68868a3b99938037cf0086628e1b8f261a9d9f79cc9edc5c8e19fa2"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 637,
+          "y": 1755,
+          "width": 92,
+          "height": 94
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 45,
+          "m_X": 46,
+          "m_Y": 49,
+          "m_Z": 46
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MajorBtn_014.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "2e787dd49f6aadb6c7137ea5ad9d6ad6cf2fbe4f5020132b0ae05d602fa36ac3",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MinorBtn_3030_001",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MinorBtn_3030_001.json",
+          "bytes": 5053,
+          "sha256": "dbb640544925738c589a889928f2590bc360d4b338acac61b176cd12be270277"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 227,
+          "y": 1852,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 40,
+          "m_X": 40,
+          "m_Y": 40,
+          "m_Z": 40
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MinorBtn_3030_001.png",
+      "outputBytes": 3058,
+      "outputSha256": "b382be3e1e13304c909a80bfb83e31d87a6fa453466907ab8832c9d0e0b53f02",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MinorBtn_3030_001",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MinorBtn_3030_001.json",
+          "bytes": 5053,
+          "sha256": "dbb640544925738c589a889928f2590bc360d4b338acac61b176cd12be270277"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 227,
+          "y": 1852,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 40,
+          "m_X": 40,
+          "m_Y": 40,
+          "m_Z": 40
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MinorBtn_3030_001.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "3c0ee453ba5b28e4e7ce47e84344cd94d7330fda8b2eb78fb45c76ccd2e88d8c",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MinorBtn_3030_011",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MinorBtn_3030_011.json",
+          "bytes": 4487,
+          "sha256": "635f6b9d7f219df881396360e09cecb5f50de44eb436f00466e44e4aa4000d7b"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1892,
+          "y": 277,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 34,
+          "m_X": 34,
+          "m_Y": 36,
+          "m_Z": 36
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MinorBtn_3030_011.png",
+      "outputBytes": 2311,
+      "outputSha256": "3862f9d2f9f74a54989f0c878dc6a76e4436bda98ae4639eb3e6d7d6b43c26f5",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Common_MinorBtn_3030_011",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+      "sourceBytes": 1133281,
+      "sourceSha256": "b782b8f4c473cd2f9544bdc7e8593d34f4133cf89f12ffca1a89663cf10993a1",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/99.common/sprites/commonui/Common_MinorBtn_3030_011.json",
+          "bytes": 4487,
+          "sha256": "635f6b9d7f219df881396360e09cecb5f50de44eb436f00466e44e4aa4000d7b"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "CommonUI",
+        "atlasPageFileName": "sactx-0-2048x2048-ASTC 6x6-CommonUI-c0745cab.png",
+        "rect": {
+          "x": 1892,
+          "y": 277,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 34,
+          "m_X": 34,
+          "m_Y": 36,
+          "m_Z": 36
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the CommonUI atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Common_MinorBtn_3030_011.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "f30ec434914917fccc89ab1ad9f25d65141546d18eeb0897066bfe9fffe77c1a",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_Artifact",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_Artifact.json",
+          "bytes": 5252,
+          "sha256": "087d7009dd0b8ef51cfde81c094178fa74335f67481190f731350756e56b6ba9"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 830,
+          "y": 355,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_Artifact.png",
+      "outputBytes": 3133,
+      "outputSha256": "fe32fd0ceb202f290a4638772bd254d5e5b58ea32818e873eb63d33851be1691",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_Artifact",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_Artifact.json",
+          "bytes": 5252,
+          "sha256": "087d7009dd0b8ef51cfde81c094178fa74335f67481190f731350756e56b6ba9"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 830,
+          "y": 355,
+          "width": 80,
+          "height": 80
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_Artifact.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "5ce68b3b6cead02e1385a15445b7b37c5db4f3e9c733b30775771cf34118f8e1",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_AutoForbiddenIcon",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_AutoForbiddenIcon.json",
+          "bytes": 5278,
+          "sha256": "7884e22e4c721d95a1b4926f8c21a45e0c4cc9e3a3ef27fe33fc0e5c2457f73a"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 951,
+          "y": 215,
+          "width": 80,
+          "height": 82
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_AutoForbiddenIcon.png",
+      "outputBytes": 5202,
+      "outputSha256": "33ec1a11e3fb8a2b89dc4efd0cf0b380d365b4d91d88ef1a6dc1fa5b49193315",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_AutoForbiddenIcon",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_AutoForbiddenIcon.json",
+          "bytes": 5278,
+          "sha256": "7884e22e4c721d95a1b4926f8c21a45e0c4cc9e3a3ef27fe33fc0e5c2457f73a"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 951,
+          "y": 215,
+          "width": 80,
+          "height": 82
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_AutoForbiddenIcon.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "c858d14b5960fa23415fa1ae11bd16ce6c96adbd0c572593e0c9cb611ba362ed",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_IconClearDeck",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_IconClearDeck.json",
+          "bytes": 5179,
+          "sha256": "876dee60d5af123de1f26dde61ef83b41351aae6a8824739541e8e45d2a882f5"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 1049,
+          "y": 0,
+          "width": 71,
+          "height": 75
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 1,
+          "m_X": 1,
+          "m_Y": 1,
+          "m_Z": 1
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_IconClearDeck.png",
+      "outputBytes": 3006,
+      "outputSha256": "292e45f106c411c55fad19fc09874b601ad9c1c6989d7e261e3abf482f0acc3f",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_IconClearDeck",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_IconClearDeck.json",
+          "bytes": 5179,
+          "sha256": "876dee60d5af123de1f26dde61ef83b41351aae6a8824739541e8e45d2a882f5"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 1049,
+          "y": 0,
+          "width": 71,
+          "height": 75
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 1,
+          "m_X": 1,
+          "m_Y": 1,
+          "m_Z": 1
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_IconClearDeck.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "301cad273d9cf247a0f9e77a0f11c1c46edaed53e61629fab92f0909ab8d52a4",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_Icon_Skip",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_Icon_Skip.json",
+          "bytes": 5318,
+          "sha256": "769508b864a0caba99ee5ff0ceb6d5728798ab4a3bc2a48584974fc59b7b1b3f"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 951,
+          "y": 123,
+          "width": 88,
+          "height": 88
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_Icon_Skip.png",
+      "outputBytes": 1069,
+      "outputSha256": "d02d0130ce27af3b09093b66b780cfa7f16415b3bc4bacdf2edd7425cd69ce20",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_Icon_Skip",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_Icon_Skip.json",
+          "bytes": 5318,
+          "sha256": "769508b864a0caba99ee5ff0ceb6d5728798ab4a3bc2a48584974fc59b7b1b3f"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 951,
+          "y": 123,
+          "width": 88,
+          "height": 88
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_Icon_Skip.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "741cc5b82f698ab59e7f8482806d27ca645dbb74a8ad13dec694f13f274d2e5d",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_ListDim",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_ListDim.json",
+          "bytes": 5244,
+          "sha256": "7f252a1965238ad558aef5d5cf052c1f345c59f9ce98655f6c9db0fab8ef62fa"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 685,
+          "y": 610,
+          "width": 120,
+          "height": 120
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 70,
+          "m_X": 70,
+          "m_Y": 50,
+          "m_Z": 50
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_ListDim.png",
+      "outputBytes": 1970,
+      "outputSha256": "03b0b7952a0f9effa780b012ce1060bab780148d10ebe1d1a71813ef4923090c",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_ListDim",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_ListDim.json",
+          "bytes": 5244,
+          "sha256": "7f252a1965238ad558aef5d5cf052c1f345c59f9ce98655f6c9db0fab8ef62fa"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 685,
+          "y": 610,
+          "width": 120,
+          "height": 120
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 70,
+          "m_X": 70,
+          "m_Y": 50,
+          "m_Z": 50
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_ListDim.png.meta",
+      "outputBytes": 1338,
+      "outputSha256": "34cc395cd157c9dcb1dea38ffe914b24cf43b479b908c3fd6dda5e7ce26e68c8",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_PositionBg",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_PositionBg.json",
+          "bytes": 4477,
+          "sha256": "3705e5815d37d0eaa25d0752f420dfa0852ba338c2f549cfc411388e63a48bb9"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 0,
+          "y": 516,
+          "width": 286,
+          "height": 240
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_PositionBg.png",
+      "outputBytes": 4441,
+      "outputSha256": "423c022dc34fc1de5d617ebda7bf78dffd203f55f41ea980389262f4fd21f80d",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_PositionBg",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_PositionBg.json",
+          "bytes": 4477,
+          "sha256": "3705e5815d37d0eaa25d0752f420dfa0852ba338c2f549cfc411388e63a48bb9"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 0,
+          "y": 516,
+          "width": 286,
+          "height": 240
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_PositionBg.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "f24bf55993af5b94c8d3c31d643cacbae578467d4d8809ff1ab239e59581e69c",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_PositionTile",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_PositionTile.json",
+          "bytes": 6548,
+          "sha256": "6724f7c6a18055b69be7027cdc824cce20a0f8f45d15a1345026d929648768a9"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 290,
+          "y": 516,
+          "width": 360,
+          "height": 120
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_PositionTile.png",
+      "outputBytes": 3356,
+      "outputSha256": "62b1162d202157f8704cdb9e20a78751f56e386e1c91411e5600d19d453ca97d",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_PositionTile",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_PositionTile.json",
+          "bytes": 6548,
+          "sha256": "6724f7c6a18055b69be7027cdc824cce20a0f8f45d15a1345026d929648768a9"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 290,
+          "y": 516,
+          "width": 360,
+          "height": 120
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_PositionTile.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "06aa3aa95685b201ce4524fa8275813dbb46d26e177daf62baa8a8ee0c30b648",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_WhiteBox",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_WhiteBox.json",
+          "bytes": 4670,
+          "sha256": "62f85f3782568619661c26633d5114fcd187b15469b7b9d13a3aec45980398f2"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 1242,
+          "y": 68,
+          "width": 4,
+          "height": 4
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 2,
+          "m_X": 2,
+          "m_Y": 2,
+          "m_Z": 2
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_WhiteBox.png",
+      "outputBytes": 79,
+      "outputSha256": "84595179392c2754adbac6c6f6e53be180854cea518afc2485d66a8942b5e37c",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Deck_WhiteBox",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Deck_WhiteBox.json",
+          "bytes": 4670,
+          "sha256": "62f85f3782568619661c26633d5114fcd187b15469b7b9d13a3aec45980398f2"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 1242,
+          "y": 68,
+          "width": 4,
+          "height": 4
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 2,
+          "m_X": 2,
+          "m_Y": 2,
+          "m_Z": 2
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Deck_WhiteBox.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "2e4daa0449db4f9106e72f2027f19d90e39e86cb6951f64702d4e40dbf9ba72b",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Graduate_Skill_Icon",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Graduate_Skill_Icon.json",
+          "bytes": 5512,
+          "sha256": "0c1302a981611e1ae899d95b4f9b0480ee54c797ac8fc33ea5245111385f362c"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 830,
+          "y": 243,
+          "width": 106,
+          "height": 108
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Graduate_Skill_Icon.png",
+      "outputBytes": 7056,
+      "outputSha256": "09b6809ac321b56e0bb1f235a09948c51f6bb93777f579e55d8451b45a02631b",
+      "transformation": "crop-spriteatlas-page",
+      "notes": "Generated Unity runtime UI asset for the party-setup screen."
+    },
+    {
+      "category": "party-setup-ui",
+      "purpose": "Graduate_Skill_Icon",
+      "evidenceStatus": "confirmed",
+      "sourceRelativePath": "03_extracted_resources/02_raw_data/Assets/Texture2D/sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+      "sourceBytes": 259010,
+      "sourceSha256": "35b6b709c1842aecf65a7b7ce9a554568921137bdaa7d364667541a58fa56737",
+      "supportingSources": [
+        {
+          "role": "sprite-serialization",
+          "relativePath": "03_extracted_resources/02_raw_data/Assets/02.resources/03.deck/sprites/Graduate_Skill_Icon.json",
+          "bytes": 5512,
+          "sha256": "0c1302a981611e1ae899d95b4f9b0480ee54c797ac8fc33ea5245111385f362c"
+        }
+      ],
+      "parameters": {
+        "atlasTag": "Deck",
+        "atlasPageFileName": "sactx-0-2048x1024-ASTC 6x6-Deck-90de9c87.png",
+        "rect": {
+          "x": 830,
+          "y": 243,
+          "width": 106,
+          "height": 108
+        },
+        "settingsRaw": 3,
+        "coordinateConvention": "Unity bottom-left converted to PNG top-left",
+        "pivot": {
+          "m_X": 0.5,
+          "m_Y": 0.5
+        },
+        "pixelsPerUnit": 100,
+        "border": {
+          "m_W": 0,
+          "m_X": 0,
+          "m_Y": 0,
+          "m_Z": 0
+        }
+      },
+      "evidence": "Serialized Sprite m_RenderDataKey matched the Deck atlas render map; native border and pivot retained in the generated importer meta.",
+      "outputRelativePath": "Assets/Game/Content/UI/PartySetup/Graduate_Skill_Icon.png.meta",
+      "outputBytes": 1334,
+      "outputSha256": "2f9b1b18dd8d3f64d34cd6d6f2a74e679d99744a206963261716e16711cc0a57",
+      "transformation": "deterministic-unity-importer-meta",
+      "notes": "Deterministic GUID and original border/pivot import settings."
+    }
+  ]
+}
